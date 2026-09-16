@@ -28,14 +28,20 @@ function footerLinks(rel, current) {
 export function homeFooter({ rel }) {
   return `
 <footer class="footer">
-  <div class="footer__galaxy" aria-hidden="true">
-    <zirconoid-galaxy core="#f2f2ee" accent="#b9b9b3" outer="#5c5c58" particle-size="0.6" rotation-speed="0.18" mouse="0" camera="0,-2.6,5.4" offset="0,0,0" dim="0.45"></zirconoid-galaxy>
-    <div class="footer__vignette"></div>
-    <div class="footer__fade-top"></div>
-    <div class="footer__fade-bottom"></div>
+  <div class="footer__clip" aria-hidden="true">
+    <div class="footer__galaxy">
+      <zirconoid-galaxy core="#f2f2ee" accent="#b9b9b3" outer="#5c5c58" particle-size="0.6" rotation-speed="0.18" mouse="0" camera="0,-2.6,5.4" offset="0,0,0" dim="0.45"></zirconoid-galaxy>
+      <div class="footer__vignette"></div>
+      <div class="footer__fade-top"></div>
+      <div class="footer__fade-bottom"></div>
+    </div>
   </div>
   <div class="footer__mark">
-    <a href="${rel}" aria-label="Zirconoid"><img src="${rel}assets/img/mark.svg" alt="" width="56" height="56"></a>
+    <a href="${rel}" aria-label="Zirconoid" aria-describedby="zr-definition"><img src="${rel}assets/img/mark.svg" alt="" width="56" height="56"></a>
+    <div class="footer__def" id="zr-definition" role="tooltip">
+      <p class="footer__def-head"><strong>Zirconoid</strong> <span class="footer__def-pos">(noun)</span> <span class="footer__def-pron">\\ ˈzər-kə-ˌnȯid \\</span></p>
+      <p class="footer__def-body"><em>Definition:</em> An architectural archetype engineered for absolute endurance and multifaceted clarity. Modeled after the geometric precision of the ditetragonal dipyramid, Zirconoid defines a new class of business—one that collects precise human intelligence to help create multifaceted breakthroughs in our lifetime. <strong>We turn pressure into permanence.</strong></p>
+    </div>
   </div>
   <div class="footer__bar">
     <span>${SITE.copyright}</span>

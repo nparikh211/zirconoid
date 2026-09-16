@@ -70,7 +70,7 @@ export function render() {
 <main>
 <section class="hero" aria-label="Introduction">
   <div class="hero__inner">
-    <h1 class="hero__title" data-hero-title>Zirconoid is organizing human-captured data for frontier labs</h1>
+    <h1 class="hero__title" data-hero-title>Zirconoid collects human data for frontier training</h1>
   </div>
 </section>
 
@@ -111,7 +111,7 @@ ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
 
   return layout({
     path: '/',
-    title: 'Zirconoid — Human-captured data for frontier labs',
+    title: 'Zirconoid — Human data for frontier training',
     description: SITE.description,
     body,
     home: true,

@@ -270,18 +270,69 @@ img, svg { max-width: 100%; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
   padding: 96px var(--gutter) 40px;
   box-sizing: border-box;
 }
+/* Clips the oversized galaxy to the footer box while letting the definition bubble rise above it. */
+.footer__clip { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .footer__galaxy { position: absolute; left: -10%; right: -10%; top: 22%; bottom: -60%; pointer-events: none; }
 .footer__vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(20, 20, 20, 0) 34%, rgba(20, 20, 20, .8) 70%, #141414 100%); }
 .footer__fade-top { position: absolute; left: 0; right: 0; top: 0; height: 120px; background: linear-gradient(180deg, #141414, rgba(20, 20, 20, 0)); }
 .footer__fade-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(180deg, rgba(20, 20, 20, 0), rgba(20, 20, 20, .92)); }
 .footer__mark { position: relative; display: flex; justify-content: center; }
 .footer__mark a { display: block; animation: zr-spin 14s linear infinite; animation-play-state: paused; }
-.footer__mark a:hover { animation-play-state: running; }
+.footer__mark a:hover, .footer__mark a:focus-visible { animation-play-state: running; }
 .footer__mark img { width: 56px; height: 56px; display: block; }
+
+/* Definition bubble: fades in above the mark while it is hovered, fades out a little slower. */
+.footer__def {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 18px);
+  width: min(440px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 18px 22px 20px;
+  border-radius: 6px;
+  background: rgba(20, 20, 20, .92);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px) scale(.98);
+  transform-origin: 50% 100%;
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.footer__def::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  background: rgba(20, 20, 20, .92);
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  transform: rotate(45deg);
+}
+.footer__mark a:hover + .footer__def,
+.footer__mark a:focus-visible + .footer__def {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.footer__def p { margin: 0; }
+.footer__def-head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
+.footer__def-head strong { font-weight: 600; }
+.footer__def-pos { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-left: 4px; }
+.footer__def-pron { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--dim); margin-left: 6px; white-space: nowrap; }
+.footer__def-body { font-size: 14px; line-height: 1.6; font-weight: 300; color: var(--soft); text-wrap: pretty; }
+.footer__def-body em { font-style: italic; color: var(--ink); }
+.footer__def-body strong { font-weight: 500; color: var(--ink); }
 .footer__bar {
   position: relative;
   display: flex;
@@ -403,6 +454,7 @@ img, svg { max-width: 100%; }
   html { scroll-behavior: auto; }
   .hero__title, .page__inner { animation: none; }
   .footer__mark a { animation: none; }
+  .footer__def { transition: none; }
   .js [data-reveal]:not(.is-in) { opacity: 1; transform: none; }
   .btn, .card, .card__media, .post-list__item, .nav__blur { transition: none; }
 }

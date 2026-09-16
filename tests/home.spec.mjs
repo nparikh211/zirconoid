@@ -4,7 +4,7 @@ import { watch, open, num, alpha } from './helpers.mjs';
 test.describe('home', () => {
   test('hero copy and structure', async ({ page }) => {
     await open(page, '/', { galaxy: false });
-    await expect(page.locator('h1')).toHaveText('Zirconoid is organizing human-captured data for frontier labs');
+    await expect(page.locator('h1')).toHaveText('Zirconoid collects human data for frontier training');
     await expect(page.locator('[data-belief] p')).toHaveCount(3);
     await expect(page.locator('[data-belief] p').first()).toContainText('Zirconoid provides specialized datasets');
     await expect(page.locator('.card')).toHaveCount(3);
@@ -124,6 +124,27 @@ test.describe('home', () => {
     await expect(link).toHaveCSS('animation-play-state', 'running');
     await page.mouse.move(0, 0);
     await expect(link).toHaveCSS('animation-play-state', 'paused');
+  });
+
+  test('footer mark shows the definition while hovered', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const link = page.locator('.footer__mark a');
+    const def = page.locator('.footer__def');
+    await link.scrollIntoViewIfNeeded();
+    await expect(def).toHaveCSS('opacity', '0');
+    await expect(def).toHaveCSS('pointer-events', 'none');
+    await expect(link).toHaveAttribute('aria-describedby', 'zr-definition');
+    await expect(def).toHaveAttribute('role', 'tooltip');
+    await link.hover();
+    await expect(link).toHaveCSS('animation-play-state', 'running');
+    await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
+    await expect(def.locator('strong').first()).toHaveText('Zirconoid');
+    await expect(def).toContainText('ˈzər-kə-ˌnȯid');
+    await expect(def).toContainText('ditetragonal dipyramid');
+    await expect(def.locator('.footer__def-body strong')).toHaveText('We turn pressure into permanence.');
+    await expect(def.locator('.footer__def-body em')).toHaveText('Definition:');
+    await page.mouse.move(0, 0);
+    await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
   });
 
   // 24 frames per galaxy before it shows, and software WebGL on CI runners takes seconds per frame.
