@@ -25,6 +25,52 @@ test.describe('home', () => {
     for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
   });
 
+  test('trusted-by section orbits the frontier labs', async ({ page }, testInfo) => {
+    await open(page, '/', { galaxy: false });
+    const marks = page.locator('.trust__mark');
+    await expect(page.locator('#trust-title')).toHaveText('Trusted by data providers who support the frontier');
+    await expect(marks).toHaveText(['OpenAI', 'Anthropic', 'Google DeepMind', 'Mistral AI', 'xAI']);
+    // The claim is about the data companies, not a claim of being their customer.
+    await expect(page.locator('.trust__note')).toHaveText(
+      'We work with the data companies that supply OpenAI, Anthropic, Google DeepMind, Mistral AI and xAI.');
+
+    const boxes = [];
+    for (let i = 0; i < 5; i++) boxes.push(await marks.nth(i).boundingBox());
+
+    if (testInfo.project.name === 'desktop') {
+      // Every name sits at the same distance from the centre, and none overlaps the title.
+      const orbit = await page.locator('.trust__orbit').boundingBox();
+      const cx = orbit.x + orbit.width / 2, cy = orbit.y + orbit.height / 2;
+      const radii = boxes.map(b => Math.hypot(b.x + b.width / 2 - cx, b.y + b.height / 2 - cy));
+      expect(Math.max(...radii) - Math.min(...radii)).toBeLessThan(6);
+      const title = await page.locator('#trust-title').boundingBox();
+      for (const b of boxes) {
+        const clash = b.x < title.x + title.width && b.x + b.width > title.x
+          && b.y < title.y + title.height && b.y + b.height > title.y;
+        expect(clash, 'a name should not sit on the title').toBe(false);
+      }
+      // The ring turns, and each name turns back so it stays upright.
+      await expect(page.locator('.trust__ring')).toHaveCSS('animation-name', 'zr-orbit');
+      await expect(marks.first()).toHaveCSS('animation-name', 'zr-orbit-rev');
+      await expect(page.locator('.trust__ring')).toHaveCSS('animation-duration', '96s');
+      await expect(marks.first()).toHaveCSS('animation-duration', '96s');
+    } else {
+      // Narrow screens drop the circle: the names sit in a plain row under the claim.
+      await expect(page.locator('.trust__ring')).toHaveCSS('animation-name', 'none');
+      const title = await page.locator('#trust-title').boundingBox();
+      for (const b of boxes) expect(b.y).toBeGreaterThan(title.y);
+    }
+  });
+
+  test('trusted-by names are not claimed as customers in the schema', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const nodes = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent())['@graph'];
+    const text = JSON.stringify(nodes);
+    for (const lab of ['OpenAI', 'Anthropic', 'DeepMind', 'Mistral', 'xAI']) {
+      expect(text, `${lab} should not appear in the structured data`).not.toContain(lab);
+    }
+  });
+
   test('faq opens one answer at a time', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const items = page.locator('.faq__item');

@@ -36,6 +36,17 @@ export const DATASETS = [
 
 const CHEVRON = '<svg class="faq__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 
+// The frontier labs our partners supply, orbiting the claim. Set as wordmarks in the site's own
+// type: it keeps them monochrome and consistent, and avoids reproducing marks we cannot source.
+// To use a real logo instead, give a brand an `svg` and it renders in place of the name.
+export const FRONTIER_LABS = [
+  { name: 'OpenAI' },
+  { name: 'Anthropic' },
+  { name: 'Google DeepMind' },
+  { name: 'Mistral AI' },
+  { name: 'xAI' },
+];
+
 export const FAQ = [
   {
     q: 'What does Zirconoid do?',
@@ -166,6 +177,16 @@ export function render() {
 ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
     </div>
   </div>
+</section>
+
+<section class="trust" aria-labelledby="trust-title" data-reveal>
+  <div class="trust__orbit">
+    <div class="trust__ring" aria-hidden="true">
+${FRONTIER_LABS.map((b, i) => `      <span class="trust__node" style="--a:${(360 / FRONTIER_LABS.length) * i}deg"><span class="trust__seat"><span class="trust__mark">${b.svg || esc(b.name)}</span></span></span>`).join('\n')}
+    </div>
+    <h2 class="trust__title" id="trust-title">Trusted by data providers who support the frontier</h2>
+  </div>
+  <p class="trust__note">We work with the data companies that supply ${FRONTIER_LABS.slice(0, -1).map(b => esc(b.name)).join(', ')} and ${esc(FRONTIER_LABS.at(-1).name)}.</p>
 </section>
 
 <section class="work" id="work" aria-labelledby="work-title">
