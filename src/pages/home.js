@@ -203,10 +203,9 @@ ${FRONTIER_LABS.map(b => `      <img class="trust__logo" src="assets/img/labs/${
   </div>
 </section>
 
-<section class="faq" aria-labelledby="faq-title">
+<section class="faq" aria-label="Questions and answers">
   <div class="faq__head" data-reveal>
     <p class="eyebrow">Questions</p>
-    <h2 class="h2" id="faq-title">What people ask us</h2>
   </div>
   <div class="faq__list" data-faq data-reveal>
 ${FAQ.map((f, i) => `    <details class="faq__item" id="faq-${i + 1}" name="zr-faq">

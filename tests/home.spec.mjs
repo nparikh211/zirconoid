@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { watch, open, num, alpha, faqRow } from './helpers.mjs';
 
 test.describe('home', () => {
-  test('hero copy and structure', async ({ page }) => {
+  test('hero copy and structure', async ({ page }, testInfo) => {
     await open(page, '/', { galaxy: false });
     await expect(page.locator('h1')).toHaveText('Zirconoid collects human data for frontier training');
     await expect(page.locator('[data-belief] p')).toHaveCount(3);
@@ -14,6 +14,13 @@ test.describe('home', () => {
       'Diagnosis pathways and treatment efficacy trends from oncologists',
     ]);
     await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Oncology']);
+    // The work heading holds one line on desktop, and the FAQ carries no heading at all.
+    if (testInfo.project.name === 'desktop') {
+      const lines = await page.locator('#work-title').evaluate(el => el.offsetHeight / parseFloat(getComputedStyle(el).lineHeight));
+      expect(Math.round(lines), 'Datasets collected by real people should fit one line').toBe(1);
+    }
+    await expect(page.locator('body')).not.toContainText('What people ask us');
+    await expect(page.locator('.faq h2')).toHaveCount(0);
     // The assembly-line card carries a capture still; the other two are still waiting on one.
     await expect(page.locator('.card__media span')).toHaveText(['Coming soon', 'Coming soon']);
     const shot = page.locator('.card').nth(1).locator('.card__media--shot img');

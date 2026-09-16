@@ -209,8 +209,8 @@ img, svg { max-width: 100%; }
 .trust { padding: 20px var(--gutter) 120px; }
 .trust__orbit {
   position: relative;
-  width: min(100%, 900px);
-  height: clamp(320px, 30vw, 440px);
+  width: min(100%, 520px);
+  height: clamp(230px, 20vw, 300px);
   margin: 0 auto;
   display: grid;
   place-items: center;
@@ -222,9 +222,9 @@ img, svg { max-width: 100%; }
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
   object-fit: contain;
   opacity: 0;               /* the script takes over on the first frame */
   will-change: transform, opacity;
@@ -254,7 +254,7 @@ img, svg { max-width: 100%; }
   padding-bottom: 36px;
   border-bottom: 1px solid var(--rule);
 }
-.work__head .h2 { max-width: 640px; }
+.work__head .h2 { white-space: nowrap; }
 .work__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 48px; }
 .card {
   padding: 40px 20px 44px;
@@ -304,7 +304,7 @@ img, svg { max-width: 100%; }
 /* FAQ. One answer open at a time. Without JS the <details> elements still work,
    just without the height transition, and the answers stay in the page source either way. */
 .faq { padding: 0 var(--gutter) 140px; }
-.faq__head { padding-bottom: 32px; }
+.faq__head { padding-bottom: 18px; }
 .faq__list { border-top: 1px solid var(--rule); }
 .faq__item { border-bottom: 1px solid var(--rule); }
 .faq__q {
@@ -574,6 +574,7 @@ img, svg { max-width: 100%; }
   .work__grid { gap: 0; }
   .post-list__item { grid-template-columns: 1fr; }
   .post-list__read { display: none; }
+  .work__head .h2 { white-space: normal; }
   .faq__q { gap: 20px; }
   .faq__a { padding-right: 0; }
   .def--right { left: 0; top: auto; bottom: calc(100% + 18px); width: min(440px, calc(100vw - var(--gutter) - 16px)); transform: translateY(8px) scale(.98); transform-origin: 32px 100%; }

@@ -115,7 +115,7 @@ function llmsFullTxt() {
     '',
     DATASETS.map(d => `### ${d.title}\n\nDomain: ${d.domain}\n\n${d.desc}\n\n- Modality: ${d.modality}\n- Operators: ${d.operators}\n- Used for: ${d.use}`).join('\n\n'),
     '',
-    '## What people ask us',
+    '## Questions',
     '',
     FAQ.map(f => `### ${f.q}\n\n${f.a}`).join('\n\n'),
     '',
