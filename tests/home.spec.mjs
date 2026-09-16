@@ -129,7 +129,7 @@ test.describe('home', () => {
   test('footer mark shows the definition while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const link = page.locator('.footer__mark a');
-    const def = page.locator('.footer__def');
+    const def = page.locator('.footer__mark .def');
     await link.scrollIntoViewIfNeeded();
     await expect(def).toHaveCSS('opacity', '0');
     await expect(def).toHaveCSS('pointer-events', 'none');
@@ -141,8 +141,29 @@ test.describe('home', () => {
     await expect(def.locator('strong').first()).toHaveText('Zirconoid');
     await expect(def).toContainText('ˈzər-kə-ˌnȯid');
     await expect(def).toContainText('ditetragonal dipyramid');
-    await expect(def.locator('.footer__def-body strong')).toHaveText('We turn pressure into permanence.');
-    await expect(def.locator('.footer__def-body em')).toHaveText('Definition:');
+    await expect(def.locator('.def__body strong')).toHaveText('We turn pressure into permanence.');
+    await expect(def.locator('.def__body em')).toHaveText('Definition:');
+    await page.mouse.move(0, 0);
+    await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
+  });
+
+  test('belief mark shows the same definition while hovered', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const wrap = page.locator('.belief__mark-wrap');
+    const def = page.locator('.belief__mark-wrap .def');
+    await wrap.scrollIntoViewIfNeeded();
+    await expect(def).toHaveCSS('opacity', '0');
+    await expect(wrap).toHaveAttribute('aria-describedby', 'zr-definition-top');
+    await wrap.hover();
+    await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
+    await expect(def).toContainText('ditetragonal dipyramid');
+    // Left-aligned to the mark, and fully inside the viewport.
+    const [w, d] = await Promise.all([wrap.boundingBox(), def.boundingBox()]);
+    expect(Math.round(d.x)).toBe(Math.round(w.x));
+    expect(d.x + d.width).toBeLessThanOrEqual(page.viewportSize().width);
+    expect(d.y).toBeGreaterThanOrEqual(0);
+    // Hover does not spin this mark; its rotation follows scroll only.
+    expect(await page.locator('[data-belief-mark]').evaluate(el => getComputedStyle(el).animationName)).toBe('none');
     await page.mouse.move(0, 0);
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
   });

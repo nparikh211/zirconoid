@@ -25,6 +25,14 @@ function footerLinks(rel, current) {
       <a href="${rel}terms/"${cur('terms')}>Terms</a>`;
 }
 
+// The Zirconoid definition, shown as a tooltip on the marks. `align` is where the caret sits: center or left.
+export function definitionBubble(id, align) {
+  return `<div class="def def--${align}" id="${id}" role="tooltip">
+      <p class="def__head"><strong>Zirconoid</strong> <span class="def__pos">(noun)</span> <span class="def__pron">\\ ˈzər-kə-ˌnȯid \\</span></p>
+      <p class="def__body"><em>Definition:</em> An architectural archetype engineered for absolute endurance and multifaceted clarity. Modeled after the geometric precision of the ditetragonal dipyramid, Zirconoid defines a new class of business—one that collects precise human intelligence to help create multifaceted breakthroughs in our lifetime. <strong>We turn pressure into permanence.</strong></p>
+    </div>`;
+}
+
 export function homeFooter({ rel }) {
   return `
 <footer class="footer">
@@ -38,10 +46,7 @@ export function homeFooter({ rel }) {
   </div>
   <div class="footer__mark">
     <a href="${rel}" aria-label="Zirconoid" aria-describedby="zr-definition"><img src="${rel}assets/img/mark.svg" alt="" width="56" height="56"></a>
-    <div class="footer__def" id="zr-definition" role="tooltip">
-      <p class="footer__def-head"><strong>Zirconoid</strong> <span class="footer__def-pos">(noun)</span> <span class="footer__def-pron">\\ ˈzər-kə-ˌnȯid \\</span></p>
-      <p class="footer__def-body"><em>Definition:</em> An architectural archetype engineered for absolute endurance and multifaceted clarity. Modeled after the geometric precision of the ditetragonal dipyramid, Zirconoid defines a new class of business—one that collects precise human intelligence to help create multifaceted breakthroughs in our lifetime. <strong>We turn pressure into permanence.</strong></p>
-    </div>
+    ${definitionBubble('zr-definition', 'center')}
   </div>
   <div class="footer__bar">
     <span>${SITE.copyright}</span>

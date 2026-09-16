@@ -190,7 +190,8 @@ img, svg { max-width: 100%; }
 /* Belief */
 .belief { position: relative; z-index: 2; padding: 60px var(--gutter) 160px; }
 .belief__inner { max-width: none; }
-.belief__mark { width: 64px; height: 64px; display: block; margin: 0 0 56px; }
+.belief__mark-wrap { position: relative; display: block; width: 64px; margin: 0 0 56px; }
+.belief__mark { width: 64px; height: 64px; display: block; }
 .belief__text { display: grid; gap: 34px; }
 .belief__text p {
   margin: 0;
@@ -284,10 +285,9 @@ img, svg { max-width: 100%; }
 .footer__mark a:hover, .footer__mark a:focus-visible { animation-play-state: running; }
 .footer__mark img { width: 56px; height: 56px; display: block; }
 
-/* Definition bubble: fades in above the mark while it is hovered, fades out a little slower. */
-.footer__def {
+/* Definition bubble: fades in above a mark while it is hovered, fades out a little slower. */
+.def {
   position: absolute;
-  left: 50%;
   bottom: calc(100% + 18px);
   width: min(440px, calc(100vw - 32px));
   box-sizing: border-box;
@@ -301,14 +301,12 @@ img, svg { max-width: 100%; }
   text-align: left;
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, 8px) scale(.98);
-  transform-origin: 50% 100%;
   transition: opacity .6s var(--ease), transform .6s var(--ease);
+  z-index: 5;
 }
-.footer__def::after {
+.def::after {
   content: "";
   position: absolute;
-  left: 50%;
   top: 100%;
   width: 10px;
   height: 10px;
@@ -319,20 +317,28 @@ img, svg { max-width: 100%; }
   border-bottom: 1px solid rgba(255, 255, 255, .12);
   transform: rotate(45deg);
 }
-.footer__mark a:hover + .footer__def,
-.footer__mark a:focus-visible + .footer__def {
+.def--center { left: 50%; transform: translate(-50%, 8px) scale(.98); transform-origin: 50% 100%; }
+.def--center::after { left: 50%; }
+.def--left { left: 0; width: min(440px, calc(100vw - var(--gutter) - 16px)); transform: translateY(8px) scale(.98); transform-origin: 32px 100%; }
+.def--left::after { left: 32px; }
+.footer__mark a:hover + .def,
+.footer__mark a:focus-visible + .def,
+.belief__mark-wrap:hover .def,
+.belief__mark-wrap:focus-visible .def {
   opacity: 1;
-  transform: translate(-50%, 0) scale(1);
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
-.footer__def p { margin: 0; }
-.footer__def-head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
-.footer__def-head strong { font-weight: 600; }
-.footer__def-pos { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-left: 4px; }
-.footer__def-pron { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--dim); margin-left: 6px; white-space: nowrap; }
-.footer__def-body { font-size: 14px; line-height: 1.6; font-weight: 300; color: var(--soft); text-wrap: pretty; }
-.footer__def-body em { font-style: italic; color: var(--ink); }
-.footer__def-body strong { font-weight: 500; color: var(--ink); }
+.footer__mark a:hover + .def--center, .footer__mark a:focus-visible + .def--center { transform: translate(-50%, 0) scale(1); }
+.belief__mark-wrap:hover .def--left, .belief__mark-wrap:focus-visible .def--left { transform: translateY(0) scale(1); }
+.def p { margin: 0; }
+.def__head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
+.def__head strong { font-weight: 600; }
+.def__pos { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-left: 4px; }
+.def__pron { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--dim); margin-left: 6px; white-space: nowrap; }
+.def__body { font-size: 14px; line-height: 1.6; font-weight: 300; color: var(--soft); text-wrap: pretty; }
+.def__body em { font-style: italic; color: var(--ink); }
+.def__body strong { font-weight: 500; color: var(--ink); }
+
 .footer__bar {
   position: relative;
   display: flex;
@@ -454,7 +460,7 @@ img, svg { max-width: 100%; }
   html { scroll-behavior: auto; }
   .hero__title, .page__inner { animation: none; }
   .footer__mark a { animation: none; }
-  .footer__def { transition: none; }
+  .def { transition: none; }
   .js [data-reveal]:not(.is-in) { opacity: 1; transform: none; }
   .btn, .card, .card__media, .post-list__item, .nav__blur { transition: none; }
 }

@@ -1,5 +1,5 @@
 import { SITE, STAR, esc } from '../site.js';
-import { layout } from '../layout.js';
+import { layout, definitionBubble } from '../layout.js';
 
 export const BELIEF = [
   "Zirconoid provides specialized datasets that power frontier models, serving as the essential upstream partner for the data companies that supply the world's leading AI labs.",
@@ -76,7 +76,10 @@ export function render() {
 
 <section class="belief" aria-label="What we believe">
   <div class="belief__inner">
-    <img class="belief__mark" src="assets/img/mark.svg" alt="" width="64" height="64" data-belief-mark>
+    <span class="belief__mark-wrap" tabindex="0" aria-label="Zirconoid mark" aria-describedby="zr-definition-top">
+      <img class="belief__mark" src="assets/img/mark.svg" alt="" width="64" height="64" data-belief-mark>
+      ${definitionBubble('zr-definition-top', 'left')}
+    </span>
     <div class="belief__text" data-belief>
 ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
     </div>
