@@ -25,41 +25,67 @@ test.describe('home', () => {
     for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
   });
 
-  test('trusted-by section orbits the frontier labs', async ({ page }, testInfo) => {
+  test('trusted-by shows the lab marks around the claim', async ({ page }, testInfo) => {
     await open(page, '/', { galaxy: false });
-    const marks = page.locator('.trust__mark');
-    await expect(page.locator('#trust-title')).toHaveText('Trusted by data providers who support the frontier');
-    await expect(marks).toHaveText(['OpenAI', 'Anthropic', 'Google DeepMind', 'Mistral AI', 'xAI']);
-    // The claim is about the data companies, not a claim of being their customer.
-    await expect(page.locator('.trust__note')).toHaveText(
-      'We work with the data companies that supply OpenAI, Anthropic, Google DeepMind, Mistral AI and xAI.');
+    const logos = page.locator('.trust__logo');
+    const title = page.locator('#trust-title');
+    await expect(title).toHaveText('Trusted by the data providers who support the frontier');
+    await expect(title).toHaveCSS('font-family', /Montserrat/); // the hero's face, smaller
+    await expect(logos).toHaveCount(5);
+    expect(await logos.evaluateAll(els => els.map(e => e.alt)))
+      .toEqual(['OpenAI', 'Anthropic', 'Google DeepMind', 'Mistral AI', 'xAI']);
+    // Real image files, decoded by the browser.
+    for (const n of await logos.evaluateAll(els => els.map(e => e.naturalWidth))) expect(n).toBeGreaterThan(0);
+    await expect(page.locator('.trust__note')).toHaveCount(0);
 
-    const boxes = [];
-    for (let i = 0; i < 5; i++) boxes.push(await marks.nth(i).boundingBox());
+    const boxes = () => logos.evaluateAll(els => els.map(e => e.getBoundingClientRect()).map(r => ({ x: r.x, y: r.y, w: r.width, h: r.height })));
+    await page.locator('.trust').scrollIntoViewIfNeeded(); // the orbit only runs while on screen
+    const t = await title.boundingBox();
 
     if (testInfo.project.name === 'desktop') {
-      // Every name sits at the same distance from the centre, and none overlaps the title.
-      const orbit = await page.locator('.trust__orbit').boundingBox();
-      const cx = orbit.x + orbit.width / 2, cy = orbit.y + orbit.height / 2;
-      const radii = boxes.map(b => Math.hypot(b.x + b.width / 2 - cx, b.y + b.height / 2 - cy));
-      expect(Math.max(...radii) - Math.min(...radii)).toBeLessThan(6);
-      const title = await page.locator('#trust-title').boundingBox();
-      for (const b of boxes) {
-        const clash = b.x < title.x + title.width && b.x + b.width > title.x
-          && b.y < title.y + title.height && b.y + b.height > title.y;
-        expect(clash, 'a name should not sit on the title').toBe(false);
+      // One line.
+      const lines = await title.evaluate(el => el.offsetHeight / parseFloat(getComputedStyle(el).fontSize));
+      expect(lines).toBeLessThan(1.6);
+
+      const before = await boxes();
+      // On an ellipse around the centre, and clear of the claim.
+      const o = await page.locator('.trust__orbit').boundingBox();
+      const cx = o.x + o.width / 2, cy = o.y + o.height / 2;
+      for (const b of before) {
+        const nx = (b.x + b.w / 2 - cx) / (o.width / 2), ny = (b.y + b.h / 2 - cy) / (o.height / 2);
+        expect(Math.hypot(nx, ny), 'each mark rides the ellipse').toBeGreaterThan(0.6);
+        const clash = b.x < t.x + t.width && b.x + b.w > t.x && b.y < t.y + t.height && b.y + b.h > t.y;
+        expect(clash, 'a mark should not sit on the claim').toBe(false);
       }
-      // The ring turns, and each name turns back so it stays upright.
-      await expect(page.locator('.trust__ring')).toHaveCSS('animation-name', 'zr-orbit');
-      await expect(marks.first()).toHaveCSS('animation-name', 'zr-orbit-rev');
-      await expect(page.locator('.trust__ring')).toHaveCSS('animation-duration', '96s');
-      await expect(marks.first()).toHaveCSS('animation-duration', '96s');
+      // Depth: the near marks are bigger and brighter than the far ones.
+      const sizes = before.map(b => b.w);
+      expect(Math.max(...sizes) - Math.min(...sizes)).toBeGreaterThan(8);
+      const fades = await logos.evaluateAll(els => els.map(e => parseFloat(getComputedStyle(e).opacity)));
+      expect(Math.max(...fades) - Math.min(...fades)).toBeGreaterThan(0.3);
+      // And they travel.
+      await page.waitForTimeout(900);
+      const after = await boxes();
+      expect(after.some((b, i) => Math.abs(b.x - before[i].x) > 4 || Math.abs(b.y - before[i].y) > 4)).toBe(true);
     } else {
-      // Narrow screens drop the circle: the names sit in a plain row under the claim.
-      await expect(page.locator('.trust__ring')).toHaveCSS('animation-name', 'none');
-      const title = await page.locator('#trust-title').boundingBox();
-      for (const b of boxes) expect(b.y).toBeGreaterThan(title.y);
+      // Narrow screens drop the orbit for a plain row under the claim.
+      for (const b of await boxes()) {
+        expect(b.y).toBeGreaterThan(t.y);
+        expect(b.w).toBeGreaterThan(0);
+      }
+      const ys = (await boxes()).map(b => Math.round(b.y));
+      expect(Math.max(...ys) - Math.min(...ys), 'the marks sit on one row').toBeLessThan(4);
     }
+  });
+
+  test('trusted-by orbit stops when it is off screen', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'the orbit only runs on wide screens');
+    await open(page, '/', { galaxy: false });
+    await page.locator('.trust').scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollTo(0, 0)); // hero: the orbit is far below
+    const at = () => page.locator('.trust__logo').first().evaluate(el => el.style.transform);
+    const before = await at();
+    await page.waitForTimeout(700);
+    expect(await at(), 'the orbit should idle while out of view').toBe(before);
   });
 
   test('trusted-by names are not claimed as customers in the schema', async ({ page }) => {

@@ -36,15 +36,15 @@ export const DATASETS = [
 
 const CHEVRON = '<svg class="faq__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 
-// The frontier labs our partners supply, orbiting the claim. Set as wordmarks in the site's own
-// type: it keeps them monochrome and consistent, and avoids reproducing marks we cannot source.
-// To use a real logo instead, give a brand an `svg` and it renders in place of the name.
+// The frontier labs, orbiting the claim. Marks live in public/assets/img/labs, redrawn from the
+// MIT-licensed @lobehub/icons set as cream silhouettes and balanced by ink area so no one mark
+// shouts over the others. See scripts/labs.py to regenerate them.
 export const FRONTIER_LABS = [
-  { name: 'OpenAI' },
-  { name: 'Anthropic' },
-  { name: 'Google DeepMind' },
-  { name: 'Mistral AI' },
-  { name: 'xAI' },
+  { name: 'OpenAI', file: 'openai' },
+  { name: 'Anthropic', file: 'anthropic' },
+  { name: 'Google DeepMind', file: 'deepmind' },
+  { name: 'Mistral AI', file: 'mistral' },
+  { name: 'xAI', file: 'xai' },
 ];
 
 export const FAQ = [
@@ -180,13 +180,12 @@ ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
 </section>
 
 <section class="trust" aria-labelledby="trust-title" data-reveal>
-  <div class="trust__orbit">
-    <div class="trust__ring" aria-hidden="true">
-${FRONTIER_LABS.map((b, i) => `      <span class="trust__node" style="--a:${(360 / FRONTIER_LABS.length) * i}deg"><span class="trust__seat"><span class="trust__mark">${b.svg || esc(b.name)}</span></span></span>`).join('\n')}
+  <div class="trust__orbit" data-orbit>
+    <div class="trust__ring">
+${FRONTIER_LABS.map(b => `      <img class="trust__logo" src="assets/img/labs/${b.file}.png" alt="${esc(b.name)}" width="44" height="44" loading="lazy" decoding="async">`).join('\n')}
     </div>
-    <h2 class="trust__title" id="trust-title">Trusted by data providers who support the frontier</h2>
+    <h2 class="trust__title" id="trust-title">Trusted by the data providers who support the frontier</h2>
   </div>
-  <p class="trust__note">We work with the data companies that supply ${FRONTIER_LABS.slice(0, -1).map(b => esc(b.name)).join(', ')} and ${esc(FRONTIER_LABS.at(-1).name)}.</p>
 </section>
 
 <section class="work" id="work" aria-labelledby="work-title">

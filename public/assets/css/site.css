@@ -204,60 +204,42 @@ img, svg { max-width: 100%; }
 }
 .belief__text [data-w] { display: inline; will-change: filter, opacity; }
 
-/* Trusted by. The ring turns; each wordmark turns back the same amount so it stays upright. */
-.trust { padding: 40px var(--gutter) 130px; }
+/* Trusted by. The marks travel an ellipse around the claim; the script sets each one's
+   position, scale and opacity per frame, so the near half reads closer than the far half. */
+.trust { padding: 30px var(--gutter) 130px; }
 .trust__orbit {
   position: relative;
-  width: min(100%, 480px);
-  aspect-ratio: 1;
-  margin: 0 auto 8px;
+  width: min(100%, 1080px);
+  height: clamp(240px, 21vw, 300px);
+  margin: 0 auto;
   display: grid;
   place-items: center;
 }
-.trust__ring { position: absolute; inset: 0; animation: zr-orbit 96s linear infinite; }
-.trust__node {
+.trust__ring { position: absolute; inset: 0; }
+.trust__logo {
   position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  transform: rotate(var(--a));
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  object-fit: contain;
+  opacity: 0;               /* the script takes over on the first frame */
+  will-change: transform, opacity;
 }
-.trust__seat { transform: rotate(calc(-1 * var(--a))); }
-.trust__mark {
-  display: block;
-  animation: zr-orbit-rev 96s linear infinite;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: .06em;
-  white-space: nowrap;
-  color: var(--muted);
-  transition: color .4s var(--ease);
-}
-.trust:hover .trust__mark { color: var(--ink); }
 .trust__title {
+  position: relative;
+  z-index: 2;               /* the marks pass behind the claim, never over it */
   margin: 0;
-  max-width: 16ch;
   text-align: center;
   font-family: var(--head);
-  font-weight: 400;
-  font-size: clamp(21px, 2.4vw, 32px);
-  line-height: 1.22;
+  font-weight: 500;
+  font-size: clamp(17px, 2.1vw, 28px);
+  line-height: 1.2;
   letter-spacing: -.02em;
-  text-wrap: balance;
+  color: var(--ink);
+  white-space: nowrap;
 }
-.trust__note {
-  margin: 0 auto;
-  max-width: 62ch;
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.7;
-  font-weight: 300;
-  color: var(--faint);
-  text-wrap: pretty;
-}
-@keyframes zr-orbit { to { transform: rotate(360deg); } }
-@keyframes zr-orbit-rev { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
 /* Work */
 .work { padding: 0 var(--gutter) 160px; }
@@ -557,16 +539,13 @@ img, svg { max-width: 100%; }
 .js [data-reveal]:not(.is-settled) { transition: opacity .9s var(--ease), transform .9s var(--ease); }
 .js [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(18px); }
 
-/* Too little room for a legible circle: stack the claim over a plain row of names. */
+/* Too little room to orbit a one-line claim: stack it over a plain row of marks. */
 @media (max-width: 720px) {
-  .trust { padding-top: 0; }
-  .trust__orbit { width: 100%; aspect-ratio: auto; display: flex; flex-direction: column; margin-bottom: 0; }
-  .trust__ring { position: static; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin-top: 32px; animation: none; }
-  .trust__node { position: static; inset: auto; display: block; transform: none; }
-  .trust__seat { transform: none; }
-  .trust__mark { animation: none; }
-  .trust__title { order: -1; max-width: 18ch; margin: 0 auto; }
-  .trust__note { margin-top: 32px; }
+  .trust { padding-top: 0; padding-bottom: 110px; }
+  .trust__orbit { width: 100%; height: auto; display: flex; flex-direction: column; align-items: center; }
+  .trust__ring { position: static; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 22px 32px; margin-top: 34px; }
+  .trust__logo { position: static; width: 34px; height: 34px; margin: 0; opacity: .85 !important; transform: none !important; }
+  .trust__title { order: -1; white-space: normal; text-wrap: balance; max-width: 20ch; }
 }
 
 /* Small screens */
@@ -597,5 +576,4 @@ img, svg { max-width: 100%; }
   .js [data-reveal]:not(.is-in) { opacity: 1; transform: none; }
   .btn, .card, .card__media, .post-list__item, .nav__blur { transition: none; }
   .js .faq__panel, .faq__chevron, .faq__q { transition: none; }
-  .trust__ring, .trust__mark { animation: none; }
 }

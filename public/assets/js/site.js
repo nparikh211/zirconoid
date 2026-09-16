@@ -76,6 +76,63 @@
     targets.forEach(el => io.observe(el));
   }
 
+  // Trusted-by orbit. The marks run an ellipse around the claim; the lower half of the path
+  // reads as nearer, so a mark grows and brightens as it comes round the front.
+  const orbit = document.querySelector('[data-orbit]');
+  const logos = orbit ? [...orbit.querySelectorAll('.trust__logo')] : [];
+  if (logos.length) {
+    const PERIOD = 30000; // ms for a full turn
+    const NEAR = { scale: 1.12, opacity: 1 };
+    const FAR = { scale: 0.62, opacity: 0.26 };
+    let rx = 0, ry = 0, spinning = false, startedAt = 0, elapsed = 0, raf = 0;
+
+    const measure = () => {
+      const stacked = getComputedStyle(orbit).display === 'flex'; // the narrow-screen row
+      if (stacked) { rx = ry = 0; return; }
+      rx = orbit.clientWidth / 2 - 30;
+      ry = orbit.clientHeight / 2 - 24;
+    };
+
+    const place = ms => {
+      if (!rx) return;                       // stacked: CSS owns the layout
+      const turn = (ms / PERIOD) * Math.PI * 2;
+      logos.forEach((el, i) => {
+        const a = turn + (i / logos.length) * Math.PI * 2;
+        const near = (Math.sin(a) + 1) / 2;   // 0 at the back, 1 at the front
+        const scale = FAR.scale + (NEAR.scale - FAR.scale) * near;
+        el.style.transform = `translate3d(${(Math.cos(a) * rx).toFixed(1)}px, ${(Math.sin(a) * ry).toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+        el.style.opacity = (FAR.opacity + (NEAR.opacity - FAR.opacity) * near).toFixed(3);
+      });
+    };
+
+    const frame = now => {
+      if (!spinning) return;
+      place(elapsed + (now - startedAt));
+      raf = requestAnimationFrame(frame);
+    };
+    const run = () => {
+      if (spinning || reduce || !rx) return;
+      spinning = true;
+      startedAt = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const halt = () => {
+      if (!spinning) return;
+      elapsed += performance.now() - startedAt;
+      spinning = false;
+      cancelAnimationFrame(raf);
+    };
+
+    measure();
+    place(elapsed);
+    window.addEventListener('resize', () => { const was = spinning; halt(); measure(); place(elapsed); if (was) run(); });
+    // Only animate while the section is on screen, and never in a hidden tab.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => { es[0].isIntersecting && !document.hidden ? run() : halt(); }, { rootMargin: '120px' }).observe(orbit);
+    } else { run(); }
+    document.addEventListener('visibilitychange', () => { if (document.hidden) halt(); });
+  }
+
   // FAQ accordion: one answer open at a time, with a height transition.
   // The <details> elements carry the behaviour on their own when this never runs.
   const faq = [...document.querySelectorAll('[data-faq] > details')];
