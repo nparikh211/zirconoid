@@ -25,5 +25,12 @@ export async function open(page, path, { galaxy = true } = {}) {
   await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
 }
 
+// An FAQ row's real state. The answer overflows a clipped zero-height panel while closed,
+// so its bounding box alone would report it visible; measure the panel instead.
+export const faqRow = (page, i) => page.locator('.faq__item').nth(i).evaluate(el => ({
+  open: el.open,
+  height: el.querySelector('.faq__panel-inner').offsetHeight,
+}));
+
 export const num = s => parseFloat(String(s).replace(/[^\d.-]/g, ''));
 export const alpha = rgba => { const m = /rgba?\(\s*\d+,\s*\d+,\s*\d+(?:,\s*([\d.]+))?\)/.exec(rgba); return m && m[1] !== undefined ? parseFloat(m[1]) : 1; };

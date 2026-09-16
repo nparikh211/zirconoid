@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { watch, open, num, alpha } from './helpers.mjs';
+import { watch, open, num, alpha, faqRow } from './helpers.mjs';
 
 test.describe('home', () => {
   test('hero copy and structure', async ({ page }) => {
@@ -23,6 +23,72 @@ test.describe('home', () => {
     // No leftover section labels the brief asked to remove.
     await expect(page.locator('body')).not.toContainText(/what we believe|how we work/i);
     for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
+  });
+
+  test('faq opens one answer at a time', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const items = page.locator('.faq__item');
+    const list = page.locator('.faq__list');
+    const opened = i => expect.poll(async () => (await faqRow(page, i)).height).toBeGreaterThan(40);
+    const shut = i => expect.poll(async () => (await faqRow(page, i)).open).toBe(false);
+
+    await expect(items).toHaveCount(9);
+    // Everything starts closed, so the list is only nine rows tall.
+    await shut(0);
+    const closedHeight = await list.evaluate(el => el.offsetHeight);
+    expect(closedHeight).toBeLessThan(700);
+
+    await items.nth(0).locator('.faq__q').click();
+    await opened(0);
+    await expect(items.nth(0)).toHaveClass(/is-open/);
+    await expect(items.nth(0).locator('.faq__a')).toContainText('talent engine for operator data');
+    await expect.poll(() => list.evaluate(el => el.offsetHeight)).toBeGreaterThan(closedHeight);
+    // Chevron points up while open.
+    await expect.poll(() => items.nth(0).locator('.faq__chevron').evaluate(el => getComputedStyle(el).transform))
+      .toBe('matrix(-1, 0, 0, -1, 0, 0)');
+
+    // Opening another closes the first.
+    await items.nth(1).locator('.faq__q').click();
+    await opened(1);
+    await shut(0);
+
+    // Clicking an open row closes it and the list returns to its compact height.
+    await items.nth(1).locator('.faq__q').click();
+    await shut(1);
+    await expect.poll(() => list.evaluate(el => el.offsetHeight)).toBe(closedHeight);
+  });
+
+  test('faq survives a click before the open transition has moved', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const first = page.locator('.faq__item').first();
+    // Open and close again immediately: no transition has run, so nothing fires transitionend.
+    await first.locator('.faq__q').click();
+    await first.locator('.faq__q').click();
+    await expect.poll(async () => (await faqRow(page, 0)).open).toBe(false);
+    // And it still opens afterwards.
+    await first.locator('.faq__q').click();
+    await expect.poll(async () => (await faqRow(page, 0)).height).toBeGreaterThan(40);
+  });
+
+  test('faq answers stay in the page source and take a deep link', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    // Closed answers are still in the DOM, which is what crawlers and assistants read.
+    const answers = await page.locator('.faq__a').allTextContents();
+    expect(answers).toHaveLength(9);
+    for (const a of answers) expect(a.length).toBeGreaterThan(80);
+
+    await page.goto('/#faq-3');
+    await expect.poll(async () => (await faqRow(page, 2)).height).toBeGreaterThan(40);
+    await expect(page.locator('#faq-3 .faq__a')).toContainText('head-mounted camera');
+  });
+
+  test('faq is keyboard operable', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    await page.locator('.faq__item').first().locator('.faq__q').focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(async () => (await faqRow(page, 0)).height).toBeGreaterThan(40);
+    await page.keyboard.press('Enter');
+    await expect.poll(async () => (await faqRow(page, 0)).open).toBe(false);
   });
 
   test('nav blur only appears after the hero scrolls away', async ({ page }) => {

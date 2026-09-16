@@ -34,6 +34,8 @@ export const DATASETS = [
   },
 ];
 
+const CHEVRON = '<svg class="faq__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+
 export const FAQ = [
   {
     q: 'What does Zirconoid do?',
@@ -182,11 +184,11 @@ ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
     <p class="eyebrow">Questions</p>
     <h2 class="h2" id="faq-title">What people ask us</h2>
   </div>
-  <div class="faq__grid">
-${FAQ.map(f => `    <div class="faq__item" data-reveal>
-      <h3 class="faq__q">${esc(f.q)}</h3>
-      <p class="faq__a">${esc(f.a)}</p>
-    </div>`).join('\n')}
+  <div class="faq__list" data-faq data-reveal>
+${FAQ.map((f, i) => `    <details class="faq__item" id="faq-${i + 1}" name="zr-faq">
+      <summary class="faq__q"><span class="faq__q-text">${esc(f.q)}</span>${CHEVRON}</summary>
+      <div class="faq__panel"><div class="faq__panel-inner"><p class="faq__a">${esc(f.a)}</p></div></div>
+    </details>`).join('\n')}
   </div>
 </section>
 

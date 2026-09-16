@@ -49,13 +49,14 @@ test('home describes the business, its service and its questions', async ({ page
     expect(offer.itemOffered.description.length).toBeGreaterThan(50);
   }
 
-  // Every question in the schema is also visible on the page, so answers can be verified.
+  // Every question in the schema is also on the page, so answers can be verified.
+  // The answers sit inside <details>, which keeps them in the source for crawlers.
   const faq = typed(nodes, 'FAQPage');
   expect(faq.mainEntity.length).toBeGreaterThanOrEqual(8);
-  const visibleQ = await page.locator('.faq__q').allInnerTexts();
-  const visibleA = await page.locator('.faq__a').allInnerTexts();
-  expect(visibleQ).toEqual(faq.mainEntity.map(q => q.name));
-  expect(visibleA).toEqual(faq.mainEntity.map(q => q.acceptedAnswer.text));
+  const onPageQ = await page.locator('.faq__q-text').allTextContents();
+  const onPageA = await page.locator('.faq__a').allTextContents();
+  expect(onPageQ).toEqual(faq.mainEntity.map(q => q.name));
+  expect(onPageA).toEqual(faq.mainEntity.map(q => q.acceptedAnswer.text));
 });
 
 test('blog index and posts are linked as a blog', async ({ page }) => {
@@ -73,6 +74,12 @@ test('blog index and posts are linked as a blog', async ({ page }) => {
   expect(post.articleBody).toContain('head-mounted camera');
   expect(typed(nodes, 'BreadcrumbList').itemListElement).toHaveLength(3);
   await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute('content', '2026-09-08');
+});
+
+test('bing verification file is served from the root', async ({ request }) => {
+  const res = await request.get('/BingSiteAuth.xml');
+  expect(res.status()).toBe(200);
+  expect(await res.text()).toContain('15AB80F2F0D7BCCA3B66707A7A49D272');
 });
 
 test('404 is not indexed', async ({ page }) => {

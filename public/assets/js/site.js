@@ -75,4 +75,62 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     targets.forEach(el => io.observe(el));
   }
+
+  // FAQ accordion: one answer open at a time, with a height transition.
+  // The <details> elements carry the behaviour on their own when this never runs.
+  const faq = [...document.querySelectorAll('[data-faq] > details')];
+  for (const item of faq) {
+    // Browsers with exclusive <details> would slam siblings shut and cut the animation short.
+    item.removeAttribute('name');
+    const panel = item.querySelector('.faq__panel');
+
+    let cleanup = null;
+    const settle = () => { if (cleanup) { cleanup(); cleanup = null; } };
+
+    const collapse = () => {
+      if (!item.open) return;
+      settle();
+      item.classList.remove('is-open');
+      if (reduce) { item.open = false; return; }
+      // Hide the element once it has finished shrinking. The timer matters: closing a row
+      // whose opening transition has not moved yet changes no value, so no transitionend comes.
+      const finish = () => { settle(); if (!item.classList.contains('is-open')) item.open = false; };
+      const onEnd = e => { if (e.target === panel) finish(); };
+      const timer = setTimeout(finish, 420);
+      panel.addEventListener('transitionend', onEnd);
+      cleanup = () => { clearTimeout(timer); panel.removeEventListener('transitionend', onEnd); };
+    };
+
+    const expand = () => {
+      settle();
+      item.open = true;
+      if (reduce) return item.classList.add('is-open');
+      // Two frames: the panel has to be laid out at 0fr before the transition can start.
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (item.open) item.classList.add('is-open'); }));
+    };
+
+    item.querySelector('summary').addEventListener('click', e => {
+      e.preventDefault();
+      const open = item.classList.contains('is-open');
+      for (const other of faq) if (other !== item) other._zrCollapse();
+      open ? collapse() : expand();
+    });
+
+    item._zrCollapse = collapse;
+    item._zrExpand = expand;
+  }
+
+  // A link to /#faq-3 opens that answer and scrolls to it.
+  const openFromHash = () => {
+    if (!/^#faq-\d+$/.test(location.hash)) return;
+    const item = document.querySelector(location.hash);
+    if (!item || !faq.includes(item)) return;
+    for (const other of faq) if (other !== item) other._zrCollapse();
+    item._zrExpand();
+    item.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  };
+  if (faq.length) {
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+  }
 })();
