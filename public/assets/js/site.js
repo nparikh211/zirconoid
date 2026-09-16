@@ -3,6 +3,7 @@
 (() => {
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nav = document.querySelector('[data-nav]');
+  const blur = document.querySelector('[data-nav-blur]');
   const hero = document.querySelector('[data-hero-title]');
   const galaxy = document.querySelector('[data-galaxy-hero]');
   const mark = document.querySelector('[data-belief-mark]');
@@ -30,9 +31,10 @@
     raf = 0;
     const y = window.scrollY || 0, vh = window.innerHeight || 800;
     if (galaxy && !reduce) galaxy.style.transform = `translateY(${(y * 0.62).toFixed(1)}px)`;
-    if (nav && !nav.classList.contains('nav--sticky')) {
+    if (nav && blur && !nav.classList.contains('nav--sticky')) {
       const on = hero ? hero.getBoundingClientRect().top < 90 : y > vh * 0.3;
       nav.classList.toggle('is-scrolled', on);
+      blur.classList.toggle('is-on', on);
     }
     if (hero && !reduce) {
       hero.style.transform = `translateY(${(-y * 0.2).toFixed(1)}px)`;
@@ -48,6 +50,12 @@
     }
   }
   function schedule() { if (!raf) raf = requestAnimationFrame(update); }
+  // Keep the blur strip the same height as the nav.
+  if (nav && blur) {
+    const fit = () => document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(nav); else window.addEventListener('resize', fit);
+  }
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   update();

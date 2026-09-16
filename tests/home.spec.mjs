@@ -31,6 +31,7 @@ test.describe('home', () => {
     expect(await blur.evaluate(el => getComputedStyle(el).backdropFilter)).toMatch(/blur\(0px\)|none/);
     await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.2));
     await expect(nav).toHaveClass(/is-scrolled/);
+    await expect(blur).toHaveClass(/is-on/);
     await expect.poll(() => blur.evaluate(el => getComputedStyle(el).backdropFilter)).toBe('blur(4px)');
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect(nav).not.toHaveClass(/is-scrolled/);
@@ -46,8 +47,13 @@ test.describe('home', () => {
     const opacity = await h1.evaluate(el => parseFloat(el.style.opacity));
     expect(opacity).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);
+    // Bottom to top: nav blur, galaxy, headline, nav links and button.
+    await expect(page.locator('.nav__blur')).toHaveCSS('z-index', '40');
     await expect(galaxy).toHaveCSS('z-index', '60');
-    await expect(page.locator('[data-nav]')).toHaveCSS('z-index', '50');
+    await expect(page.locator('.hero')).toHaveCSS('z-index', '65');
+    await expect(page.locator('[data-nav]')).toHaveCSS('z-index', '70');
+    const navH = await page.locator('[data-nav]').evaluate(el => el.offsetHeight);
+    expect(await page.locator('.nav__blur').evaluate(el => el.offsetHeight)).toBe(navH);
   });
 
   test('belief text unblurs word by word on scroll and the mark rotates', async ({ page }) => {

@@ -66,23 +66,23 @@ img, svg { max-width: 100%; }
 }
 .mono-link:hover { color: #fff; }
 
-/* Nav */
+/* Nav. Stacking order on the home page, bottom to top: nav blur (40), galaxy (60), hero (65), nav (70). */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 50;
+  z-index: 70;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 22px var(--nav-gutter);
   pointer-events: none;
-  isolation: isolate;
 }
 .nav--sticky { position: sticky; padding: 18px var(--nav-gutter); pointer-events: auto; }
 .nav__blur {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h, 80px);
+  z-index: 40;
   pointer-events: none;
   background: transparent;
   -webkit-backdrop-filter: blur(0px);
@@ -91,8 +91,8 @@ img, svg { max-width: 100%; }
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
 }
-.nav--sticky .nav__blur,
-.nav.is-scrolled .nav__blur { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.nav__blur--on,
+.nav__blur.is-on { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .nav__brand {
   pointer-events: auto;
   font-family: var(--head);
@@ -158,7 +158,7 @@ img, svg { max-width: 100%; }
 /* Hero */
 .hero {
   position: relative;
-  z-index: 1;
+  z-index: 65;
   min-height: 100vh;
   display: flex;
   align-items: center;

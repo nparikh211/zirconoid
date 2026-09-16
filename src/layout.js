@@ -4,9 +4,11 @@ import { SITE, STAR } from './site.js';
 export const relRoot = path => '../'.repeat(path.split('/').filter(Boolean).length) || './';
 
 function nav({ rel, current, home }) {
+  // The blur is a sibling below the galaxy layer, so it softens page content but never the galaxy.
+  // The nav itself sits above the galaxy so links and the button always stay readable.
   return `
+<div class="nav__blur${home ? '' : ' nav__blur--on'}" data-nav-blur aria-hidden="true"></div>
 <header class="nav${home ? '' : ' nav--sticky'}" data-nav>
-  <div class="nav__blur" aria-hidden="true"></div>
   <a class="nav__brand" href="${rel}">Zirconoid</a>
   <nav class="nav__links" aria-label="Primary">
     <a class="nav__link" href="${rel}blog/"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a>
