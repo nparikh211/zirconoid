@@ -23,6 +23,8 @@ export const DATASETS = [
     modality: 'Egocentric video, 8 hrs/day per operator, synced task logs',
     operators: 'Motherboard assembly line workers',
     use: 'Long-horizon task understanding, procedure grounding for embodied agents',
+    image: 'assembly-line',
+    imageAlt: 'An operator soldering a wire to one of a batch of circuit boards laid out on a workbench',
   },
   {
     domain: 'Oncology',

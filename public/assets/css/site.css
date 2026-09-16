@@ -215,8 +215,9 @@ img, svg { max-width: 100%; }
   display: grid;
   place-items: center;
 }
-/* Its own stacking context, so the marks' depth order stays below the claim. */
-.trust__ring { position: absolute; inset: 0; z-index: 1; }
+/* Deliberately no z-index: the ring must not open a stacking context, or the marks on the near
+   side of the sphere could never rise above the claim that hangs inside it. */
+.trust__ring { position: absolute; inset: 0; }
 .trust__logo {
   position: absolute;
   top: 50%;
@@ -230,7 +231,7 @@ img, svg { max-width: 100%; }
 }
 .trust__title {
   position: relative;
-  z-index: 2;               /* the marks pass behind the claim, never over it */
+  z-index: 50;              /* the claim hangs mid-sphere; see TITLE_LAYER in site.js */
   margin: 0;
   text-align: center;
   font-family: var(--head);

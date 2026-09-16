@@ -85,7 +85,8 @@
     const TILT = 0.50;      // radians the sphere leans towards the viewer
     const FOCAL = 3.2;      // smaller pulls the perspective harder
     const DIM = 0.18;       // opacity at the very back
-    const LIT = 0.82;       // opacity at the very front, kept under the claim's own weight
+    const LIT = 0.95;       // opacity at the very front
+    const TITLE_LAYER = 50; // must match .trust__title's z-index
 
     // Evenly spaced around the upright axis, at stepped latitudes. A Fibonacci spread suits a
     // crowd, but with five marks its uneven azimuths let two bunch up. These latitudes came from
@@ -109,7 +110,7 @@
       const y = sy * cosT - spun * sinT;
       const z = sy * sinT + spun * cosT;       // -1 at the back, 1 at the front
       const p = FOCAL / (FOCAL - z);           // near marks grow
-      return { x: x * p, y: y * p, p };
+      return { x: x * p, y: y * p, p, z };
     };
 
     // The widest and tallest the sphere ever gets over a full turn, in units of radius.
@@ -138,12 +139,16 @@
       const turn = (ms / PERIOD) * Math.PI * 2;
       const cosA = Math.cos(turn), sinA = Math.sin(turn);
       logos.forEach((el, i) => {
-        const { x, y, p } = project(seeds[i], cosA, sinA);
+        const { x, y, p, z } = project(seeds[i], cosA, sinA);
         const near = (p - FAR_P) / (NEAR_P - FAR_P);
         el.style.transform = `translate3d(${(x * radius).toFixed(1)}px, ${(y * radius).toFixed(1)}px, 0) scale(${p.toFixed(3)})`;
         el.style.opacity = (DIM + (LIT - DIM) * near).toFixed(3);
-        // Where two marks cross, the nearer one covers the farther one, as a sphere would.
-        el.style.zIndex = Math.round(near * 100);
+        // The claim hangs in the middle of the sphere, on TITLE_LAYER. A mark on the near side
+        // passes over the words, one on the far side goes behind them, and among themselves the
+        // nearer always covers the farther.
+        el.style.zIndex = z > 0
+          ? TITLE_LAYER + 1 + Math.round(z * 48)
+          : 1 + Math.round((z + 1) * 48);
       });
     };
 

@@ -34,7 +34,10 @@ public/            copied verbatim into dist/
   assets/fonts/    Montserrat, IBM Plex Sans, JetBrains Mono (variable woff2, latin subsets)
   assets/img/      mark.svg and PNG marks, favicon, Open Graph image
   assets/vendor/   three.js 0.160 (MIT)
+  assets/img/labs/ frontier lab marks, cream silhouettes
+  assets/img/work/ capture stills for the dataset cards
   CNAME            custom domain for GitHub Pages
+media/             full-size photo originals, not published
 src/               page templates, content and the schema.org nodes
 scripts/           build.mjs, robots.mjs, serve.mjs, check.mjs
 tests/             Playwright specs
@@ -68,7 +71,7 @@ The site is built to be read by search engines and by AI answer engines, and to 
 ## Editing content
 
 - Home copy and the three dataset cards: `src/pages/home.js` (`BELIEF`, `DATASETS`).
-- Dataset card stills: give a dataset `image: 'name'` and drop `public/assets/img/work/name.jpg` in place; it replaces the "Coming soon" block. Add `imageAlt` to describe the shot, or it falls back to the card title. Crop about 2:1; the block is 160px tall and covers. Stills are held back to 40% grey on the page and come to full colour when the card is hovered.
+- Dataset card stills: give a dataset `image: 'name'` and drop `public/assets/img/work/name.jpg` in place; it replaces the "Coming soon" block. Add `imageAlt` to describe the shot, or it falls back to the card title. Crop about 2:1; the block is 160px tall and covers. Stills are held back to 40% grey on the page and come to full colour when the card is hovered. Full-size originals live in `media/`, which is outside `public/` so they are never published.
 - Blog posts: add an object to `src/content/posts.json`. Each needs `slug`, `tag`, `date`, `isoDate`, `read`, `title`, `excerpt`, `body` (array of paragraphs). The build writes `/blog/<slug>/index.html` and adds it to the sitemap.
 - FAQ: `FAQ` in `src/pages/home.js`. Keep answers factual; they are what AI assistants will quote.
 - Legal text: `src/pages/legal.js`. Change `EFFECTIVE` and `EFFECTIVE_ISO` when you change the text.

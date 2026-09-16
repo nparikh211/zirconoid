@@ -14,8 +14,18 @@ test.describe('home', () => {
       'Diagnosis pathways and treatment efficacy trends from oncologists',
     ]);
     await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Oncology']);
-    // The media blocks hold no stills yet.
-    await expect(page.locator('.card__media span')).toHaveText(['Coming soon', 'Coming soon', 'Coming soon']);
+    // The assembly-line card carries a capture still; the other two are still waiting on one.
+    await expect(page.locator('.card__media span')).toHaveText(['Coming soon', 'Coming soon']);
+    const shot = page.locator('.card').nth(1).locator('.card__media--shot img');
+    await expect(shot).toHaveAttribute('src', 'assets/img/work/assembly-line.jpg');
+    await expect(shot).toHaveAttribute('alt', /soldering/);
+    await shot.scrollIntoViewIfNeeded();   // it is lazy, so bring it into view before asking
+    await expect.poll(() => shot.evaluate(el => el.naturalWidth), { message: 'the still should decode' }).toBeGreaterThan(0);
+    expect(await shot.evaluate(el => getComputedStyle(el).objectFit)).toBe('cover');
+    // Held back on the page, full colour when the card is hovered.
+    expect(await shot.evaluate(el => getComputedStyle(el).filter)).toMatch(/grayscale/);
+    await page.locator('.card').nth(1).hover();
+    await expect.poll(() => shot.evaluate(el => getComputedStyle(el).filter)).toBe('none');
     await expect(page.locator('body')).not.toContainText('placeholder:');
     await expect(page.locator('.cta .btn--lg')).toHaveText(/Request a sample dataset/);
     await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
@@ -79,9 +89,22 @@ test.describe('home', () => {
         }
       }
 
-      // The claim reads over the top of them.
-      await expect(page.locator('.trust__ring')).toHaveCSS('z-index', '1');
-      await expect(title).toHaveCSS('z-index', '2');
+      // The claim hangs inside the sphere: over a full turn each mark spends time in front of
+      // the words and time behind them, and the ring never traps them in its own layer.
+      await expect(title).toHaveCSS('z-index', '50');
+      await expect(page.locator('.trust__ring')).toHaveCSS('z-index', 'auto');
+      const seen = await page.evaluate(() => new Promise(resolve => {
+        const marks = [...document.querySelectorAll('.trust__logo')];
+        const front = new Set(), back = new Set();
+        const tick = () => {
+          for (const el of marks) (+el.style.zIndex > 50 ? front : back).add(el.alt);
+          if (front.size === marks.length && back.size === marks.length) return resolve({ front: front.size, back: back.size });
+          requestAnimationFrame(tick);
+        };
+        tick();
+        setTimeout(() => resolve({ front: front.size, back: back.size }), 28000);
+      }));
+      expect(seen).toEqual({ front: 5, back: 5 });
 
       // And they travel.
       await page.waitForTimeout(900);
