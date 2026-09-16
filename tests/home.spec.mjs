@@ -1,0 +1,168 @@
+import { test, expect } from '@playwright/test';
+import { watch, open, num, alpha } from './helpers.mjs';
+
+test.describe('home', () => {
+  test('hero copy and structure', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    await expect(page.locator('h1')).toHaveText('Zirconoid is organizing human-captured data for frontier labs');
+    await expect(page.locator('[data-belief] p')).toHaveCount(3);
+    await expect(page.locator('[data-belief] p').first()).toContainText('Zirconoid provides specialized datasets');
+    await expect(page.locator('.card')).toHaveCount(3);
+    await expect(page.locator('.card__title')).toHaveText([
+      'Egocentric video from textile factory floors',
+      '8-hour egocentric days on a motherboard assembly line',
+      'Diagnosis pathways and treatment efficacy trends from oncologists',
+    ]);
+    await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Oncology']);
+    await expect(page.locator('.cta .btn--lg')).toHaveText(/Request a sample dataset/);
+    await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
+    await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Privacy', 'Terms', 'Contact']);
+    // No leftover section labels the brief asked to remove.
+    await expect(page.locator('body')).not.toContainText(/what we believe|how we work/i);
+    for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
+  });
+
+  test('nav blur only appears after the hero scrolls away', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const nav = page.locator('[data-nav]');
+    const blur = page.locator('.nav__blur');
+    await expect(nav).not.toHaveClass(/is-scrolled/);
+    await expect(nav).toHaveCSS('position', 'fixed');
+    expect(await blur.evaluate(el => getComputedStyle(el).backdropFilter)).toMatch(/blur\(0px\)|none/);
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.2));
+    await expect(nav).toHaveClass(/is-scrolled/);
+    await expect.poll(() => blur.evaluate(el => getComputedStyle(el).backdropFilter)).toBe('blur(4px)');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(nav).not.toHaveClass(/is-scrolled/);
+  });
+
+  test('hero and galaxy move at different speeds (parallax)', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const h1 = page.locator('h1');
+    const galaxy = page.locator('[data-galaxy-hero]');
+    await page.evaluate(() => window.scrollTo(0, 400));
+    await expect.poll(async () => num(await h1.evaluate(el => el.style.transform))).toBe(-80);
+    await expect.poll(async () => num(await galaxy.evaluate(el => el.style.transform))).toBe(248);
+    const opacity = await h1.evaluate(el => parseFloat(el.style.opacity));
+    expect(opacity).toBeLessThan(1);
+    expect(opacity).toBeGreaterThan(0);
+    await expect(galaxy).toHaveCSS('z-index', '60');
+    await expect(page.locator('[data-nav]')).toHaveCSS('z-index', '50');
+  });
+
+  test('belief text unblurs word by word on scroll and the mark rotates', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const words = page.locator('[data-belief] [data-w]');
+    expect(await words.count()).toBeGreaterThan(60);
+    // Below the fold: dim and blurred.
+    const first = words.first();
+    await expect.poll(async () => num(await first.evaluate(el => el.style.opacity))).toBeCloseTo(0.14, 2);
+    await expect.poll(async () => num(await first.evaluate(el => el.style.filter))).toBeCloseTo(6.3, 1);
+    // Bring the first line into the focus band at the bottom of the viewport: half way there.
+    const para = page.locator('[data-belief] p').first();
+    await para.evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - (window.innerHeight - 84 - 36)));
+    await expect.poll(async () => num(await first.evaluate(el => el.style.filter))).toBeLessThan(6.3);
+    expect(num(await first.evaluate(el => el.style.filter))).toBeGreaterThan(0);
+    const mid = num(await first.evaluate(el => el.style.opacity));
+    expect(mid).toBeGreaterThan(0.14);
+    expect(mid).toBeLessThan(1);
+    // Lines further down the same paragraph are still fully soft.
+    const lastWord = words.nth(await para.locator('[data-w]').count() - 1);
+    expect(num(await lastWord.evaluate(el => el.style.opacity))).toBeCloseTo(0.14, 2);
+    // Scroll the paragraph to the top of the viewport: sharp and fully visible.
+    await para.evaluate(el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120));
+    await expect.poll(async () => num(await first.evaluate(el => el.style.opacity))).toBe(1);
+    await expect.poll(() => first.evaluate(el => el.style.filter)).toBe('none');
+    const rot = await page.locator('[data-belief-mark]').evaluate(el => el.style.transform);
+    expect(rot).toMatch(/^rotate\(\d+\.\d+deg\)$/);
+    expect(parseFloat(rot.replace('rotate(', ''))).toBeGreaterThan(30);
+  });
+
+  test('sections reveal when scrolled into view and cards keep hover', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const card = page.locator('.card').first();
+    await expect(card).not.toHaveClass(/is-in/);
+    await expect(card).toHaveCSS('opacity', '0');
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toHaveClass(/is-in/);
+    await expect(card).toHaveClass(/is-settled/, { timeout: 15000 });
+    await expect(card).toHaveCSS('opacity', '1');
+    await expect(card).toHaveCSS('transition-duration', '0.45s, 0.55s');
+    await card.hover();
+    await expect.poll(async () => alpha(await card.evaluate(el => getComputedStyle(el).backgroundColor))).toBeGreaterThan(0.02);
+    await expect.poll(() => card.evaluate(el => getComputedStyle(el).transform)).toBe('matrix(1, 0, 0, 1, 0, -6)');
+    await expect.poll(async () => alpha(await card.locator('.card__media').evaluate(el => getComputedStyle(el).borderColor))).toBeCloseTo(0.22, 1);
+  });
+
+  test('buttons lift on hover and the star turns', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const btn = page.locator('header .btn');
+    await expect(btn).toHaveCSS('border-radius', '4px');
+    await expect(btn).toHaveCSS('font-family', /JetBrains Mono/);
+    await btn.hover();
+    await expect.poll(() => btn.evaluate(el => getComputedStyle(el).transform)).toBe('matrix(1, 0, 0, 1, 0, -2)');
+    await expect.poll(() => btn.evaluate(el => getComputedStyle(el).backgroundColor)).toBe('rgb(255, 255, 255)');
+    const cta = page.locator('.cta .btn--lg');
+    await cta.scrollIntoViewIfNeeded();
+    await cta.hover();
+    await expect.poll(() => cta.locator('.btn__star').evaluate(el => getComputedStyle(el).transform)).not.toBe('none');
+  });
+
+  test('footer mark spins only while hovered', async ({ page }) => {
+    await open(page, '/', { galaxy: false });
+    const link = page.locator('.footer__mark a');
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toHaveCSS('animation-play-state', 'paused');
+    await expect(link).toHaveCSS('animation-duration', '14s');
+    await link.hover();
+    await expect(link).toHaveCSS('animation-play-state', 'running');
+    await page.mouse.move(0, 0);
+    await expect(link).toHaveCSS('animation-play-state', 'paused');
+  });
+
+  // 24 frames per galaxy before it shows, and software WebGL on CI runners takes seconds per frame.
+  // The budget also covers browser context setup, which crawls right after a heavy WebGL page closes.
+  test.describe('galaxy', () => {
+    test.describe.configure({ timeout: 240_000 });
+
+    test('galaxy renders in the hero and the footer', async ({ page }) => {
+      const errors = watch(page);
+      await open(page, '/');
+      const gal = page.locator('zirconoid-galaxy');
+      await expect(gal).toHaveCount(2);
+      await expect(gal.first()).toHaveAttribute('mouse', '1');
+      await expect(gal.nth(1)).toHaveAttribute('mouse', '0');
+      await expect(gal.nth(1)).toHaveAttribute('rotation-speed', '0.18');
+      await expect(gal.first().locator('canvas')).toHaveCount(1);
+      await expect(gal.first()).toHaveAttribute('data-ready', '', { timeout: 120000 });
+      await expect.poll(() => gal.first().locator('canvas').evaluate(el => getComputedStyle(el).opacity), { timeout: 60000 }).toBe('1');
+      // The galaxy layer must never catch clicks.
+      await expect(page.locator('[data-galaxy-hero]')).toHaveCSS('pointer-events', 'none');
+      // The footer galaxy only starts rendering once it is near the viewport.
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await expect(gal.nth(1)).toHaveAttribute('data-ready', '', { timeout: 120000 });
+      await expect.poll(() => gal.nth(1).locator('canvas').evaluate(el => getComputedStyle(el).opacity), { timeout: 60000 }).toBe('0.45');
+      expect(errors.filter(e => !/WebGL|GPU|swiftshader/i.test(e))).toEqual([]);
+    });
+
+    test('galaxy code loads three.js from the vendored copy', async ({ page }) => {
+      const urls = [];
+      page.on('request', r => urls.push(r.url()));
+      await open(page, '/');
+      await expect(page.locator('zirconoid-galaxy').first()).toHaveAttribute('data-ready', '', { timeout: 120000 });
+      expect(urls.some(u => u.endsWith('/assets/vendor/three.module.min.js'))).toBe(true);
+      expect(urls.filter(u => /jsdelivr/.test(u))).toEqual([]);
+    });
+  });
+
+  test('reduced motion shows everything at once', async ({ browser }) => {
+    const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await open(page, '/', { galaxy: false });
+    const first = page.locator('[data-belief] [data-w]').first();
+    await expect.poll(async () => num(await first.evaluate(el => el.style.opacity))).toBe(1);
+    await expect(page.locator('.card').first()).toHaveClass(/is-in/);
+    await expect(page.locator('.card').first()).toHaveCSS('opacity', '1');
+    await ctx.close();
+  });
+});

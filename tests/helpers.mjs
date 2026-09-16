@@ -1,0 +1,29 @@
+import { expect } from '@playwright/test';
+
+// Collect console errors and failed requests for the life of a page.
+export function watch(page) {
+  const errors = [];
+  page.on('console', m => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });
+  page.on('pageerror', e => errors.push(`pageerror: ${e.message}`));
+  page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+  return errors;
+}
+
+export const PAGES = ['/', '/blog/', '/blog/announcing-zirconoid/', '/blog/egocentric-capture/', '/blog/operators-by-the-hour/', '/blog/expert-trajectories/', '/privacy/', '/terms/'];
+
+export async function expectNoOverflow(page) {
+  const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
+  expect(sw, 'page should not scroll horizontally').toBeLessThanOrEqual(iw);
+}
+
+// Navigate and turn off smooth scrolling so programmatic scrolls land at once.
+// Tests that only care about layout or CSS can drop the galaxy: software WebGL in headless
+// Chromium is slow enough to starve transitions, and the galaxy has its own tests.
+export async function open(page, path, { galaxy = true } = {}) {
+  if (!galaxy) await page.route('**/assets/js/galaxy.js', r => r.abort());
+  await page.goto(path);
+  await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
+}
+
+export const num = s => parseFloat(String(s).replace(/[^\d.-]/g, ''));
+export const alpha = rgba => { const m = /rgba?\(\s*\d+,\s*\d+,\s*\d+(?:,\s*([\d.]+))?\)/.exec(rgba); return m && m[1] !== undefined ? parseFloat(m[1]) : 1; };

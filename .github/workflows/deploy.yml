@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  CUSTOM_DOMAIN: zirconoid.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check
+      # Creates the Pages site (source: GitHub Actions) if the repo does not have one yet.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      # Workflow deployments ignore the CNAME file, so the custom domain is set through the API.
+      # If the token is not allowed to, the deploy still stands; set the domain under Settings > Pages.
+      - name: Set custom domain
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          current=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.cname // ""')
+          if [ "$current" = "$CUSTOM_DOMAIN" ]; then
+            echo "custom domain already set to $CUSTOM_DOMAIN"
+          else
+            gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" -f cname="$CUSTOM_DOMAIN"
+            echo "custom domain set to $CUSTOM_DOMAIN"
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '{cname, https_enforced, status, protected_domain_state, html_url}'
