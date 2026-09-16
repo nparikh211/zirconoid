@@ -14,6 +14,9 @@ test.describe('home', () => {
       'Diagnosis pathways and treatment efficacy trends from oncologists',
     ]);
     await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Oncology']);
+    // The media blocks hold no stills yet.
+    await expect(page.locator('.card__media span')).toHaveText(['Coming soon', 'Coming soon', 'Coming soon']);
+    await expect(page.locator('body')).not.toContainText('placeholder:');
     await expect(page.locator('.cta .btn--lg')).toHaveText(/Request a sample dataset/);
     await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
     await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Privacy', 'Terms', 'Contact']);

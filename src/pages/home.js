@@ -15,7 +15,6 @@ export const DATASETS = [
     modality: 'Egocentric video + audio',
     operators: 'Textile factory workers, multi-site',
     use: 'Vision-language pretraining, manipulation and defect-recognition policies',
-    placeholder: 'placeholder: egocentric still, loom station',
   },
   {
     domain: 'Electronics assembly',
@@ -24,7 +23,6 @@ export const DATASETS = [
     modality: 'Egocentric video, 8 hrs/day per operator, synced task logs',
     operators: 'Motherboard assembly line workers',
     use: 'Long-horizon task understanding, procedure grounding for embodied agents',
-    placeholder: 'placeholder: egocentric still, assembly line',
   },
   {
     domain: 'Oncology',
@@ -33,14 +31,13 @@ export const DATASETS = [
     modality: 'Structured expert text, decision trajectories',
     operators: 'Board-certified oncologists',
     use: 'Expert trajectories for agent evaluation and RL reward modeling in clinical reasoning',
-    placeholder: 'placeholder: abstract diagram, decision pathway',
   },
 ];
 
 const card = d => `
       <article class="card" data-reveal>
         <span class="card__domain">${esc(d.domain)}</span>
-        <div class="card__media" aria-hidden="true"><span>${esc(d.placeholder)}</span></div>
+        <div class="card__media"><span>Coming soon</span></div>
         <h3 class="card__title">${esc(d.title)}</h3>
         <p class="card__desc">${esc(d.desc)}</p>
         <dl class="card__meta">
