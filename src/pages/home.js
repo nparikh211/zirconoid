@@ -89,7 +89,9 @@ export const FAQ = [
 const card = d => `
       <article class="card" data-reveal>
         <span class="card__domain">${esc(d.domain)}</span>
-        <div class="card__media"><span>Coming soon</span></div>
+        <div class="card__media${d.image ? ' card__media--shot' : ''}">${d.image
+          ? `<img src="assets/img/work/${d.image}.jpg" alt="${esc(d.imageAlt || d.title)}" loading="lazy" decoding="async">`
+          : '<span>Coming soon</span>'}</div>
         <h3 class="card__title">${esc(d.title)}</h3>
         <p class="card__desc">${esc(d.desc)}</p>
         <dl class="card__meta">

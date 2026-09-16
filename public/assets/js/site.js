@@ -76,32 +76,74 @@
     targets.forEach(el => io.observe(el));
   }
 
-  // Trusted-by orbit. The marks run an ellipse around the claim; the lower half of the path
-  // reads as nearer, so a mark grows and brightens as it comes round the front.
+  // Trusted-by sphere. The marks sit on a sphere centred on the claim and the sphere turns,
+  // so each one swings out to the sides and slides back behind the words in between.
   const orbit = document.querySelector('[data-orbit]');
   const logos = orbit ? [...orbit.querySelectorAll('.trust__logo')] : [];
   if (logos.length) {
-    const PERIOD = 30000; // ms for a full turn
-    const NEAR = { scale: 1.12, opacity: 1 };
-    const FAR = { scale: 0.62, opacity: 0.26 };
-    let rx = 0, ry = 0, spinning = false, startedAt = 0, elapsed = 0, raf = 0;
+    const PERIOD = 26000;   // ms for one full turn
+    const TILT = 0.50;      // radians the sphere leans towards the viewer
+    const FOCAL = 3.2;      // smaller pulls the perspective harder
+    const DIM = 0.18;       // opacity at the very back
+    const LIT = 0.82;       // opacity at the very front, kept under the claim's own weight
+
+    // Evenly spaced around the upright axis, at stepped latitudes. A Fibonacci spread suits a
+    // crowd, but with five marks its uneven azimuths let two bunch up. These latitudes came from
+    // searching arrangements for the widest worst-case gap over a full turn.
+    const LATITUDES = [0.66, -0.33, 0, 0.33, -0.66];
+    const seeds = logos.map((_, i) => {
+      const y = LATITUDES[i % LATITUDES.length];
+      const ring = Math.sqrt(1 - y * y);
+      const az = (i / logos.length) * Math.PI * 2;
+      return [Math.cos(az) * ring, y, Math.sin(az) * ring];
+    });
+
+    const cosT = Math.cos(TILT), sinT = Math.sin(TILT);
+    const NEAR_P = FOCAL / (FOCAL - 1), FAR_P = FOCAL / (FOCAL + 1);
+
+    // Spin a seed about the upright axis, lean the sphere towards the viewer, then project.
+    // Returns offsets in units of the sphere radius, plus the perspective factor.
+    const project = ([sx, sy, sz], cosA, sinA) => {
+      const x = sx * cosA + sz * sinA;
+      const spun = sz * cosA - sx * sinA;
+      const y = sy * cosT - spun * sinT;
+      const z = sy * sinT + spun * cosT;       // -1 at the back, 1 at the front
+      const p = FOCAL / (FOCAL - z);           // near marks grow
+      return { x: x * p, y: y * p, p };
+    };
+
+    // The widest and tallest the sphere ever gets over a full turn, in units of radius.
+    // Measuring it beats a worst-case guess, which would leave the sphere far too small.
+    let spanX = 0, spanY = 0;
+    for (let k = 0; k < 180; k++) {
+      const turn = (k / 180) * Math.PI * 2;
+      const cosA = Math.cos(turn), sinA = Math.sin(turn);
+      for (const seed of seeds) {
+        const { x, y } = project(seed, cosA, sinA);
+        spanX = Math.max(spanX, Math.abs(x));
+        spanY = Math.max(spanY, Math.abs(y));
+      }
+    }
+
+    let radius = 0, spinning = false, startedAt = 0, elapsed = 0, raf = 0;
 
     const measure = () => {
-      const stacked = getComputedStyle(orbit).display === 'flex'; // the narrow-screen row
-      if (stacked) { rx = ry = 0; return; }
-      rx = orbit.clientWidth / 2 - 30;
-      ry = orbit.clientHeight / 2 - 24;
+      if (getComputedStyle(orbit).display === 'flex') { radius = 0; return; } // narrow-screen row
+      const pad = (logos[0].clientWidth || 40) * NEAR_P / 2 + 8;   // half a mark at its largest
+      radius = Math.min((orbit.clientWidth / 2 - pad) / spanX, (orbit.clientHeight / 2 - pad) / spanY);
     };
 
     const place = ms => {
-      if (!rx) return;                       // stacked: CSS owns the layout
+      if (!radius) return;                     // stacked: CSS owns the layout
       const turn = (ms / PERIOD) * Math.PI * 2;
+      const cosA = Math.cos(turn), sinA = Math.sin(turn);
       logos.forEach((el, i) => {
-        const a = turn + (i / logos.length) * Math.PI * 2;
-        const near = (Math.sin(a) + 1) / 2;   // 0 at the back, 1 at the front
-        const scale = FAR.scale + (NEAR.scale - FAR.scale) * near;
-        el.style.transform = `translate3d(${(Math.cos(a) * rx).toFixed(1)}px, ${(Math.sin(a) * ry).toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
-        el.style.opacity = (FAR.opacity + (NEAR.opacity - FAR.opacity) * near).toFixed(3);
+        const { x, y, p } = project(seeds[i], cosA, sinA);
+        const near = (p - FAR_P) / (NEAR_P - FAR_P);
+        el.style.transform = `translate3d(${(x * radius).toFixed(1)}px, ${(y * radius).toFixed(1)}px, 0) scale(${p.toFixed(3)})`;
+        el.style.opacity = (DIM + (LIT - DIM) * near).toFixed(3);
+        // Where two marks cross, the nearer one covers the farther one, as a sphere would.
+        el.style.zIndex = Math.round(near * 100);
       });
     };
 
@@ -111,7 +153,7 @@
       raf = requestAnimationFrame(frame);
     };
     const run = () => {
-      if (spinning || reduce || !rx) return;
+      if (spinning || reduce || !radius) return;
       spinning = true;
       startedAt = performance.now();
       raf = requestAnimationFrame(frame);

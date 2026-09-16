@@ -48,20 +48,41 @@ test.describe('home', () => {
       expect(lines).toBeLessThan(1.6);
 
       const before = await boxes();
-      // On an ellipse around the centre, and clear of the claim.
       const o = await page.locator('.trust__orbit').boundingBox();
       const cx = o.x + o.width / 2, cy = o.y + o.height / 2;
+
+      // Every mark stays inside the section, centred on the claim.
       for (const b of before) {
-        const nx = (b.x + b.w / 2 - cx) / (o.width / 2), ny = (b.y + b.h / 2 - cy) / (o.height / 2);
-        expect(Math.hypot(nx, ny), 'each mark rides the ellipse').toBeGreaterThan(0.6);
-        const clash = b.x < t.x + t.width && b.x + b.w > t.x && b.y < t.y + t.height && b.y + b.h > t.y;
-        expect(clash, 'a mark should not sit on the claim').toBe(false);
+        expect(b.x).toBeGreaterThanOrEqual(o.x - 1);
+        expect(b.x + b.w).toBeLessThanOrEqual(o.x + o.width + 1);
+        expect(b.y).toBeGreaterThanOrEqual(o.y - 1);
+        expect(b.y + b.h).toBeLessThanOrEqual(o.y + o.height + 1);
       }
-      // Depth: the near marks are bigger and brighter than the far ones.
+      // A sphere, not a ring: the marks sit at a spread of distances from the centre,
+      // because the ones near the poles project inwards.
+      const reach = before.map(b => Math.hypot(b.x + b.w / 2 - cx, b.y + b.h / 2 - cy));
+      expect(Math.max(...reach) - Math.min(...reach), 'depths should vary, not ride one ring').toBeGreaterThan(30);
+
+      // Depth also reads as size and brightness.
       const sizes = before.map(b => b.w);
       expect(Math.max(...sizes) - Math.min(...sizes)).toBeGreaterThan(8);
       const fades = await logos.evaluateAll(els => els.map(e => parseFloat(getComputedStyle(e).opacity)));
       expect(Math.max(...fades) - Math.min(...fades)).toBeGreaterThan(0.3);
+
+      // No two marks pile up on each other.
+      for (let i = 0; i < before.length; i++) {
+        for (let j = i + 1; j < before.length; j++) {
+          const gap = Math.hypot(
+            (before[i].x + before[i].w / 2) - (before[j].x + before[j].w / 2),
+            (before[i].y + before[i].h / 2) - (before[j].y + before[j].h / 2));
+          expect(gap, 'two marks should not sit on top of each other').toBeGreaterThan(20);
+        }
+      }
+
+      // The claim reads over the top of them.
+      await expect(page.locator('.trust__ring')).toHaveCSS('z-index', '1');
+      await expect(title).toHaveCSS('z-index', '2');
+
       // And they travel.
       await page.waitForTimeout(900);
       const after = await boxes();
