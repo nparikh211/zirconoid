@@ -1,4 +1,11 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { SITE, STAR } from './site.js';
+
+// Short content hash per asset, appended as ?v=, so a CDN can never pair new HTML with a stale file.
+const hash = file => createHash('sha256').update(readFileSync(new URL(`../public/${file}`, import.meta.url))).digest('hex').slice(0, 10);
+export const ASSET_V = Object.fromEntries(['assets/css/fonts.css', 'assets/css/site.css', 'assets/js/site.js', 'assets/js/galaxy.js'].map(f => [f, hash(f)]));
+const v = file => `${file}?v=${ASSET_V[file]}`;
 
 // Relative prefix from a page path back to the site root, so pages work at any base URL.
 export const relRoot = path => '../'.repeat(path.split('/').filter(Boolean).length) || './';
@@ -111,8 +118,8 @@ export function layout({ path, title, description, body, home = false, current =
 <link rel="preload" href="${rel}assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${rel}assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${rel}assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${rel}assets/css/fonts.css">
-<link rel="stylesheet" href="${rel}assets/css/site.css">
+<link rel="stylesheet" href="${rel}${v('assets/css/fonts.css')}">
+<link rel="stylesheet" href="${rel}${v('assets/css/site.css')}">
 <script>document.documentElement.classList.add('js')</script>${jsonLd ? `\n<script type="application/ld+json">${jsonLd}</script>` : ''}
 </head>
 <body>
@@ -121,7 +128,7 @@ ${nav({ rel, current, home })}
 ${body}
 ${home ? homeFooter({ rel }) : simpleFooter({ rel, current })}
 </div>
-<script src="${rel}assets/js/site.js" defer></script>${home ? `\n<script type="module" src="${rel}assets/js/galaxy.js"></script>` : ''}
+<script src="${rel}${v('assets/js/site.js')}" defer></script>${home ? `\n<script type="module" src="${rel}${v('assets/js/galaxy.js')}"></script>` : ''}
 </body>
 </html>
 `;

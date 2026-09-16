@@ -78,7 +78,7 @@ export function render() {
   <div class="belief__inner">
     <span class="belief__mark-wrap" tabindex="0" aria-label="Zirconoid mark" aria-describedby="zr-definition-top">
       <img class="belief__mark" src="assets/img/mark.svg" alt="" width="64" height="64" data-belief-mark>
-      ${definitionBubble('zr-definition-top', 'left')}
+      ${definitionBubble('zr-definition-top', 'right')}
     </span>
     <div class="belief__text" data-belief>
 ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}

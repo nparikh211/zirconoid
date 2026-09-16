@@ -319,8 +319,23 @@ img, svg { max-width: 100%; }
 }
 .def--center { left: 50%; transform: translate(-50%, 8px) scale(.98); transform-origin: 50% 100%; }
 .def--center::after { left: 50%; }
-.def--left { left: 0; width: min(440px, calc(100vw - var(--gutter) - 16px)); transform: translateY(8px) scale(.98); transform-origin: 32px 100%; }
-.def--left::after { left: 32px; }
+.def--right {
+  left: calc(100% + 22px);
+  top: 50%;
+  bottom: auto;
+  width: min(440px, calc(100vw - 2 * var(--gutter) - 64px - 22px));
+  transform: translateY(-50%) translateX(-8px) scale(.98);
+  transform-origin: 0 50%;
+}
+.def--right::after {
+  top: 50%;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 1px solid rgba(255, 255, 255, .12);
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  transform: rotate(-45deg);
+}
 .footer__mark a:hover + .def,
 .footer__mark a:focus-visible + .def,
 .belief__mark-wrap:hover .def,
@@ -329,7 +344,7 @@ img, svg { max-width: 100%; }
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
 .footer__mark a:hover + .def--center, .footer__mark a:focus-visible + .def--center { transform: translate(-50%, 0) scale(1); }
-.belief__mark-wrap:hover .def--left, .belief__mark-wrap:focus-visible .def--left { transform: translateY(0) scale(1); }
+.belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right { transform: translateY(-50%) translateX(0) scale(1); }
 .def p { margin: 0; }
 .def__head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
 .def__head strong { font-weight: 600; }
@@ -453,6 +468,9 @@ img, svg { max-width: 100%; }
   .work__grid { gap: 0; }
   .post-list__item { grid-template-columns: 1fr; }
   .post-list__read { display: none; }
+  .def--right { left: 0; top: auto; bottom: calc(100% + 18px); width: min(440px, calc(100vw - var(--gutter) - 16px)); transform: translateY(8px) scale(.98); transform-origin: 32px 100%; }
+  .def--right::after { top: 100%; left: 32px; border-left: 0; border-top: 0; border-right: 1px solid rgba(255, 255, 255, .12); border-bottom: 1px solid rgba(255, 255, 255, .12); transform: rotate(45deg); }
+  .belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right { transform: translateY(0) scale(1); }
 }
 
 /* Reduced motion */

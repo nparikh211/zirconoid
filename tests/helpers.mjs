@@ -20,7 +20,7 @@ export async function expectNoOverflow(page) {
 // Tests that only care about layout or CSS can drop the galaxy: software WebGL in headless
 // Chromium is slow enough to starve transitions, and the galaxy has its own tests.
 export async function open(page, path, { galaxy = true } = {}) {
-  if (!galaxy) await page.route('**/assets/js/galaxy.js', r => r.abort());
+  if (!galaxy) await page.route('**/assets/js/galaxy.js*', r => r.abort());
   await page.goto(path);
   await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
 }

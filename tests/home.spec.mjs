@@ -157,9 +157,15 @@ test.describe('home', () => {
     await wrap.hover();
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
     await expect(def).toContainText('ditetragonal dipyramid');
-    // Left-aligned to the mark, and fully inside the viewport.
+    // To the right of the mark on desktop, above it on phones; always inside the viewport.
     const [w, d] = await Promise.all([wrap.boundingBox(), def.boundingBox()]);
-    expect(Math.round(d.x)).toBe(Math.round(w.x));
+    if (page.viewportSize().width > 640) {
+      expect(d.x).toBeGreaterThan(w.x + w.width);
+      expect(Math.abs((d.y + d.height / 2) - (w.y + w.height / 2))).toBeLessThan(2);
+    } else {
+      expect(Math.round(d.x)).toBe(Math.round(w.x));
+      expect(d.y + d.height).toBeLessThan(w.y);
+    }
     expect(d.x + d.width).toBeLessThanOrEqual(page.viewportSize().width);
     expect(d.y).toBeGreaterThanOrEqual(0);
     // Hover does not spin this mark; its rotation follows scroll only.

@@ -5,7 +5,15 @@ export const SITE = {
   domain: 'zirconoid.com',
   origin: 'https://zirconoid.com',
   email: 'data@zirconoid.com',
-  sampleMailto: 'mailto:data@zirconoid.com?subject=Sample%20dataset%20request',
+  sampleMailto: 'mailto:data@zirconoid.com?subject=Sample%20dataset%20request&body=' + encodeURIComponent([
+    'Hi Zirconoid team,',
+    '',
+    "I'd like to request some sample data with the following specs: [please enter info here]",
+    '',
+    '[Please share a few times that you are available for a call to discuss your requirements].',
+    '',
+    '- [Your Name]',
+  ].join('\r\n')),
   copyright: '© 2026 Zirconoid. Worldwide.',
   description: 'Zirconoid recruits operators and collects human-captured datasets for the data companies that supply frontier AI labs.',
 };

@@ -9,7 +9,12 @@ for (const path of PAGES) {
     await expect(page).toHaveTitle(/Zirconoid/);
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('.nav__brand')).toHaveText('Zirconoid');
-    await expect(page.locator('header .btn')).toHaveAttribute('href', /mailto:data@zirconoid\.com\?subject=Sample%20dataset%20request/);
+    await expect(page.locator('header .btn')).toHaveAttribute('href', /mailto:data@zirconoid\.com\?subject=Sample%20dataset%20request&body=/);
+    const body = decodeURIComponent((await page.locator('header .btn').getAttribute('href')).split('&body=')[1]);
+    expect(body).toBe("Hi Zirconoid team,\r\n\r\nI'd like to request some sample data with the following specs: [please enter info here]\r\n\r\n[Please share a few times that you are available for a call to discuss your requirements].\r\n\r\n- [Your Name]");
+    // Versioned asset URLs, so a CDN cannot pair this HTML with stale CSS or JS.
+    for (const href of await page.locator('link[rel="stylesheet"]').evaluateAll(els => els.map(e => e.getAttribute('href')))) expect(href).toMatch(/\?v=[0-9a-f]{10}$/);
+    for (const src of await page.locator('script[src]').evaluateAll(els => els.map(e => e.getAttribute('src')))) expect(src).toMatch(/\?v=[0-9a-f]{10}$/);
     await expect(page.locator('header .btn .btn__star')).toHaveCount(1);
     await expect(page.locator('footer')).toContainText('© 2026 Zirconoid. Worldwide.');
     await expectNoOverflow(page);
