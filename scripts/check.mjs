@@ -24,8 +24,19 @@ for (const file of htmlFiles) {
     if (clean.endsWith('/')) target = join(target, 'index.html');
     if (!existsSync(target)) errors.push(`${rel}: broken link ${url}`);
   }
+  // Structured data must parse and name a type on every page.
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try {
+      const data = JSON.parse(m[1]);
+      const nodes = data['@graph'] || [data];
+      if (!nodes.length || nodes.some(n => !n['@type'])) errors.push(`${rel}: JSON-LD node without @type`);
+    } catch (e) { errors.push(`${rel}: JSON-LD does not parse (${e.message})`); }
+  }
+  if (!/ld\+json/.test(html) && !rel.includes('404')) errors.push(`${rel}: no structured data`);
+  if (!/<meta name="robots"/.test(html)) errors.push(`${rel}: missing robots meta`);
 }
-for (const f of ['CNAME', 'sitemap.xml', 'robots.txt', '404.html', '.nojekyll']) if (!existsSync(join(DIST, f))) errors.push(`missing ${f}`);
+
+for (const f of ['CNAME', 'sitemap.xml', 'robots.txt', 'feed.xml', 'llms.txt', 'llms-full.txt', '404.html', '.nojekyll']) if (!existsSync(join(DIST, f))) errors.push(`missing ${f}`);
 
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
 console.log(`checked ${htmlFiles.length} pages: ok`);

@@ -250,6 +250,23 @@ img, svg { max-width: 100%; }
 .card__meta dt { color: var(--faint); }
 .card__meta dd { margin: 0; color: var(--ink); }
 
+/* FAQ */
+.faq { padding: 0 var(--gutter) 140px; }
+.faq__head { padding-bottom: 36px; border-bottom: 1px solid var(--rule); }
+.faq__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0 64px; }
+.faq__item { padding: 30px 0; border-bottom: 1px solid var(--rule); }
+.faq__q {
+  margin: 0 0 12px;
+  font-family: var(--head);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.faq__a { margin: 0; font-size: 15px; line-height: 1.7; font-weight: 300; color: var(--muted); text-wrap: pretty; }
+
 /* CTA */
 .cta { padding: 0 var(--gutter) 40px; }
 .cta__inner {

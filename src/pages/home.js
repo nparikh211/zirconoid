@@ -1,4 +1,4 @@
-import { SITE, STAR, esc } from '../site.js';
+import { SITE, STAR, esc, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID } from '../site.js';
 import { layout, definitionBubble } from '../layout.js';
 
 export const BELIEF = [
@@ -34,6 +34,45 @@ export const DATASETS = [
   },
 ];
 
+export const FAQ = [
+  {
+    q: 'What does Zirconoid do?',
+    a: 'Zirconoid is a talent engine for operator data. We recruit the people who do real work and we capture what they do, then deliver those datasets to the data companies that supply frontier AI labs. Operators join by the hour for capture scenarios, or on contract and full-time.',
+  },
+  {
+    q: 'Who does Zirconoid work with?',
+    a: 'Data companies and research organizations that supply frontier AI labs. We sit upstream of them: we find the operators and run the capture, they deliver to the labs. Engagements run under a signed statement of work, license, or master services agreement.',
+  },
+  {
+    q: 'What is egocentric data?',
+    a: "Egocentric data is video recorded from the operator's own point of view, usually with a head-mounted camera. It shows where the hands go, where the eyes go, and what the environment looks like at the moment a decision is made, which is difficult to reproduce any other way.",
+  },
+  {
+    q: 'What kinds of datasets does Zirconoid collect?',
+    a: 'Three programs are running now: egocentric video from textile factory floors, full 8-hour egocentric shifts on motherboard assembly lines, and structured diagnosis pathways and treatment efficacy trends from practicing oncologists. We take on new domains wherever humans still outperform models.',
+  },
+  {
+    q: 'Why is human-collected data hard to replace with synthetic data?',
+    a: 'Engineering systems that solve technical problems get commoditized. Fresh human-collected and operator-collected data does not, because it is specific to the person, the place, and the task. A real operator performs the version of a task that works on this machine, with this material, on this shift, and those deviations are the signal.',
+  },
+  {
+    q: 'How does Zirconoid recruit and vet operators?',
+    a: 'We source through direct relationships with employers, referrals from operators already in our network, and open recruiting in regions where an industry is concentrated. Vetting is practical for floor work: operators perform a short segment of the task on camera and a domain reviewer confirms the technique. Expert programs verify credentials such as board certification.',
+  },
+  {
+    q: 'How are operators paid?',
+    a: 'Operators are paid hourly for capture sessions, with a premium for full-shift recordings and for wearing equipment. Contract and full-time arrangements are available for programs that run for months.',
+  },
+  {
+    q: 'How do I request a sample dataset?',
+    a: `Email ${SITE.email} with the domain, modality, and volume you need. We return a scoped sample and a capture plan. Sample datasets are confidential and licensed for internal evaluation only.`,
+  },
+  {
+    q: 'Where does Zirconoid operate?',
+    a: 'Worldwide. We recruit talent globally and run capture wherever the ground truth lives, from factory floors and assembly lines to clinics and workshops.',
+  },
+];
+
 const card = d => `
       <article class="card" data-reveal>
         <span class="card__domain">${esc(d.domain)}</span>
@@ -48,16 +87,60 @@ const card = d => `
       </article>`;
 
 export function render() {
-  const jsonLd = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE.name,
-    legalName: SITE.legalName,
-    url: SITE.origin,
-    logo: `${SITE.origin}/assets/img/icon-512.png`,
-    email: SITE.email,
-    description: SITE.description,
-  });
+  const jsonLd = [
+    ORGANIZATION,
+    WEBSITE,
+    {
+      '@type': 'WebPage',
+      '@id': `${SITE.origin}/#webpage`,
+      url: SITE.origin + '/',
+      name: 'Zirconoid — Human data for frontier training',
+      description: SITE.description,
+      isPartOf: { '@id': SITE_ID },
+      about: { '@id': ORG_ID },
+      inLanguage: 'en',
+      dateModified: SITE.updated,
+      primaryImageOfPage: `${SITE.origin}/assets/img/og.jpg`,
+    },
+    {
+      '@type': 'Service',
+      '@id': `${SITE.origin}/#service`,
+      name: 'Operator data collection and recruiting',
+      serviceType: 'AI training data collection',
+      provider: { '@id': ORG_ID },
+      areaServed: SITE.areaServed,
+      audience: { '@type': 'BusinessAudience', name: 'Data companies supplying frontier AI labs' },
+      description: 'Zirconoid recruits operators and domain experts and collects specialized datasets, including egocentric video and expert reasoning trajectories, for the data companies that supply frontier AI labs.',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Dataset programs',
+        itemListElement: DATASETS.map(d => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Dataset',
+            name: d.title,
+            description: d.desc,
+            creator: { '@id': ORG_ID },
+            variableMeasured: d.modality,
+            about: d.domain,
+            keywords: [d.domain, d.modality, d.operators].join(', '),
+            isAccessibleForFree: false,
+            license: `${SITE.origin}/terms/`,
+          },
+        })),
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${SITE.origin}/#faq`,
+      isPartOf: { '@id': SITE_ID },
+      mainEntity: FAQ.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ];
 
   const body = `
 <div class="galaxy-hero" data-galaxy-hero aria-hidden="true">
@@ -91,6 +174,19 @@ ${BELIEF.map(t => `      <p>${esc(t)}</p>`).join('\n')}
     </div>
   </div>
   <div class="work__grid">${DATASETS.map(card).join('')}
+  </div>
+</section>
+
+<section class="faq" aria-labelledby="faq-title">
+  <div class="faq__head" data-reveal>
+    <p class="eyebrow">Questions</p>
+    <h2 class="h2" id="faq-title">What people ask us</h2>
+  </div>
+  <div class="faq__grid">
+${FAQ.map(f => `    <div class="faq__item" data-reveal>
+      <h3 class="faq__q">${esc(f.q)}</h3>
+      <p class="faq__a">${esc(f.a)}</p>
+    </div>`).join('\n')}
   </div>
 </section>
 

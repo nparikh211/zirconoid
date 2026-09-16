@@ -1,4 +1,4 @@
-import { SITE } from '../site.js';
+import { SITE, ORGANIZATION, ORG_ID, SITE_ID, WEBSITE, breadcrumbs } from '../site.js';
 import { layout } from '../layout.js';
 
 const EFFECTIVE = 'Effective September 15, 2026';
@@ -7,6 +7,8 @@ const section = (h, ...ps) => `
       <section>${h ? `\n        <h2>${h}</h2>` : ''}
 ${ps.map(p => `        <p>${p}</p>`).join('\n')}
       </section>`;
+
+export const EFFECTIVE_ISO = '2026-09-15';
 
 function legalPage({ path, title, description, current, intro, sections }) {
   const body = `
@@ -19,11 +21,28 @@ function legalPage({ path, title, description, current, intro, sections }) {
     </div>
   </div>
 </main>`;
-  return layout({ path, title: `${title} — Zirconoid`, description, body, current });
+  const jsonLd = [
+    ORGANIZATION,
+    WEBSITE,
+    {
+      '@type': 'WebPage',
+      '@id': `${SITE.origin}${path}#webpage`,
+      url: SITE.origin + path,
+      name: title,
+      description,
+      inLanguage: 'en',
+      isPartOf: { '@id': SITE_ID },
+      about: { '@id': ORG_ID },
+      publisher: { '@id': ORG_ID },
+      datePublished: EFFECTIVE_ISO,
+      dateModified: EFFECTIVE_ISO,
+    },
+    breadcrumbs([{ name: 'Home', path: '/' }, { name: title, path }]),
+  ];
+  return layout({ path, title: `${title} — Zirconoid`, description, body, current, jsonLd, modified: EFFECTIVE_ISO });
 }
 
-export function renderPrivacy() {
-  return legalPage({
+export const PRIVACY = {
     path: '/privacy/',
     title: 'Privacy Policy',
     description: 'How Zirconoid Inc. collects, uses, and shares personal information.',
@@ -52,12 +71,12 @@ export function renderPrivacy() {
         'We may update this Policy from time to time. We will post the revised version here with a new effective date. Material changes will be communicated where required by law.'],
       ['10. Contact',
         `Zirconoid Inc.<br>Privacy inquiries: <a href="mailto:${SITE.email}">${SITE.email}</a>`],
-    ],
-  });
-}
+  ],
+};
 
-export function renderTerms() {
-  return legalPage({
+export function renderPrivacy() { return legalPage(PRIVACY); }
+
+export const TERMS = {
     path: '/terms/',
     title: 'Terms of Service',
     description: 'Terms governing use of zirconoid.com and related services provided by Zirconoid Inc.',
@@ -92,6 +111,7 @@ export function renderTerms() {
         'These Terms, together with our <a href="../privacy/">Privacy Policy</a>, are the entire agreement between you and Zirconoid Inc. regarding the site. If any provision is found unenforceable, the remainder stays in effect. Our failure to enforce a provision is not a waiver. You may not assign these Terms without our consent; we may assign them freely.'],
       ['14. Contact',
         `Zirconoid Inc.<br><a href="mailto:${SITE.email}">${SITE.email}</a>`],
-    ],
-  });
-}
+  ],
+};
+
+export function renderTerms() { return legalPage(TERMS); }

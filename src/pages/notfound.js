@@ -12,5 +12,5 @@ export function render() {
   </div>
 </main>`;
   // The 404 page is served for any unknown URL, so its links must be absolute.
-  return layout({ path: '/404.html', title: 'Page not found — Zirconoid', description: 'The page you asked for does not exist.', body, rel: '/' });
+  return layout({ path: '/404.html', title: 'Page not found — Zirconoid', description: 'The page you asked for does not exist.', body, rel: '/', robots: 'noindex,follow' });
 }

@@ -90,10 +90,20 @@ export function simpleFooter({ rel, current }) {
  * @param {string} [o.current]   which nav item is current
  * @param {string} [o.jsonLd]    optional JSON-LD block
  * @param {string} [o.ogType]
+ * @param {string} [o.robots]    robots directives; pass "noindex,follow" to keep a page out of search
+ * @param {string} [o.published] ISO date for article metadata
+ * @param {string} [o.modified]  ISO date of the last meaningful edit
  * @param {string} [o.rel]       prefix for asset and nav links; defaults to a relative path back to the root
  */
-export function layout({ path, title, description, body, home = false, current = '', jsonLd = '', ogType = 'website', rel = relRoot(path) }) {
+export function layout({
+  path, title, description, body,
+  home = false, current = '', jsonLd = '', ogType = 'website', rel = relRoot(path),
+  robots = 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
+  published = '', modified = SITE.updated, extraHead = '',
+}) {
   const canonical = SITE.origin + path;
+  // Several nodes per page go in one @graph so they can reference each other by @id.
+  const ld = Array.isArray(jsonLd) ? JSON.stringify({ '@context': 'https://schema.org', '@graph': jsonLd }) : jsonLd;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,7 +112,10 @@ export function layout({ path, title, description, body, home = false, current =
 <title>${title}</title>
 <meta name="description" content="${description}">
 <link rel="canonical" href="${canonical}">
+<meta name="robots" content="${robots}">
+<meta name="googlebot" content="${robots}">
 <meta name="theme-color" content="#141414">
+<meta name="author" content="${SITE.legalName}">
 <meta property="og:site_name" content="${SITE.name}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${title}">
@@ -111,16 +124,23 @@ export function layout({ path, title, description, body, home = false, current =
 <meta property="og:image" content="${SITE.origin}/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Zirconoid mark">
+<meta property="og:locale" content="en_US">${published ? `\n<meta property="article:published_time" content="${published}">\n<meta property="article:modified_time" content="${modified}">\n<meta property="article:publisher" content="${SITE.origin}/">` : ''}
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${description}">
+<meta name="twitter:image" content="${SITE.origin}/assets/img/og.jpg">
 <link rel="icon" href="${rel}assets/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="${rel}assets/img/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="${rel}assets/img/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Zirconoid blog" href="${SITE.origin}/feed.xml">
+<link rel="sitemap" type="application/xml" href="${SITE.origin}/sitemap.xml">
 <link rel="preload" href="${rel}assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${rel}assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${rel}assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${rel}${v('assets/css/fonts.css')}">
 <link rel="stylesheet" href="${rel}${v('assets/css/site.css')}">
-<script>document.documentElement.classList.add('js')</script>${jsonLd ? `\n<script type="application/ld+json">${jsonLd}</script>` : ''}
+<script>document.documentElement.classList.add('js')</script>${ld ? `\n<script type="application/ld+json">${ld}</script>` : ''}${extraHead}
 </head>
 <body>
 <div class="site${home ? '' : ' site--column'}">

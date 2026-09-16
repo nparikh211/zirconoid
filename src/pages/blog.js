@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { SITE, esc } from '../site.js';
+import { SITE, esc, plain, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID, breadcrumbs } from '../site.js';
 import { layout } from '../layout.js';
 
 export const POSTS = JSON.parse(readFileSync(new URL('../content/posts.json', import.meta.url), 'utf8'));
@@ -32,26 +32,67 @@ export function renderIndex() {
 (function () { var s = location.hash.replace('#', ''); if (s && /^[a-z0-9-]+$/.test(s)) location.replace(s + '/'); })();
 </script>`;
 
+  const jsonLd = [
+    ORGANIZATION,
+    WEBSITE,
+    {
+      '@type': 'Blog',
+      '@id': `${SITE.origin}/blog/#blog`,
+      url: `${SITE.origin}/blog/`,
+      name: 'Zirconoid blog',
+      description: 'Notes on capture, operators, and ground truth from Zirconoid.',
+      inLanguage: 'en',
+      publisher: { '@id': ORG_ID },
+      isPartOf: { '@id': SITE_ID },
+      blogPost: POSTS.map(p => ({
+        '@type': 'BlogPosting',
+        '@id': `${SITE.origin}/blog/${p.slug}/#article`,
+        headline: p.title,
+        description: p.excerpt,
+        datePublished: p.isoDate,
+        url: `${SITE.origin}/blog/${p.slug}/`,
+        author: { '@id': ORG_ID },
+      })),
+    },
+    breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }]),
+  ];
+
   return layout({
     path: '/blog/',
     title: 'Blog — Zirconoid',
     description: 'Notes on capture, operators, and ground truth from Zirconoid.',
     body,
     current: 'blog',
+    jsonLd,
+    modified: POSTS.map(p => p.isoDate).sort().pop(),
   });
 }
 
 export function renderPost(p) {
-  const jsonLd = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: p.title,
-    description: p.excerpt,
-    datePublished: p.isoDate,
-    author: { '@type': 'Organization', name: SITE.name },
-    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
-    mainEntityOfPage: `${SITE.origin}/blog/${p.slug}/`,
-  });
+  const url = `${SITE.origin}/blog/${p.slug}/`;
+  const jsonLd = [
+    ORGANIZATION,
+    {
+      '@type': 'BlogPosting',
+      '@id': `${url}#article`,
+      headline: p.title,
+      name: p.title,
+      description: p.excerpt,
+      articleBody: p.body.map(plain).join('\n\n'),
+      wordCount: p.body.join(' ').split(/\s+/).length,
+      datePublished: p.isoDate,
+      dateModified: p.isoDate,
+      articleSection: p.tag,
+      keywords: SITE.topics.join(', '),
+      inLanguage: 'en',
+      author: { '@id': ORG_ID },
+      publisher: { '@id': ORG_ID },
+      image: `${SITE.origin}/assets/img/og.jpg`,
+      isPartOf: { '@id': `${SITE.origin}/blog/#blog` },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    },
+    breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }, { name: p.title, path: `/blog/${p.slug}/` }]),
+  ];
 
   const body = `
 <main class="page">
@@ -77,5 +118,7 @@ ${p.body.map(t => `      <p>${linkify(t)}</p>`).join('\n')}
     current: 'blog',
     jsonLd,
     ogType: 'article',
+    published: p.isoDate,
+    modified: p.isoDate,
   });
 }

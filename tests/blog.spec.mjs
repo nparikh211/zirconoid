@@ -38,8 +38,8 @@ test('old hash links redirect to the post page', async ({ page }) => {
 
 test('post pages carry article metadata', async ({ page }) => {
   await page.goto('/blog/announcing-zirconoid/');
-  const ld = await page.locator('script[type="application/ld+json"]').textContent();
-  expect(JSON.parse(ld)).toMatchObject({ '@type': 'BlogPosting', headline: 'Announcing Zirconoid', datePublished: '2026-09-15' });
+  const nodes = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent())['@graph'];
+  expect(nodes.find(n => n['@type'] === 'BlogPosting')).toMatchObject({ headline: 'Announcing Zirconoid', datePublished: '2026-09-15' });
   await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://zirconoid.com/blog/announcing-zirconoid/');
 });

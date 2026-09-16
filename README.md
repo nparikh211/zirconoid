@@ -35,8 +35,8 @@ public/            copied verbatim into dist/
   assets/img/      mark.svg and PNG marks, favicon, Open Graph image
   assets/vendor/   three.js 0.160 (MIT)
   CNAME            custom domain for GitHub Pages
-src/               page templates and content
-scripts/           build.mjs, serve.mjs, check.mjs
+src/               page templates, content and the schema.org nodes
+scripts/           build.mjs, robots.mjs, serve.mjs, check.mjs
 tests/             Playwright specs
 ```
 
@@ -52,11 +52,23 @@ All of it lives in `public/assets/js/site.js` and `public/assets/css/site.css`.
 
 `prefers-reduced-motion` turns all of it off: text is sharp, reveals are instant, the galaxy stands still.
 
+## Search and answer engines
+
+The site is built to be read by search engines and by AI answer engines, and to be quotable by both.
+
+- **Structured data.** Every page ships one JSON-LD `@graph` whose nodes reference each other by `@id`: `Organization` and `WebSite` everywhere, plus `WebPage`, `Service` (with a `Dataset` offer per program) and `FAQPage` on the home page, `Blog` on the index, `BlogPosting` with the full `articleBody` on each post, and a `BreadcrumbList` on every sub page. `npm run check` fails the build if any of it stops parsing.
+- **FAQ.** The home page answers nine common questions in plain text. Every question and answer in the `FAQPage` schema is also visible on the page, which is what answer engines reward; a test asserts the two never drift apart. Edit them in `FAQ` in `src/pages/home.js`.
+- **robots.txt.** Written by `scripts/robots.mjs`. It allows everything and then names the search, training and assistant crawlers one by one (Googlebot, GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, CCBot, meta-externalagent and the rest) so the intent is unambiguous. Add or remove names in `ALLOWED_BOTS`.
+- **llms.txt and llms-full.txt.** `/llms.txt` follows [llmstxt.org](https://llmstxt.org): a short map of the site with a one-line summary of every page. `/llms-full.txt` is the whole site as plain text, so a model can read everything in one fetch. Both are generated from the same content as the pages, so they cannot fall out of date.
+- **Feeds and sitemap.** `/feed.xml` carries every post in full. `/sitemap.xml` uses real per-page dates: post dates for posts, `EFFECTIVE_ISO` for the legal pages, `SITE.updated` for the home page. Bump `SITE.updated` in `src/site.js` when the home or legal wording changes.
+- **Per-page meta.** Canonical URL, `robots` with `max-snippet:-1` and `max-image-preview:large`, Open Graph, Twitter cards, `article:published_time` on posts. The 404 page is `noindex,follow`.
+
 ## Editing content
 
 - Home copy and the three dataset cards: `src/pages/home.js` (`BELIEF`, `DATASETS`).
 - Blog posts: add an object to `src/content/posts.json`. Each needs `slug`, `tag`, `date`, `isoDate`, `read`, `title`, `excerpt`, `body` (array of paragraphs). The build writes `/blog/<slug>/index.html` and adds it to the sitemap.
-- Legal text: `src/pages/legal.js`. Change `EFFECTIVE` when you change the text.
+- FAQ: `FAQ` in `src/pages/home.js`. Keep answers factual; they are what AI assistants will quote.
+- Legal text: `src/pages/legal.js`. Change `EFFECTIVE` and `EFFECTIVE_ISO` when you change the text.
 - Dataset card images: the cards use a striped placeholder box (`.card__media`). Swap in an `<img>` there when stills are ready.
 
 ## Deploying
@@ -64,5 +76,7 @@ All of it lives in `public/assets/js/site.js` and `public/assets/css/site.css`.
 See [docs/DEPLOY.md](docs/DEPLOY.md). Pushing to `main` builds and publishes the site through GitHub Pages.
 
 ## Tests
+
+`tests/seo.spec.mjs` covers the search metadata: structured data on every page, the FAQ schema matching the visible text, robots.txt naming the AI crawlers, the sitemap dates, the RSS feed and both llms files.
 
 `tests/` covers every page on desktop and mobile Chromium: page load with no console errors or failed requests, nav blur toggling, parallax offsets, word-by-word reveal, card and button hover states, footer mark spin, galaxy rendering (hero and footer) from the vendored three.js, blog routing including old `#slug` links, legal page sections, the 404 page, sitemap, robots and CNAME. `npm run check` is a fast static pass over `dist/` for broken links and missing metadata.
