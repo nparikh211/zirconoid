@@ -189,7 +189,7 @@ img, svg { max-width: 100%; }
 
 /* Belief */
 .belief { position: relative; z-index: 2; padding: 60px var(--gutter) 160px; }
-.belief__inner { max-width: 980px; }
+.belief__inner { max-width: none; }
 .belief__mark { width: 64px; height: 64px; display: block; margin: 0 0 56px; }
 .belief__text { display: grid; gap: 34px; }
 .belief__text p {
