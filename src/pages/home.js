@@ -2,9 +2,9 @@ import { SITE, STAR, esc, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID } from '../site
 import { layout, definitionBubble } from '../layout.js';
 
 export const BELIEF = [
-  "Zirconoid provides specialized datasets that power frontier models, serving as the essential upstream partner for the data companies that supply the world's leading AI labs.",
-  'Our core belief is that data that is complex enough to teach today’s frontier models is bottlenecked by access to human operators and the datasets they produce. Engineering systems that solve technical problems get commoditized. Fresh human-collected and operator-collected data does not.',
-  'From egocentric work on a factory floor to expert working knowledge used in agent and RL training, we recruit talent globally and collect datasets for data companies.',
+  "Physical AI is the future. Zirconoid provides specialized egocentric datasets that accelerate physical AI model training, serving as the essential upstream partner for the data companies that supply the world's leading AI labs.",
+  'Our core belief is that complex data required to teach today’s frontier models is bottlenecked by access to human operators and the datasets they can produce. Engineering systems that solve technical problems get commoditized. Fresh human- and operator-collected data does not.',
+  'From physical labor on a factory floor to expert working knowledge used in agent and RL training, we recruit talent globally and collect datasets at scale.',
 ];
 
 export const DATASETS = [
