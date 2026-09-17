@@ -51,8 +51,8 @@ export function homeFooter({ rel }) {
       <div class="footer__fade-bottom"></div>
     </div>
   </div>
-  <div class="footer__mark">
-    <a href="${rel}" aria-label="Zirconoid" aria-describedby="zr-definition"><img src="${rel}assets/img/mark.svg" alt="" width="56" height="56"></a>
+  <div class="footer__mark" tabindex="0" aria-label="Zirconoid mark" aria-describedby="zr-definition">
+    <img src="${rel}assets/img/mark.svg" alt="" width="56" height="56">
     ${definitionBubble('zr-definition', 'center')}
   </div>
   <div class="footer__bar">

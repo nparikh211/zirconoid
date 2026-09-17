@@ -131,7 +131,7 @@
   const orbit = document.querySelector('[data-orbit]');
   const logos = orbit ? [...orbit.querySelectorAll('.trust__logo')] : [];
   if (logos.length) {
-    const PERIOD = 26000;   // ms for one full turn
+    const PERIOD = 22600;   // ms for one full turn
     const TILT = 0.20;      // radians the sphere leans towards the viewer. Kept shallow so marks
                             // cross the line of text rather than arcing clear of it.
     const FOCAL = 3.2;      // smaller pulls the perspective harder

@@ -229,8 +229,14 @@ img, svg { max-width: 100%; }
   opacity: 0;               /* the script takes over on the first frame */
   will-change: transform, opacity;
 }
+/* The claim is wider than the sphere it hangs in, and a grid item that overflows its track is
+   laid out from the start edge, which pushed the whole line to the right. Take it out of the
+   flow and pin it to the middle of the sphere, which is the middle of the page. */
 .trust__title {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 50;              /* the claim hangs mid-sphere; see TITLE_LAYER in site.js */
   margin: 0;
   text-align: center;
@@ -377,10 +383,11 @@ img, svg { max-width: 100%; }
 .footer__vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(20, 20, 20, 0) 34%, rgba(20, 20, 20, .8) 70%, #141414 100%); }
 .footer__fade-top { position: absolute; left: 0; right: 0; top: 0; height: 120px; background: linear-gradient(180deg, #141414, rgba(20, 20, 20, 0)); }
 .footer__fade-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(180deg, rgba(20, 20, 20, 0), rgba(20, 20, 20, .92)); }
-.footer__mark { position: relative; display: flex; justify-content: center; }
-.footer__mark a { display: block; animation: zr-spin 14s linear infinite; animation-play-state: paused; }
-.footer__mark a:hover, .footer__mark a:focus-visible { animation-play-state: running; }
-.footer__mark img { width: 56px; height: 56px; display: block; }
+/* The mark is not a link: it only shows its definition. The wrapper is the width of the mark,
+   so hovering the empty space either side of it does nothing. */
+.footer__mark { position: relative; width: 56px; margin: 0 auto; }
+.footer__mark img { width: 56px; height: 56px; display: block; animation: zr-spin 14s linear infinite; animation-play-state: paused; }
+.footer__mark:hover img, .footer__mark:focus-visible img { animation-play-state: running; }
 
 /* Definition bubble: fades in above a mark while it is hovered, fades out a little slower. */
 .def {
@@ -435,19 +442,19 @@ img, svg { max-width: 100%; }
 }
 .footer__mark.is-open .def,
 .belief__mark-wrap.is-open .def,
-.footer__mark a:hover + .def,
-.footer__mark a:focus-visible + .def,
+.footer__mark:hover .def,
+.footer__mark:focus-visible .def,
 .belief__mark-wrap:hover .def,
 .belief__mark-wrap:focus-visible .def {
   opacity: 1;
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
-.footer__mark a:hover + .def--center, .footer__mark a:focus-visible + .def--center,
+.footer__mark:hover .def--center, .footer__mark:focus-visible .def--center,
 .footer__mark.is-open .def--center { transform: translate(-50%, 0) scale(1); }
 .belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right,
 .belief__mark-wrap.is-open .def--right { transform: translateY(-50%) translateX(0) scale(1); }
 /* The footer mark keeps turning while its definition is up on a touch screen. */
-.footer__mark.is-open a { animation-play-state: running; }
+.footer__mark.is-open img { animation-play-state: running; }
 .def p { margin: 0; }
 .def__head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
 .def__head strong { font-weight: 600; }
@@ -565,7 +572,8 @@ img, svg { max-width: 100%; }
   .trust__orbit { width: 100%; height: auto; display: flex; flex-direction: column; align-items: center; }
   .trust__ring { position: static; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 22px 32px; margin-top: 34px; }
   .trust__logo { position: static; width: 34px; height: 34px; margin: 0; opacity: .85 !important; transform: none !important; }
-  .trust__title { order: -1; white-space: normal; text-wrap: balance; max-width: 20ch; }
+  /* Stacked: the claim goes back into the flow, above a plain row of marks. */
+  .trust__title { position: static; transform: none; order: -1; white-space: normal; text-wrap: balance; max-width: 20ch; }
 }
 
 /* Small screens */
@@ -605,7 +613,7 @@ img, svg { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero__title, .page__inner { animation: none; }
-  .footer__mark a { animation: none; }
+  .footer__mark img { animation: none; }
   .def { transition: none; }
   .js [data-reveal]:not(.is-in) { opacity: 1; transform: none; }
   .btn, .card, .card__media, .post-list__item, .nav__blur { transition: none; }

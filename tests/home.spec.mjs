@@ -60,9 +60,12 @@ test.describe('home', () => {
     const t = await title.boundingBox();
 
     if (testInfo.project.name === 'desktop') {
-      // One line.
+      // One line, centred on the page. The claim is wider than the sphere it hangs in, and a
+      // grid item that overflows its track lands at the start edge, which used to push it right.
       const lines = await title.evaluate(el => el.offsetHeight / parseFloat(getComputedStyle(el).fontSize));
       expect(lines).toBeLessThan(1.6);
+      const vw = page.viewportSize().width;
+      expect(Math.abs(t.x + t.width / 2 - vw / 2), 'the claim should sit on the page centre').toBeLessThan(2);
 
       const before = await boxes();
       const o = await page.locator('.trust__orbit').boundingBox();
@@ -335,27 +338,30 @@ test.describe('home', () => {
 
   test('footer mark spins only while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });
-    const link = page.locator('.footer__mark a');
-    await link.scrollIntoViewIfNeeded();
-    await expect(link).toHaveCSS('animation-play-state', 'paused');
-    await expect(link).toHaveCSS('animation-duration', '14s');
-    await link.hover();
-    await expect(link).toHaveCSS('animation-play-state', 'running');
+    const mark = page.locator('.footer__mark');
+    const img = mark.locator('img');
+    await mark.scrollIntoViewIfNeeded();
+    // It shows the definition and nothing else: it is not a link home any more.
+    await expect(mark.locator('a')).toHaveCount(0);
+    await expect(img).toHaveCSS('animation-play-state', 'paused');
+    await expect(img).toHaveCSS('animation-duration', '14s');
+    await mark.hover();
+    await expect(img).toHaveCSS('animation-play-state', 'running');
     await page.mouse.move(0, 0);
-    await expect(link).toHaveCSS('animation-play-state', 'paused');
+    await expect(img).toHaveCSS('animation-play-state', 'paused');
   });
 
   test('footer mark shows the definition while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });
-    const link = page.locator('.footer__mark a');
+    const mark = page.locator('.footer__mark');
     const def = page.locator('.footer__mark .def');
-    await link.scrollIntoViewIfNeeded();
+    await mark.scrollIntoViewIfNeeded();
     await expect(def).toHaveCSS('opacity', '0');
     await expect(def).toHaveCSS('pointer-events', 'none');
-    await expect(link).toHaveAttribute('aria-describedby', 'zr-definition');
+    await expect(mark).toHaveAttribute('aria-describedby', 'zr-definition');
     await expect(def).toHaveAttribute('role', 'tooltip');
-    await link.hover();
-    await expect(link).toHaveCSS('animation-play-state', 'running');
+    await mark.hover();
+    await expect(mark.locator('img')).toHaveCSS('animation-play-state', 'running');
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
     await expect(def.locator('strong').first()).toHaveText('Zirconoid');
     await expect(def).toContainText('ˈzər-kə-ˌnȯid');
@@ -378,8 +384,8 @@ test.describe('home', () => {
       const at = await page.evaluate(() => Math.round(window.scrollY));
       await expect(footerDef).toHaveCSS('opacity', '0');
 
-      // A tap shows the definition. It must not follow the link to the top of the page.
-      await footer.locator('a').tap();
+      // A tap shows the definition, and nothing takes the reader to the top of the page.
+      await footer.tap();
       await expect(footer).toHaveClass(/is-open/);
       await expect.poll(() => footerDef.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
       expect(page.url(), 'the tap should not navigate').toBe(url);
@@ -398,7 +404,7 @@ test.describe('home', () => {
       await expect.poll(() => top.locator('.def').evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
       // Only one at a time.
       await footer.scrollIntoViewIfNeeded();
-      await footer.locator('a').tap();
+      await footer.tap();
       await expect(top).not.toHaveClass(/is-open/);
     });
 
