@@ -2,6 +2,9 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { SITE, STAR } from './site.js';
 
+// RB2B Forever Free visitor ID (company-level). Key from app.rb2b.com for zirconoid.com.
+const RB2B = `<script>!function(key){if(window.reb2b)return;window.reb2b={loaded:true};var s=document.createElement("script");s.async=true;s.src="https://ddwl4m2hdecbv.cloudfront.net/b/"+key+"/"+key+".js.gz";document.getElementsByTagName("script")[0].parentNode.insertBefore(s,document.getElementsByTagName("script")[0]);}("DNXY8HJ8VDO0");</script>`;
+
 // Short content hash per asset, appended as ?v=, so a CDN can never pair new HTML with a stale file.
 const hash = file => createHash('sha256').update(readFileSync(new URL(`../public/${file}`, import.meta.url))).digest('hex').slice(0, 10);
 export const ASSET_V = Object.fromEntries(
@@ -142,7 +145,7 @@ export function layout({
 <link rel="preload" href="${rel}assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${rel}${v('assets/css/fonts.css')}">
 <link rel="stylesheet" href="${rel}${v('assets/css/site.css')}">
-<script>document.documentElement.classList.add('js')</script>${ld ? `\n<script type="application/ld+json">${ld}</script>` : ''}${extraHead}
+<script>document.documentElement.classList.add('js')</script>${ld ? `\n<script type="application/ld+json">${ld}</script>` : ''}${extraHead}${RB2B}
 </head>
 <body>
 <div class="site${home ? '' : ' site--column'}${paper ? ' site--paper' : ''}">
