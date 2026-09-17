@@ -33,14 +33,14 @@ export const DATASETS = [
     imageAlt: 'Egocentric headcam view of gloved hands soldering a motherboard on an assembly bench',
   },
   {
-    domain: 'Oncology',
-    title: 'Diagnosis pathways and treatment efficacy trends from oncologists',
-    desc: 'Practicing oncologists document diagnostic reasoning step by step, from presentation to staging to treatment selection, alongside efficacy trends observed across de-identified patient cohorts.',
-    modality: 'Structured expert text, decision trajectories',
-    operators: 'Board-certified oncologists',
-    use: 'Expert trajectories for agent evaluation and RL reward modeling in clinical reasoning',
-    image: 'oncology-iphone',
-    imageAlt: 'Casual phone photo of an oncology desk with handwritten notes, charts, and a CT scan on a monitor',
+    domain: 'Manufacturing',
+    title: 'Egocentric capture across a multi-station manufacturing plant',
+    desc: 'Plant operators wear head-mounted cameras through machine tending, changeovers, quality checks, and material handoffs across stations. Continuous capture keeps the shop-floor context that short clips lose.',
+    modality: 'Egocentric video + audio, shift-tied task logs',
+    operators: 'Manufacturing plant operators, multi-station',
+    use: 'Manipulation policies, procedure grounding, and long-horizon task understanding for physical AI',
+    image: 'manufacturing-plant',
+    imageAlt: 'Egocentric view of a manufacturing plant worker inspecting metal parts at a workbench',
   },
 ];
 
@@ -72,7 +72,7 @@ export const FAQ = [
   },
   {
     q: 'What kinds of datasets does Zirconoid collect?',
-    a: 'Three programs are running now: egocentric video from textile factory floors, full 8-hour egocentric shifts on motherboard assembly lines, and structured diagnosis pathways and treatment efficacy trends from practicing oncologists. We take on new domains wherever humans still outperform models.',
+    a: 'Three programs are running now: egocentric video from textile factory floors, full 8-hour egocentric shifts on motherboard assembly lines, and egocentric capture across multi-station manufacturing plants. We take on new domains wherever humans still outperform models.',
   },
   {
     q: 'Why is human-collected data hard to replace with synthetic data?',
@@ -92,7 +92,7 @@ export const FAQ = [
   },
   {
     q: 'Where does Zirconoid operate?',
-    a: 'Worldwide. We recruit talent globally and run capture wherever the ground truth lives, from factory floors and assembly lines to clinics and workshops.',
+    a: 'Worldwide. We recruit talent globally and run capture wherever the ground truth lives, from factory floors and assembly lines to manufacturing plants and workshops.',
   },
 ];
 
@@ -135,7 +135,7 @@ export function render() {
       provider: { '@id': ORG_ID },
       areaServed: SITE.areaServed,
       audience: { '@type': 'BusinessAudience', name: 'Teams building physical AI models' },
-      description: 'Zirconoid recruits operators and domain experts and collects specialized datasets, including egocentric video and expert reasoning trajectories, for teams building physical AI, including data companies, robotics organizations, and research groups.',
+      description: 'Zirconoid recruits operators and collects specialized datasets, including egocentric video and operator-collected datasets, for teams building physical AI, including data companies, robotics organizations, and research groups.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Dataset programs',
