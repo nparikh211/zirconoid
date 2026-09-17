@@ -6,9 +6,9 @@ import { layout, definitionBubble } from '../layout.js';
 export const HEADLINE = 'Zirconoid is organizing human-captured data for physical AI';
 
 export const BELIEF = [
-  "Physical AI is the future. Zirconoid provides specialized egocentric datasets that accelerate physical AI model training, serving as the essential upstream partner for the data companies that supply the world's leading AI labs.",
-  'Our core belief is that complex data required to teach today’s frontier models is bottlenecked by access to human operators and the datasets they can produce. Engineering systems that solve technical problems get commoditized. Fresh human- and operator-collected data does not.',
-  'From physical labor on a factory floor to expert working knowledge used in agent and RL training, we recruit talent globally and collect datasets at scale.',
+  'Physical AI is the future. Zirconoid provides global, human-captured egocentric data to train physical AI models at scale.',
+  "Our core belief is that complex data required to teach today's models is bottlenecked by access to diverse, real-world physical environments. Engineering systems that solve technical problems get commoditized. Proprietary human and operator-collected data does not.",
+  'From factory floors and fields to construction sites and manufacturing plants, we recruit global talent and collect large-scale datasets across diverse physical environments.',
 ];
 
 export const DATASETS = [
