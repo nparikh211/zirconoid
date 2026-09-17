@@ -56,6 +56,7 @@ test.describe('home', () => {
       .toEqual(['OpenAI', 'Anthropic', 'Google DeepMind', 'Mistral AI', 'xAI']);
     // Real image files, decoded by the browser.
     for (const n of await logos.evaluateAll(els => els.map(e => e.naturalWidth))) expect(n).toBeGreaterThan(0);
+    await expect(page.locator('.trust__note')).toHaveCount(0);
 
     const boxes = () => logos.evaluateAll(els => els.map(e => e.getBoundingClientRect()).map(r => ({ x: r.x, y: r.y, w: r.width, h: r.height })));
     await page.locator('.trust').scrollIntoViewIfNeeded(); // the orbit only runs while on screen
@@ -353,7 +354,7 @@ test.describe('home', () => {
     await expect(img).toHaveCSS('animation-play-state', 'paused');
   });
 
-  test('footer mark shows the definition while hovered', async ({ page }) => {
+  test('footer mark shows the definition while hovered', async ({ page }) =>
     await open(page, '/', { galaxy: false });
     const mark = page.locator('.footer__mark');
     const def = page.locator('.footer__mark .def');
