@@ -507,6 +507,47 @@ img, svg { max-width: 100%; }
 .page__meta { margin: 0 0 56px; font-size: 13px; color: var(--faint); }
 .page .eyebrow { margin-bottom: 18px; }
 
+/* The blog sits on a sheet of paper. Nearly every rule on this site takes its colour from a
+   variable, so the sheet redefines the palette for its own subtree and the rest follows.
+   assets/js/paper.js puts a canvas behind the text and paints the grain with a static shader;
+   without WebGL2 the off-white background below it carries the page on its own. */
+.paper {
+  position: relative;
+  isolation: isolate;
+  /* The sheet grows by its own margins so the column of text keeps the width it had before. */
+  --paper-pad: clamp(24px, 4.4vw, 68px);
+  max-width: calc(720px + 2 * var(--paper-pad));
+  border-radius: 14px;
+  background: #fdfcf7;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .05);
+  overflow: hidden;                 /* clip the canvas to the rounded corners */
+  --ink: #17160f;
+  --soft: #2b291f;
+  --muted: #4c4839;
+  --dim: #5f5a49;
+  --faint: #7d7768;
+  --cream: #17160f;
+  --rule: rgba(23, 22, 15, .18);
+  --rule-soft: rgba(23, 22, 15, .1);
+  color: var(--ink);
+}
+/* The padding lives in here, not on the sheet: the shader sizes its canvas from the host's
+   content box and then stretches it over the border box, so padding on the host renders the
+   grain small and blows it back up. */
+.page__inner--wide.paper { max-width: calc(1200px + 2 * var(--paper-pad)); }
+.paper__inner { padding: clamp(30px, 4.4vw, 64px) var(--paper-pad) clamp(40px, 5vw, 76px); }
+/* The base rules brighten to white on hover, which on paper has to darken instead. */
+.paper a:hover,
+.paper .post__back:hover,
+.paper .post__body a:hover,
+.paper .post__foot a:hover { color: #000; }
+.paper .post__body a { border-bottom-color: var(--rule); }
+.paper .post__body a:hover { border-bottom-color: var(--muted); }
+.paper ::selection { background: #17160f; color: #fdfcf7; }
+.paper .post-list__item:hover { background: rgba(23, 22, 15, .04); }
+/* The nav floats over the sheet, and its blur alone would leave pale type on white paper. */
+.site--paper .nav__blur { background: rgba(20, 20, 20, .72); }
+
 /* Legal */
 .legal { display: grid; gap: 44px; font-size: 16px; line-height: 1.75; font-weight: 300; color: var(--soft); }
 .legal section { display: grid; gap: 14px; }

@@ -4,7 +4,8 @@ import { SITE, STAR } from './site.js';
 
 // Short content hash per asset, appended as ?v=, so a CDN can never pair new HTML with a stale file.
 const hash = file => createHash('sha256').update(readFileSync(new URL(`../public/${file}`, import.meta.url))).digest('hex').slice(0, 10);
-export const ASSET_V = Object.fromEntries(['assets/css/fonts.css', 'assets/css/site.css', 'assets/js/site.js', 'assets/js/galaxy.js'].map(f => [f, hash(f)]));
+export const ASSET_V = Object.fromEntries(
+  ['assets/css/fonts.css', 'assets/css/site.css', 'assets/js/site.js', 'assets/js/galaxy.js', 'assets/js/paper.js'].map(f => [f, hash(f)]));
 const v = file => `${file}?v=${ASSET_V[file]}`;
 
 // Relative prefix from a page path back to the site root, so pages work at any base URL.
@@ -93,11 +94,12 @@ export function simpleFooter({ rel, current }) {
  * @param {string} [o.robots]    robots directives; pass "noindex,follow" to keep a page out of search
  * @param {string} [o.published] ISO date for article metadata
  * @param {string} [o.modified]  ISO date of the last meaningful edit
+ * @param {boolean} [o.paper]    blog pages sit on a paper sheet: light palette, dark nav scrim
  * @param {string} [o.rel]       prefix for asset and nav links; defaults to a relative path back to the root
  */
 export function layout({
   path, title, description, body,
-  home = false, current = '', jsonLd = '', ogType = 'website', rel = relRoot(path),
+  home = false, paper = false, current = '', jsonLd = '', ogType = 'website', rel = relRoot(path),
   robots = 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
   published = '', modified = SITE.updated, extraHead = '',
 }) {
@@ -143,12 +145,12 @@ export function layout({
 <script>document.documentElement.classList.add('js')</script>${ld ? `\n<script type="application/ld+json">${ld}</script>` : ''}${extraHead}
 </head>
 <body>
-<div class="site${home ? '' : ' site--column'}">
+<div class="site${home ? '' : ' site--column'}${paper ? ' site--paper' : ''}">
 ${nav({ rel, current, home })}
 ${body}
 ${home ? homeFooter({ rel }) : simpleFooter({ rel, current })}
 </div>
-<script src="${rel}${v('assets/js/site.js')}" defer></script>${home ? `\n<script type="module" src="${rel}${v('assets/js/galaxy.js')}"></script>` : ''}
+<script src="${rel}${v('assets/js/site.js')}" defer></script>${home ? `\n<script type="module" src="${rel}${v('assets/js/galaxy.js')}"></script>` : ''}${paper ? `\n<script type="module" src="${rel}${v('assets/js/paper.js')}"></script>` : ''}
 </body>
 </html>
 `;

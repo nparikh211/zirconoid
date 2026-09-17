@@ -1,9 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { watch, PAGES, expectNoOverflow } from './helpers.mjs';
+import { watch, PAGES, expectNoOverflow, stub } from './helpers.mjs';
+
+// Software WebGL takes seconds per sheet, so only the first post runs the paper texture here.
+// One page is enough to prove the script loads and logs nothing; blog.spec.mjs checks the rest.
+const SHADER_PAGE = '/blog/announcing-zirconoid/';
 
 for (const path of PAGES) {
   test(`${path} loads clean`, async ({ page }) => {
     const errors = watch(page);
+    if (path !== SHADER_PAGE) await stub(page, '**/assets/js/paper.js*');
     const res = await page.goto(path);
     expect(res.status()).toBe(200);
     await expect(page).toHaveTitle(/Zirconoid/);

@@ -30,10 +30,11 @@ npm test           # build, then run the Playwright suite (desktop + mobile)
 ```
 public/            copied verbatim into dist/
   assets/css/      site.css (all styles), fonts.css (self-hosted @font-face rules)
-  assets/js/       site.js (scroll effects), galaxy.js (WebGL Milky Way custom element)
+  assets/js/       site.js (scroll effects), galaxy.js (WebGL Milky Way custom element),
+                   paper.js (paper texture on the blog sheets)
   assets/fonts/    Montserrat, IBM Plex Sans, JetBrains Mono (variable woff2, latin subsets)
   assets/img/      mark.svg and PNG marks, favicon, Open Graph image
-  assets/vendor/   three.js 0.160 (MIT)
+  assets/vendor/   three.js 0.160 (MIT), paper-shaders 0.0.80 (Apache-2.0)
   assets/img/labs/ frontier lab marks, cream silhouettes
   assets/img/work/ capture stills for the dataset cards
   CNAME            custom domain for GitHub Pages
@@ -58,6 +59,17 @@ All of it lives in `public/assets/js/site.js` and `public/assets/css/site.css`.
 - **Definition on a touch screen.** Both Zirconoid marks show their definition on hover, which a phone has none of. Under `(hover: none)` a tap opens the definition instead, a tap anywhere else closes it, and only one is open at a time.
 
 `prefers-reduced-motion` turns all of it off: text is sharp, reveals are instant, the galaxy stands still.
+
+## The blog sheet
+
+The blog index and every post sit on a sheet of paper: a light panel with rounded corners on the dark page, black text, and a real paper grain behind the words.
+
+- **The palette.** Nearly every rule on this site takes its colour from a variable, so `.paper` redefines `--ink`, `--soft`, `--muted`, `--dim`, `--faint` and the rules for its own subtree and the rest follows. Only the handful of rules that brighten to white on hover needed a dark counterpart.
+- **The grain.** `assets/js/paper.js` mounts the Paper Shaders paper texture ([paper.design](https://github.com/paper-design/shaders), Apache-2.0) on each sheet. The library is vendored in `assets/vendor/paper-shaders` rather than pulled through React and a bundler, which this site has neither of; `paper.js` builds the same uniforms its React component does. The shader is static, so it draws once per size and then sits there.
+- **Padding goes inside the sheet.** The library sizes its canvas from the host's content box but stretches it over the border box, so padding on the host renders the grain small and blows it back up. `.paper` carries no padding; `.paper__inner` does, and `.paper` grows by the same amount so the column of text keeps its width.
+- **Without WebGL2** the sheet keeps its plain off-white background and the page reads exactly the same. A test covers that.
+- **The nav** floats over the sheet, and its blur alone would leave pale type on white paper, so pages with a sheet give `.nav__blur` a dark scrim. Pass `paper: true` to `layout()` to get the scrim and the script.
+- **Cost.** An article runs several screens, and the canvas covers all of it, so the render is capped: roughly 2M pixels on a touch screen and 6M elsewhere. Grain a touch softer on a phone beats a canvas the size of the page.
 
 ## Search and answer engines
 

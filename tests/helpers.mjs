@@ -16,11 +16,16 @@ export async function expectNoOverflow(page) {
   expect(sw, 'page should not scroll horizontally').toBeLessThanOrEqual(iw);
 }
 
+// Serve a script as an empty module instead of the real thing. Aborting the request would do
+// it too, but the browser logs a console error for a module that fails to load, which any test
+// watching the console would then report.
+export const stub = (page, glob) => page.route(glob, r => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+
 // Navigate and turn off smooth scrolling so programmatic scrolls land at once.
 // Tests that only care about layout or CSS can drop the galaxy: software WebGL in headless
 // Chromium is slow enough to starve transitions, and the galaxy has its own tests.
 export async function open(page, path, { galaxy = true } = {}) {
-  if (!galaxy) await page.route('**/assets/js/galaxy.js*', r => r.abort());
+  if (!galaxy) await stub(page, '**/assets/js/galaxy.js*');
   await page.goto(path);
   await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
 }

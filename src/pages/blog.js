@@ -27,10 +27,12 @@ export function renderIndex() {
 
   const body = `
 <main class="page">
-  <div class="page__inner page__inner--wide">
-    <p class="eyebrow">Blog</p>
-    <h1 class="page__title blog__title">Notes on capture, operators, and ground truth.</h1>
-    <div class="post-list">${items}
+  <div class="page__inner page__inner--wide paper" data-paper>
+    <div class="paper__inner">
+      <p class="eyebrow">Blog</p>
+      <h1 class="page__title blog__title">Notes on capture, operators, and ground truth.</h1>
+      <div class="post-list">${items}
+      </div>
     </div>
   </div>
 </main>
@@ -70,6 +72,7 @@ export function renderIndex() {
     description: 'Notes on capture, operators, and ground truth from Zirconoid.',
     body,
     current: 'blog',
+    paper: true,
     jsonLd,
     modified: POSTS.map(p => p.updatedIso).sort().pop(),
   });
@@ -103,16 +106,18 @@ export function renderPost(p) {
 
   const body = `
 <main class="page">
-  <article class="page__inner">
-    <a class="post__back" href="../">← All posts</a>
-    <p class="post__meta">${esc(p.tag)} · <time datetime="${p.isoDate}">${esc(p.date)}</time> · ${esc(p.read)}</p>
-    <h1 class="page__title post__title">${esc(p.title)}</h1>
-    <div class="post__body">
-${p.body.map(t => `      <p>${linkify(t)}</p>`).join('\n')}
-    </div>
-    <div class="post__foot">
-      <span>Questions about this work?</span>
-      <a href="mailto:${SITE.email}">${SITE.email} →</a>
+  <article class="page__inner paper" data-paper>
+    <div class="paper__inner">
+      <a class="post__back" href="../">← All posts</a>
+      <p class="post__meta">${esc(p.tag)} · <time datetime="${p.isoDate}">${esc(p.date)}</time> · ${esc(p.read)}</p>
+      <h1 class="page__title post__title">${esc(p.title)}</h1>
+      <div class="post__body">
+${p.body.map(t => `        <p>${linkify(t)}</p>`).join('\n')}
+      </div>
+      <div class="post__foot">
+        <span>Questions about this work?</span>
+        <a href="mailto:${SITE.email}">${SITE.email} →</a>
+      </div>
     </div>
   </article>
 </main>`;
@@ -123,6 +128,7 @@ ${p.body.map(t => `      <p>${linkify(t)}</p>`).join('\n')}
     description: p.excerpt,
     body,
     current: 'blog',
+    paper: true,
     jsonLd,
     ogType: 'article',
     published: p.isoDate,
