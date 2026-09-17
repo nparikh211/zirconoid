@@ -1,14 +1,14 @@
 import { SITE, ORGANIZATION, ORG_ID, SITE_ID, WEBSITE, breadcrumbs } from '../site.js';
 import { layout } from '../layout.js';
 
-const EFFECTIVE = 'Effective September 15, 2026';
+const EFFECTIVE = 'Effective September 17, 2026';
 
 const section = (h, ...ps) => `
       <section>${h ? `\n        <h2>${h}</h2>` : ''}
 ${ps.map(p => `        <p>${p}</p>`).join('\n')}
       </section>`;
 
-export const EFFECTIVE_ISO = '2026-09-15';
+export const EFFECTIVE_ISO = '2026-09-17';
 
 function legalPage({ path, title, description, current, intro, sections }) {
   const body = `
@@ -53,23 +53,26 @@ export const PRIVACY = {
         '<strong>Information you provide.</strong> Name, email address, company, role, and the contents of any message you send to us, including inquiries to data@zirconoid.com. If you apply to work with us as an operator, contractor, or employee, we collect the information in your application, including work history, certifications, availability, and payment details.',
         '<strong>Information collected automatically.</strong> When you visit our website we collect standard log data such as IP address, browser type, referring pages, pages viewed, and timestamps, and we may use cookies or similar technologies for analytics and site functionality.',
         '<strong>Capture program data.</strong> Operators who participate in capture programs may generate audio, video, text, and task data as part of a program. Collection, use, and rights in this data are governed by the separate participation agreement signed for that program, not by this Policy.'],
-      ['2. How we use information',
+      ['2. Online advertising partners',
+        'When you visit or log in to our website, cookies and similar technologies may be used by our online data partners or vendors to associate these activities with other personal information they or others have about you, including by association with your email. We (or service providers on our behalf) may then send communications and marketing to these email addresses. You may opt out of receiving this advertising by visiting <a href="https://app.retention.com/optout" rel="noopener noreferrer">https://app.retention.com/optout</a>.',
+        'One such partner is RB2B, which we use to identify companies that visit our website. RB2B may use cookies, device identifiers, and IP addresses for this purpose. See RB2B\'s own privacy documentation for more detail on their processing.'],
+      ['3. How we use information',
         'We use personal information to respond to inquiries, evaluate and onboard operators and partners, provide and improve the Services, process payments, communicate about programs and updates, maintain security, comply with legal obligations, and enforce our agreements.'],
-      ['3. How we share information',
+      ['4. How we share information',
         'We share personal information with service providers that help us operate (hosting, analytics, payments, communications), with partner data companies where you have applied to or been placed on their program, with professional advisors, in connection with a merger, acquisition, or sale of assets, and where required by law or to protect rights and safety. We do not sell personal information.'],
-      ['4. Retention',
+      ['5. Retention',
         'We keep personal information for as long as needed to fulfil the purposes described above, to comply with legal, tax, and accounting requirements, and to resolve disputes. Application information for operators is retained so we can contact you about future programs unless you ask us to delete it.'],
-      ['5. Your rights',
+      ['6. Your rights',
         'Depending on where you live, you may have the right to access, correct, delete, or export your personal information, to object to or restrict certain processing, and to withdraw consent. To exercise these rights, email data@zirconoid.com. We will respond within the time required by applicable law. You may also have the right to complain to a data protection authority.'],
-      ['6. International transfers',
+      ['7. International transfers',
         'Zirconoid operates worldwide. Your information may be processed in countries other than the one you live in. Where required, we use appropriate safeguards such as standard contractual clauses for such transfers.'],
-      ['7. Security',
+      ['8. Security',
         'We use administrative, technical, and physical safeguards designed to protect personal information. No method of transmission or storage is completely secure, and we cannot guarantee absolute security.'],
-      ['8. Children',
+      ['9. Children',
         'The Services are not directed to children under 16, and we do not knowingly collect personal information from them. If you believe a child has provided us personal information, contact us and we will delete it.'],
-      ['9. Changes',
+      ['10. Changes',
         'We may update this Policy from time to time. We will post the revised version here with a new effective date. Material changes will be communicated where required by law.'],
-      ['10. Contact',
+      ['11. Contact',
         `Zirconoid Inc.<br>Privacy inquiries: <a href="mailto:${SITE.email}">${SITE.email}</a>`],
   ],
 };
