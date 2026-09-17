@@ -80,7 +80,7 @@ export const FAQ = [
   },
   {
     q: 'How does Zirconoid recruit and vet operators?',
-    a: 'We source through direct relationships with employers, referrals from operators already in our network, and open recruiting in regions where an industry is concentrated. Vetting is practical for floor work: operators perform a short segment of the task on camera and a domain reviewer confirms the technique. Expert programs verify credentials such as board certification.',
+    a: 'We source through direct relationships with employers, referrals from operators already in our network, and open recruiting in regions where an industry is concentrated. Vetting is practical for floor work: operators perform a short segment of the task on camera and a domain reviewer confirms the technique.',
   },
   {
     q: 'How are operators paid?',
