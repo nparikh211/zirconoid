@@ -235,25 +235,34 @@ test.describe('home', () => {
     const box = await layer.boundingBox();
     const vw = page.viewportSize().width;
     if (testInfo.project.name === 'mobile') {
-      // A tall narrow frame crops the spiral to a sliver, so on a phone the layer is wider than
-      // the screen, shorter, and held under the headline rather than behind it.
+      // A tall narrow frame crops the spiral to a sliver, so on a phone the layer bleeds past
+      // both edges and is held under the headline rather than behind it. It also has to carry
+      // the whole hero, top to bottom, instead of capping the top of it.
       expect(box.width, 'it should bleed past both edges').toBeGreaterThan(vw);
       expect(box.x).toBeLessThan(0);
       expect(await layer.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBeLessThan(1);
-      expect(box.height / box.width, 'the frame should not be extremely tall').toBeLessThan(2);
+      const hero = await page.locator('.hero').boundingBox();
+      expect(box.y, 'it should start above the hero').toBeLessThanOrEqual(hero.y);
+      expect(box.y + box.height, 'it should reach the foot of the hero').toBeGreaterThan(hero.y + hero.height * 0.95);
     } else {
       expect(box.x).toBeGreaterThan(0);        // desktop keeps it to the right of the headline
       expect(await layer.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
     }
   });
 
-  test('hero and galaxy move at different speeds (parallax)', async ({ page }) => {
+  test('hero and galaxy move at different speeds (parallax)', async ({ page }, testInfo) => {
     await open(page, '/', { galaxy: false });
     const h1 = page.locator('h1');
     const galaxy = page.locator('[data-galaxy-hero]');
     await page.evaluate(() => window.scrollTo(0, 400));
     await expect.poll(async () => num(await h1.evaluate(el => el.style.transform))).toBe(-80);
-    await expect.poll(async () => num(await galaxy.evaluate(el => el.style.transform))).toBe(248);
+    // A phone scrolls on its own thread and hands the page a frame after the fact, so a layer
+    // this size moved from script trails the scroll. It stays put there.
+    if (testInfo.project.name === 'mobile') {
+      expect(await galaxy.evaluate(el => el.style.transform)).toBe('');
+    } else {
+      await expect.poll(async () => num(await galaxy.evaluate(el => el.style.transform))).toBe(248);
+    }
     const opacity = await h1.evaluate(el => parseFloat(el.style.opacity));
     expect(opacity).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);

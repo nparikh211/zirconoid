@@ -167,7 +167,15 @@ class ZirconoidGalaxy extends HTMLElement {
     Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%', display: 'block', opacity: '0', transition: 'opacity 1.6s ease' });
     this.appendChild(canvas);
     const renderer = new T.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', alpha: true });
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); renderer.setPixelRatio(dpr);
+    // A phone draws this over the whole hero, on a screen denser than most laptops', and every
+    // particle is an additive sprite, so what costs is fill rate. Draw fewer of them at a lower
+    // density on a touch screen: the spiral reads the same, and the phone keeps the headroom it
+    // needs to scroll smoothly.
+    const mq = q => !!(window.matchMedia && window.matchMedia(q).matches);
+    const lite = mq('(pointer: coarse)');
+    const cfg = lite ? { ...CFG, texSize: 256 } : CFG;
+    const scfg = lite ? { ...SMOKE_CFG, texSize: 34 } : SMOKE_CFG;
+    const dpr = Math.max(1, Math.min(lite ? 1.5 : 2, window.devicePixelRatio || 1)); renderer.setPixelRatio(dpr);
     const scene = new T.Scene();
     const camera = new T.PerspectiveCamera(45, 1, 0.01, 200);
     const cam = (this.getAttribute('camera') || '-1,-1.8,4').split(',').map(Number); camera.position.set(cam[0], cam[1], cam[2]); camera.lookAt(0, 0, 0);
@@ -176,13 +184,13 @@ class ZirconoidGalaxy extends HTMLElement {
 
     const mkMat = (vert, frag, posTex, extra) => new T.ShaderMaterial({ uniforms: Object.assign({ uPosition: { value: posTex }, uPixelRatio: { value: dpr }, uTime: { value: 0 }, uParticleSize: { value: 1 }, uCoreColor: { value: new T.Color('#ffffff') }, uAccentColor: { value: new T.Color('#ffffff') }, uOuterColor: { value: new T.Color('#ffffff') } }, extra || {}), vertexShader: vert, fragmentShader: frag, transparent: true, depthWrite: false, blending: T.AdditiveBlending });
 
-    const gal = buildTextures(T, CFG), galGeo = buildGeo(T, CFG), galMat = mkMat(PARTICLE_VERT, PARTICLE_FRAG, gal.posTex);
-    const smk = buildSmokeTextures(T, SMOKE_CFG), smkGeo = buildSmokeGeo(T, SMOKE_CFG), smkMat = mkMat(SMOKE_VERT, SMOKE_FRAG, smk.posTex);
-    const gpu = new GPUCompute(T, CFG.texSize, CFG.texSize, renderer); gpu.addVar('pos', SIM_FRAG, gal.posTex);
-    const sgpu = new GPUCompute(T, SMOKE_CFG.texSize, SMOKE_CFG.texSize, renderer); sgpu.addVar('smokePos', SMOKE_SIM_FRAG, smk.posTex);
+    const gal = buildTextures(T, cfg), galGeo = buildGeo(T, cfg), galMat = mkMat(PARTICLE_VERT, PARTICLE_FRAG, gal.posTex);
+    const smk = buildSmokeTextures(T, scfg), smkGeo = buildSmokeGeo(T, scfg), smkMat = mkMat(SMOKE_VERT, SMOKE_FRAG, smk.posTex);
+    const gpu = new GPUCompute(T, cfg.texSize, cfg.texSize, renderer); gpu.addVar('pos', SIM_FRAG, gal.posTex);
+    const sgpu = new GPUCompute(T, scfg.texSize, scfg.texSize, renderer); sgpu.addVar('smokePos', SMOKE_SIM_FRAG, smk.posTex);
 
     // background stars
-    const starCount = 4000, sp = new Float32Array(starCount * 3), rand = mulberry32(12345);
+    const starCount = lite ? 1400 : 4000, sp = new Float32Array(starCount * 3), rand = mulberry32(12345);
     for (let i = 0; i < starCount; i++) { const th = rand() * Math.PI * 2, ph = Math.acos(2 * rand() - 1), r = 40 + rand() * 20; sp[i * 3] = r * Math.sin(ph) * Math.cos(th); sp[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th); sp[i * 3 + 2] = r * Math.cos(ph); }
     const starGeo = new T.BufferGeometry(); starGeo.setAttribute('position', new T.BufferAttribute(sp, 3));
     const starMat = new T.PointsMaterial({ color: '#ffffff', size: 0.055, sizeAttenuation: true, transparent: true, opacity: 0.7, depthWrite: false });
@@ -209,9 +217,12 @@ class ZirconoidGalaxy extends HTMLElement {
     // A perspective camera crops horizontally as the frame narrows, so on a phone the spiral
     // would be a sliver of its middle. Shrink it to suit instead, and ease its offset back
     // towards the centre by the same amount so the composition holds rather than drifting off.
-    const BASE_SCALE = 1.65, REF_ASPECT = 1.5, MIN_FIT = 0.34;
+    const BASE_SCALE = 1.65, REF_ASPECT = 1.5, MIN_FIT = mq('(max-width: 640px)') ? 0.46 : 0.34;
+    let lastW = 0, lastH = 0;
     const resize = () => {
       const w = this.clientWidth || 1, h = this.clientHeight || 1;
+      if (w === lastW && h === lastH) return;   // reallocating the buffer mid-scroll costs a frame
+      lastW = w; lastH = h;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();

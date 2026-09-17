@@ -26,30 +26,56 @@
   }
 
   const BLUR = 6.3, BAND = 72, FOCUS_OFFSET = 84;
+  // A phone drives the scroll itself and hands the page a frame after the fact, so a big layer
+  // moved from script trails the scroll and stutters. Leave the galaxy where it is there.
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  // Where each word sits in the page, measured once. Asking the browser for eighty boxes on
+  // every scroll frame, in the same loop that writes their blur, makes it settle the styles it
+  // has just been handed. Nothing here moves the words, so measure once and do arithmetic.
+  let tops = [], last = [], heroTop = 0;
+  const pageTop = el => { let t = 0; for (let n = el; n; n = n.offsetParent) t += n.offsetTop; return t; };
+  function measure() {
+    const y = window.scrollY || 0;
+    tops = words.map(el => el.getBoundingClientRect().top + y);
+    last = words.map(() => NaN);
+    if (hero) heroTop = pageTop(hero);     // offsetTop ignores the hero's own parallax
+  }
+
   let raf = 0;
   function update() {
     raf = 0;
     const y = window.scrollY || 0, vh = window.innerHeight || 800;
-    if (galaxy && !reduce) galaxy.style.transform = `translateY(${(y * 0.62).toFixed(1)}px)`;
+    if (galaxy && !reduce && !coarse) galaxy.style.transform = `translateY(${(y * 0.62).toFixed(1)}px)`;
+    const shift = hero && !reduce ? -y * 0.2 : 0;
     if (nav && blur && !nav.classList.contains('nav--sticky')) {
-      const on = hero ? hero.getBoundingClientRect().top < 90 : y > vh * 0.3;
+      const on = hero ? heroTop - y + shift < 90 : y > vh * 0.3;
       nav.classList.toggle('is-scrolled', on);
       blur.classList.toggle('is-on', on);
     }
     if (hero && !reduce) {
-      hero.style.transform = `translateY(${(-y * 0.2).toFixed(1)}px)`;
+      hero.style.transform = `translateY(${shift.toFixed(1)}px)`;
       hero.style.opacity = Math.max(0, 1 - y / (vh * 0.9)).toFixed(3);
     }
     if (mark && !reduce) mark.style.transform = `rotate(${(y * 0.06).toFixed(2)}deg)`;
-    const focus = vh - FOCUS_OFFSET;
-    for (const el of words) {
-      const top = el.getBoundingClientRect().top;
-      const t = reduce ? 1 : Math.max(0, Math.min(1, (focus - top) / BAND));
-      el.style.filter = t >= 1 ? 'none' : `blur(${((1 - t) * BLUR).toFixed(2)}px)`;
-      el.style.opacity = (0.14 + 0.86 * t).toFixed(3);
+    const focus = y + vh - FOCUS_OFFSET;
+    for (let i = 0; i < words.length; i++) {
+      const t = reduce ? 1 : Math.max(0, Math.min(1, (focus - tops[i]) / BAND));
+      // Round to a hundredth: a word that has settled then writes nothing at all, so most
+      // frames touch only the handful of words actually crossing the focus line.
+      const q = Math.round(t * 100) / 100;
+      if (q === last[i]) continue;
+      last[i] = q;
+      const el = words[i];
+      el.style.filter = q >= 1 ? 'none' : `blur(${((1 - q) * BLUR).toFixed(2)}px)`;
+      el.style.opacity = (0.14 + 0.86 * q).toFixed(3);
     }
   }
   function schedule() { if (!raf) raf = requestAnimationFrame(update); }
+  // Measuring costs a layout, so never more than once a frame: a phone fires resize repeatedly
+  // as the address bar slides away.
+  let mraf = 0;
+  function remeasure() { if (!mraf) mraf = requestAnimationFrame(() => { mraf = 0; measure(); update(); }); }
   // Keep the blur strip the same height as the nav.
   if (nav && blur) {
     const fit = () => document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
@@ -57,7 +83,10 @@
     if ('ResizeObserver' in window) new ResizeObserver(fit).observe(nav); else window.addEventListener('resize', fit);
   }
   window.addEventListener('scroll', schedule, { passive: true });
-  window.addEventListener('resize', schedule);
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('load', remeasure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+  measure();
   update();
 
   // Scroll-in reveals. Once an element has faded in it goes back to its own hover transitions.

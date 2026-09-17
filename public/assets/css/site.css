@@ -570,16 +570,17 @@ img, svg { max-width: 100%; }
 
 /* Small screens */
 @media (max-width: 640px) {
-  /* Wider and shorter than on desktop: a tall narrow frame crops the spiral to nothing, and the
-     hard left fade was cutting away most of what was left. */
+  /* Wider than the screen and as tall as the hero: a tall narrow frame crops the spiral to
+     nothing, and the hard left fade was cutting away most of what was left. The fades sit close
+     to the edges so the galaxy carries the whole hero instead of capping the top of it. */
   .galaxy-hero {
     left: -14%;
     right: -14%;
-    top: -16vh;
-    height: 84vh;
-    opacity: .78;             /* it sits behind the headline, so keep it under the type */
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 46%, transparent 78%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 46%, transparent 78%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    top: -12vh;
+    height: 122vh;
+    opacity: .72;             /* it sits behind the headline, so keep it under the type */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 13%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 13%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
   }
   :root { --nav-gutter: 16px; }
   .nav { padding-top: 16px; padding-bottom: 16px; }
