@@ -6,7 +6,7 @@ test.describe('home', () => {
     await open(page, '/', { galaxy: false });
     await expect(page.locator('h1')).toHaveText('Zirconoid is organizing human-captured data for physical AI');
     await expect(page.locator('[data-belief] p')).toHaveCount(3);
-    await expect(page.locator('[data-belief] p').first()).toContainText('Zirconoid provides specialized datasets');
+    await expect(page.locator('[data-belief] p').first()).toContainText('Physical AI is the future');
     await expect(page.locator('.card')).toHaveCount(3);
     await expect(page.locator('.card__title')).toHaveText([
       'Egocentric video from textile factory floors',
@@ -21,10 +21,12 @@ test.describe('home', () => {
     }
     await expect(page.locator('body')).not.toContainText('What people ask us');
     await expect(page.locator('.faq h2')).toHaveCount(0);
-    // The assembly-line card carries a capture still; the other two are still waiting on one.
-    await expect(page.locator('.card__media span')).toHaveText(['Coming soon', 'Coming soon']);
+    const shots = page.locator('.card__media--shot img');
+    await expect(shots).toHaveCount(3);
+    await expect(shots.nth(0)).toHaveAttribute('src', 'assets/img/work/textile-ego.jpg');
+    await expect(shots.nth(1)).toHaveAttribute('src', 'assets/img/work/assembly-ego.jpg');
+    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/oncology-iphone.jpg');
     const shot = page.locator('.card').nth(1).locator('.card__media--shot img');
-    await expect(shot).toHaveAttribute('src', 'assets/img/work/assembly-line.jpg');
     await expect(shot).toHaveAttribute('alt', /soldering/);
     await shot.scrollIntoViewIfNeeded();   // it is lazy, so bring it into view before asking
     await expect.poll(() => shot.evaluate(el => el.naturalWidth), { message: 'the still should decode' }).toBeGreaterThan(0);
@@ -151,7 +153,7 @@ test.describe('home', () => {
     }
   });
 
-  test('faq opens one answer at a time', async ({ page }) =>
+  test('faq opens one answer at a time', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const items = page.locator('.faq__item');
     const list = page.locator('.faq__list');
