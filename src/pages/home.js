@@ -39,7 +39,7 @@ export const DATASETS = [
     modality: 'Egocentric video + audio, shift-tied task logs',
     operators: 'Manufacturing plant operators, multi-station',
     use: 'Manipulation policies, procedure grounding, and long-horizon task understanding for physical AI',
-    image: 'manufacturing-plant',
+    image: 'plant-floor',
     imageAlt: 'Egocentric view of a manufacturing plant worker inspecting metal parts at a workbench',
   },
 ];
