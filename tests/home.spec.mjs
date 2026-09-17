@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { watch, open, num, alpha, faqRow } from './helpers.mjs';
+import { HEADLINE } from '../src/pages/home.js';
 
 test.describe('home', () => {
   test('hero copy and structure', async ({ page }, testInfo) => {
     await open(page, '/', { galaxy: false });
-    await expect(page.locator('h1')).toHaveText('Zirconoid is organizing human-captured data for physical AI');
+    await expect(page.locator('h1')).toHaveText(HEADLINE);
     await expect(page.locator('[data-belief] p')).toHaveCount(3);
     await expect(page.locator('[data-belief] p').first()).toContainText('Physical AI is the future');
     await expect(page.locator('.card')).toHaveCount(3);
@@ -353,7 +354,7 @@ test.describe('home', () => {
     await expect(img).toHaveCSS('animation-play-state', 'paused');
   });
 
-  test('footer mark shows the definition while hovered', async ({ page }) =>
+  test('footer mark shows the definition while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const mark = page.locator('.footer__mark');
     const def = page.locator('.footer__mark .def');
@@ -490,7 +491,7 @@ test.describe('home', () => {
     });
   });
 
-  test('reduced motion shows everything at once', async ({ browser }) =>
+  test('reduced motion shows everything at once', async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();
     await open(page, '/', { galaxy: false });

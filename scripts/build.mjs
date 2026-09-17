@@ -3,7 +3,7 @@ import { cpSync, mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, plain } from '../src/site.js';
-import { render as renderHome, BELIEF, DATASETS, FAQ } from '../src/pages/home.js';
+import { render as renderHome, HEADLINE, BELIEF, DATASETS, FAQ } from '../src/pages/home.js';
 import { POSTS, renderIndex, renderPost } from '../src/pages/blog.js';
 import { PRIVACY, TERMS, EFFECTIVE_ISO, renderPrivacy, renderTerms } from '../src/pages/legal.js';
 import { render as renderNotFound } from '../src/pages/notfound.js';
@@ -107,7 +107,7 @@ function llmsFullTxt() {
     '',
     '# Home',
     '',
-    '## Zirconoid collects human data for frontier training',
+    `## ${HEADLINE}`,
     '',
     BELIEF.join('\n\n'),
     '',

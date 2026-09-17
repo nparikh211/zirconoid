@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PAGES } from './helpers.mjs';
+import { SITE } from '../src/site.js';
+import { HEADLINE } from '../src/pages/home.js';
 
 const ld = async page => {
   const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
@@ -123,7 +125,8 @@ test('rss feed carries every post in full', async ({ request }) => {
 test('llms.txt maps the site and llms-full.txt holds the text', async ({ request }) => {
   const llms = await (await request.get('/llms.txt')).text();
   expect(llms.startsWith('# Zirconoid')).toBe(true);
-  expect(llms).toContain('> Zirconoid recruits operators');
+  // The blockquote is the site description, so it follows whatever SITE.description says.
+  expect(llms).toContain(`> ${SITE.description}`);
   expect(llms).toContain('## Pages');
   for (const slug of ['announcing-zirconoid', 'egocentric-capture', 'operators-by-the-hour', 'expert-trajectories']) {
     expect(llms).toContain(`/blog/${slug}/`);
@@ -131,7 +134,7 @@ test('llms.txt maps the site and llms-full.txt holds the text', async ({ request
 
   const full = await (await request.get('/llms-full.txt')).text();
   expect(full.length).toBeGreaterThan(9000);
-  expect(full).toContain('Zirconoid is organizing human-captured data for physical AI');
+  expect(full).toContain(HEADLINE);   // one string, so the plain text cannot drift from the page
   expect(full).toContain('## Questions');
   expect(full).toContain('# Privacy Policy');
   expect(full).toContain('# Terms of Service');

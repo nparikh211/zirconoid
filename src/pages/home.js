@@ -1,6 +1,10 @@
 import { SITE, STAR, esc, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID } from '../site.js';
 import { layout, definitionBubble } from '../layout.js';
 
+// The hero headline. scripts/build.mjs puts the same string in llms-full.txt, so a model reading
+// the site in one fetch sees what a reader sees.
+export const HEADLINE = 'Zirconoid is organizing human-captured data for physical AI';
+
 export const BELIEF = [
   "Physical AI is the future. Zirconoid provides specialized egocentric datasets that accelerate physical AI model training, serving as the essential upstream partner for the data companies that supply the world's leading AI labs.",
   'Our core belief is that complex data required to teach today’s frontier models is bottlenecked by access to human operators and the datasets they can produce. Engineering systems that solve technical problems get commoditized. Fresh human- and operator-collected data does not.',
@@ -171,7 +175,7 @@ export function render() {
 <main>
 <section class="hero" aria-label="Introduction">
   <div class="hero__inner">
-    <h1 class="hero__title" data-hero-title>Zirconoid is organizing human-captured data for physical AI</h1>
+    <h1 class="hero__title" data-hero-title>${esc(HEADLINE)}</h1>
   </div>
 </section>
 
