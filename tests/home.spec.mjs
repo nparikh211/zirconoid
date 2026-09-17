@@ -354,7 +354,7 @@ test.describe('home', () => {
     await expect(img).toHaveCSS('animation-play-state', 'paused');
   });
 
-  test('footer mark shows the definition while hovered', async ({ page }) =>
+  test('footer mark shows the definition while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const mark = page.locator('.footer__mark');
     const def = page.locator('.footer__mark .def');
