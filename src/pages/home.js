@@ -60,11 +60,11 @@ export const FRONTIER_LABS = [
 export const FAQ = [
   {
     q: 'What does Zirconoid do?',
-    a: 'Zirconoid is a talent engine for operator data. We recruit the people who do real work and we capture what they do, then deliver those datasets to the data companies building physical AI. Operators join by the hour for capture scenarios, or on contract and full-time.',
+    a: 'Zirconoid is a talent engine for operator data. We recruit the people who do real work and we capture what they do, then deliver those datasets to teams building physical AI. Operators join by the hour for capture scenarios, or on contract and full-time.',
   },
   {
     q: 'Who does Zirconoid work with?',
-    a: 'Data companies and research organizations that supply frontier AI labs. We sit upstream of them: we find the operators and run the capture, they deliver to the labs. Engagements run under a signed statement of work, license, or master services agreement.',
+    a: 'Teams building physical AI — data companies, robotics organizations, and research groups. We recruit operators and run the capture. Engagements sit under a signed statement of work, license, or MSA.',
   },
   {
     q: 'What is egocentric data?',
@@ -134,8 +134,8 @@ export function render() {
       serviceType: 'AI training data collection',
       provider: { '@id': ORG_ID },
       areaServed: SITE.areaServed,
-      audience: { '@type': 'BusinessAudience', name: 'Data companies supplying frontier AI labs' },
-      description: 'Zirconoid recruits operators and domain experts and collects specialized datasets, including egocentric video and expert reasoning trajectories, for the data companies that supply frontier AI labs.',
+      audience: { '@type': 'BusinessAudience', name: 'Teams building physical AI models' },
+      description: 'Zirconoid recruits operators and domain experts and collects specialized datasets, including egocentric video and expert reasoning trajectories, for teams building physical AI, including data companies, robotics organizations, and research groups.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Dataset programs',
