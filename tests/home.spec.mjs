@@ -415,20 +415,19 @@ test.describe('home', () => {
     const wrap = page.locator('.belief__mark-wrap');
     const def = page.locator('.belief__mark-wrap .def');
     await wrap.scrollIntoViewIfNeeded();
+    // It sits on the centre line of the page, not against the left gutter.
+    const box = await wrap.boundingBox();
+    expect(Math.abs(box.x + box.width / 2 - page.viewportSize().width / 2), 'centred').toBeLessThan(2);
     await expect(def).toHaveCSS('opacity', '0');
     await expect(wrap).toHaveAttribute('aria-describedby', 'zr-definition-top');
     await wrap.hover();
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
     await expect(def).toContainText('ditetragonal dipyramid');
-    // To the right of the mark on desktop, above it on phones; always inside the viewport.
+    // Centred above the mark, the way the footer one is, and always inside the viewport.
     const [w, d] = await Promise.all([wrap.boundingBox(), def.boundingBox()]);
-    if (page.viewportSize().width > 640) {
-      expect(d.x).toBeGreaterThan(w.x + w.width);
-      expect(Math.abs((d.y + d.height / 2) - (w.y + w.height / 2))).toBeLessThan(2);
-    } else {
-      expect(Math.round(d.x)).toBe(Math.round(w.x));
-      expect(d.y + d.height).toBeLessThan(w.y);
-    }
+    expect(Math.abs((d.x + d.width / 2) - (w.x + w.width / 2)), 'centred on the mark').toBeLessThan(2);
+    expect(d.y + d.height, 'sitting above it').toBeLessThan(w.y);
+    expect(d.x).toBeGreaterThanOrEqual(0);
     expect(d.x + d.width).toBeLessThanOrEqual(page.viewportSize().width);
     expect(d.y).toBeGreaterThanOrEqual(0);
     // Hover does not spin this mark; its rotation follows scroll only.
