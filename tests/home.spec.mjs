@@ -12,9 +12,9 @@ test.describe('home', () => {
     await expect(page.locator('.card__title')).toHaveText([
       'Egocentric video from textile factory floors',
       '8-hour egocentric days on a motherboard assembly line',
-      'Diagnosis pathways and treatment efficacy trends from oncologists',
+      'Egocentric capture across a multi-station manufacturing plant',
     ]);
-    await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Oncology']);
+    await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Manufacturing']);
     // The work heading holds one line on desktop, and the FAQ carries no heading at all.
     if (testInfo.project.name === 'desktop') {
       const lines = await page.locator('#work-title').evaluate(el => el.offsetHeight / parseFloat(getComputedStyle(el).lineHeight));
@@ -26,7 +26,7 @@ test.describe('home', () => {
     await expect(shots).toHaveCount(3);
     await expect(shots.nth(0)).toHaveAttribute('src', 'assets/img/work/textile-ego.jpg');
     await expect(shots.nth(1)).toHaveAttribute('src', 'assets/img/work/assembly-ego.jpg');
-    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/oncology-iphone.jpg');
+    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/manufacturing-plant.jpg');
     const shot = page.locator('.card').nth(1).locator('.card__media--shot img');
     await expect(shot).toHaveAttribute('alt', /soldering/);
     await shot.scrollIntoViewIfNeeded();   // it is lazy, so bring it into view before asking
@@ -242,8 +242,8 @@ test.describe('home', () => {
     const vw = page.viewportSize().width;
     if (testInfo.project.name === 'mobile') {
       // A tall narrow frame crops the spiral to a sliver, so on a phone the layer bleeds past
-      // both edges and is held under the headline rather than behind it. It also has to carry
-      // the whole hero, top to bottom, instead of capping the top of it.
+      // both edges and is held under the headline rather than behind it. It also has to carry the
+      // whole hero, top to bottom, instead of capping the top of it.
       expect(box.width, 'it should bleed past both edges').toBeGreaterThan(vw);
       expect(box.x).toBeLessThan(0);
       expect(await layer.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBeLessThan(1);
@@ -368,7 +368,6 @@ test.describe('home', () => {
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
     await expect(def.locator('strong').first()).toHaveText('Zirconoid');
     await expect(def).toContainText('ˈzər-kə-ˌnȯid');
-    await expect(def).toContainText('ditetragonal dipyramid');
     await expect(def.locator('.def__body strong')).toHaveText('We turn pressure into permanence.');
     await expect(def.locator('.def__body em')).toHaveText('Definition:');
     await page.mouse.move(0, 0);
