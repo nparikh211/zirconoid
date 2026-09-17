@@ -6,11 +6,12 @@ export const SITE = {
   origin: 'https://zirconoid.com',
   email: 'data@zirconoid.com',
   copyright: '© 2026 Zirconoid. Worldwide.',
-  description: 'Zirconoid recruits operators and collects human-captured datasets for the data companies that supply frontier AI labs.',
+  description: 'Zirconoid is organizing human-captured data for physical AI. We recruit operators and collect datasets for the data companies that train physical AI models.',
   // Bump when the wording on the home or legal pages changes; it feeds sitemap lastmod.
-  updated: '2026-09-16',
+  updated: '2026-09-17',
   areaServed: 'Worldwide',
   topics: [
+    'physical AI',
     'operator data collection',
     'egocentric video datasets',
     'human-captured training data',
