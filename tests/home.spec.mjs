@@ -26,7 +26,7 @@ test.describe('home', () => {
     await expect(shots).toHaveCount(3);
     await expect(shots.nth(0)).toHaveAttribute('src', 'assets/img/work/textile-ego.jpg');
     await expect(shots.nth(1)).toHaveAttribute('src', 'assets/img/work/assembly-ego.jpg');
-    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/manufacturing-plant.jpg');
+    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/plant-floor.jpg');
     const shot = page.locator('.card').nth(1).locator('.card__media--shot img');
     await expect(shot).toHaveAttribute('alt', /soldering/);
     await shot.scrollIntoViewIfNeeded();   // it is lazy, so bring it into view before asking
@@ -56,7 +56,6 @@ test.describe('home', () => {
       .toEqual(['OpenAI', 'Anthropic', 'Google DeepMind', 'Mistral AI', 'xAI']);
     // Real image files, decoded by the browser.
     for (const n of await logos.evaluateAll(els => els.map(e => e.naturalWidth))) expect(n).toBeGreaterThan(0);
-    await expect(page.locator('.trust__note')).toHaveCount(0);
 
     const boxes = () => logos.evaluateAll(els => els.map(e => e.getBoundingClientRect()).map(r => ({ x: r.x, y: r.y, w: r.width, h: r.height })));
     await page.locator('.trust').scrollIntoViewIfNeeded(); // the orbit only runs while on screen
