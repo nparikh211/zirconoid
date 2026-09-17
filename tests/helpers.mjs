@@ -1,11 +1,15 @@
 import { expect } from '@playwright/test';
 
-// Collect console errors and failed requests for the life of a page.
+// Collect console errors and failed requests for the life of a page. Third-party tags are
+// skipped: whether someone else's CDN answers is not something this site can be tested on, and a
+// runner without egress to it would fail every page.
+const ours = url => !url || url.startsWith('http://localhost') || url.includes('zirconoid.com');
+
 export function watch(page) {
   const errors = [];
-  page.on('console', m => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });
+  page.on('console', m => { if (m.type() === 'error' && ours(m.location()?.url)) errors.push(`console: ${m.text()}`); });
   page.on('pageerror', e => errors.push(`pageerror: ${e.message}`));
-  page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+  page.on('response', r => { if (r.status() >= 400 && ours(r.url())) errors.push(`${r.status()} ${r.url()}`); });
   return errors;
 }
 

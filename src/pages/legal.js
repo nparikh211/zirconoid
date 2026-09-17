@@ -1,7 +1,7 @@
 import { SITE, ORGANIZATION, ORG_ID, SITE_ID, WEBSITE, breadcrumbs } from '../site.js';
 import { layout } from '../layout.js';
 
-const EFFECTIVE = 'Effective September 17, 2026';
+export const EFFECTIVE = 'Effective September 17, 2026';
 
 const section = (h, ...ps) => `
       <section>${h ? `\n        <h2>${h}</h2>` : ''}

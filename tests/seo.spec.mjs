@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { PAGES } from './helpers.mjs';
 import { SITE } from '../src/site.js';
 import { HEADLINE } from '../src/pages/home.js';
+import { POSTS } from '../src/pages/blog.js';
+import { EFFECTIVE_ISO } from '../src/pages/legal.js';
 
 const ld = async page => {
   const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
@@ -108,8 +110,12 @@ test('sitemap lists every page with a real date', async ({ request }) => {
   const mods = [...xml.matchAll(/<lastmod>(.*?)<\/lastmod>/g)].map(m => m[1]);
   expect(mods).toHaveLength(PAGES.length);
   for (const m of mods) expect(m).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-  // The post entries carry their own publication dates, not one shared build date.
-  expect(new Set(mods).size).toBeGreaterThan(1);
+  // Every date comes from the content, never from the clock at build time. Posts can legitimately
+  // share a date when they were all revised together, so read each one rather than counting them.
+  const at = path => xml.match(new RegExp(`<loc>https://zirconoid\\.com${path}</loc>\\s*<lastmod>(.*?)</lastmod>`))[1];
+  for (const p of POSTS) expect(at(`/blog/${p.slug}/`), `${p.slug} should carry its own date`).toBe(p.updatedIso);
+  expect(at('/privacy/')).toBe(EFFECTIVE_ISO);
+  expect(at('/')).toBe(SITE.updated);
 });
 
 test('rss feed carries every post in full', async ({ request }) => {
