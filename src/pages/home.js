@@ -15,6 +15,8 @@ export const DATASETS = [
     modality: 'Egocentric video + audio',
     operators: 'Textile factory workers, multi-site',
     use: 'Vision-language pretraining, manipulation and defect-recognition policies',
+    image: 'textile-ego',
+    imageAlt: 'Egocentric view of a textile worker inspecting fabric on a loom in an Indian mill',
   },
   {
     domain: 'Electronics assembly',
@@ -23,8 +25,8 @@ export const DATASETS = [
     modality: 'Egocentric video, 8 hrs/day per operator, synced task logs',
     operators: 'Motherboard assembly line workers',
     use: 'Long-horizon task understanding, procedure grounding for embodied agents',
-    image: 'assembly-line',
-    imageAlt: 'An operator soldering a wire to one of a batch of circuit boards laid out on a workbench',
+    image: 'assembly-ego',
+    imageAlt: 'Egocentric headcam view of gloved hands soldering a motherboard on an assembly bench',
   },
   {
     domain: 'Oncology',
@@ -33,6 +35,8 @@ export const DATASETS = [
     modality: 'Structured expert text, decision trajectories',
     operators: 'Board-certified oncologists',
     use: 'Expert trajectories for agent evaluation and RL reward modeling in clinical reasoning',
+    image: 'oncology-iphone',
+    imageAlt: 'Casual phone photo of an oncology desk with handwritten notes, charts, and a CT scan on a monitor',
   },
 ];
 
