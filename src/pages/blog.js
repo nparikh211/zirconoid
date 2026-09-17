@@ -2,7 +2,14 @@ import { readFileSync } from 'node:fs';
 import { SITE, esc, plain, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID, breadcrumbs } from '../site.js';
 import { layout } from '../layout.js';
 
-export const POSTS = JSON.parse(readFileSync(new URL('../content/posts.json', import.meta.url), 'utf8'));
+const RAW = JSON.parse(readFileSync(new URL('../content/posts.json', import.meta.url), 'utf8'));
+
+// Counted from the text at 200 words a minute, so the label can never drift from the post.
+// `updatedIso` is the date the wording last changed; it carries the published date when absent.
+export const POSTS = RAW.map(p => {
+  const words = p.body.join(' ').split(/\s+/).length;
+  return { ...p, words, read: `${Math.max(1, Math.round(words / 200))} min read`, updatedIso: p.updatedIso || p.isoDate };
+});
 
 // Turn bare email addresses in post copy into mailto links.
 const linkify = s => esc(s).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<a href="mailto:$1">$1</a>');
@@ -64,7 +71,7 @@ export function renderIndex() {
     body,
     current: 'blog',
     jsonLd,
-    modified: POSTS.map(p => p.isoDate).sort().pop(),
+    modified: POSTS.map(p => p.updatedIso).sort().pop(),
   });
 }
 
@@ -79,9 +86,9 @@ export function renderPost(p) {
       name: p.title,
       description: p.excerpt,
       articleBody: p.body.map(plain).join('\n\n'),
-      wordCount: p.body.join(' ').split(/\s+/).length,
+      wordCount: p.words,
       datePublished: p.isoDate,
-      dateModified: p.isoDate,
+      dateModified: p.updatedIso,
       articleSection: p.tag,
       keywords: SITE.topics.join(', '),
       inLanguage: 'en',
@@ -119,6 +126,6 @@ ${p.body.map(t => `      <p>${linkify(t)}</p>`).join('\n')}
     jsonLd,
     ogType: 'article',
     published: p.isoDate,
-    modified: p.isoDate,
+    modified: p.updatedIso,
   });
 }

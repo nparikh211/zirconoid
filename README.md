@@ -74,7 +74,8 @@ The site is built to be read by search engines and by AI answer engines, and to 
 
 - Home copy and the three dataset cards: `src/pages/home.js` (`BELIEF`, `DATASETS`).
 - Dataset card stills: give a dataset `image: 'name'` and drop `public/assets/img/work/name.jpg` in place; it replaces the "Coming soon" block. Add `imageAlt` to describe the shot, or it falls back to the card title. Crop about 2:1; the block is 160px tall and covers. Stills are held back to 40% grey on the page and come to full colour when the card is hovered. Full-size originals live in `media/`, which is outside `public/` so they are never published.
-- Blog posts: add an object to `src/content/posts.json`. Each needs `slug`, `tag`, `date`, `isoDate`, `read`, `title`, `excerpt`, `body` (array of paragraphs). The build writes `/blog/<slug>/index.html` and adds it to the sitemap.
+- Blog posts: add an object to `src/content/posts.json`. Each needs `slug`, `tag`, `date`, `isoDate`, `title`, `excerpt`, `body` (array of paragraphs). The reading time is counted from the text at 200 words a minute, so it can never drift. Add `updatedIso` when you change the wording of a post that is already up: it feeds `dateModified` and the sitemap, while `isoDate` stays the day it was published. The build writes `/blog/<slug>/index.html` and adds it to the sitemap.
+- Every post has to say that Zirconoid partners with the sites as well as recruiting the operators: workshops, factories, plants, bottling lines, chip fabs, mills, logistics hubs and the rest. Without it the posts read as an individual-recruiting business. A test enforces it.
 - FAQ: `FAQ` in `src/pages/home.js`. Keep answers factual; they are what AI assistants will quote.
 - Legal text: `src/pages/legal.js`. Change `EFFECTIVE` and `EFFECTIVE_ISO` when you change the text.
 - Dataset card images: the cards use a striped placeholder box (`.card__media`). Swap in an `<img>` there when stills are ready.

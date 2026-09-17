@@ -4,14 +4,16 @@
     "tag": "Company",
     "date": "Sep 2026",
     "isoDate": "2026-09-15",
-    "read": "3 min read",
+    "updatedIso": "2026-09-17",
     "title": "Announcing Zirconoid",
-    "excerpt": "The talent engine for operator data. Why the bottleneck on frontier data is access to real operators, and what we are building to fix it.",
+    "excerpt": "The talent engine for operator data. Why the bottleneck on frontier data is access to real operators and the sites they work in, and what we are building to fix it.",
     "body": [
-      "Zirconoid provides specialized datasets that power frontier models. We are the upstream partner for the data companies that supply the world's leading AI labs: we recruit the people who do real work and we capture what they do.",
+      "Zirconoid provides specialized datasets that power frontier models. We are the upstream partner for the data companies that supply the world's leading AI labs: we recruit the people who do real work, we partner with the places where that work happens, and we capture what they do.",
       "Our core belief is that data complex enough to teach today's frontier models is bottlenecked by access to real operators and the datasets they produce. Engineering systems that solve technical problems get commoditized. Fresh human-collected and operator-collected data does not, because it is so specific to the person, the place, and the task.",
-      "That is why we built a talent engine rather than a software platform. We bring people in by the hour for capture scenarios, or on contract and full-time, across any industry where humans still outperform models. Factory floors, assembly lines, clinics, workshops. Wherever the ground truth lives.",
-      "Our first programs are running now: egocentric video from textile and electronics manufacturing, and structured diagnostic reasoning from oncologists. If you supply data to frontier labs and need operator data you cannot source yourself, write to data@zirconoid.com."
+      "That is why we built a talent engine rather than a software platform. We bring people in by the hour for capture scenarios, or on contract and full time, across any industry where people still outperform models.",
+      "Hiring one operator at a time only goes so far. The work that matters happens inside buildings other people own, so we partner with the sites as well as the staff: boutique workshops with four benches, contract factories, full manufacturing plants, bottling and packaging lines, chip fabs and their cleanrooms, foundries, machine shops, textile mills, food and cold-chain processing, warehouses and logistics hubs, ports, rail yards and shipyards, refineries, and the specialized plants that make one part for one customer. We go to the regions where each industry sits, agree terms with plant management, and run capture around the production schedule rather than across it.",
+      "The mix is not only a matter of logistics. A four-person workshop and a thousand-person plant teach a model different things about the same task, and a dataset drawn from one kind of site alone inherits that site's habits.",
+      "Our first programs are running now: egocentric video from textile and electronics manufacturing, and structured diagnostic reasoning from oncologists. If you supply data to frontier labs and need operators, or a site, you cannot source yourself, write to data@zirconoid.com."
     ]
   },
   {
@@ -19,15 +21,17 @@
     "tag": "Capture",
     "date": "Sep 2026",
     "isoDate": "2026-09-08",
-    "read": "5 min read",
+    "updatedIso": "2026-09-17",
     "title": "Why egocentric capture is the hardest data to fake",
     "excerpt": "First-person video of real work carries information no synthetic pipeline reproduces. Notes from running capture on factory floors.",
     "body": [
       "Egocentric video is footage recorded from the operator's point of view, usually with a head-mounted camera. It shows where the hands go, where the eyes go, and what the environment looks like at the moment a decision is made. For models that need to act in the physical world, that combination is difficult to reproduce any other way.",
       "Staged capture breaks down quickly. An actor demonstrating a task performs the canonical version of it. A real operator performs the version that works on this machine, with this material, on this shift. The deviations are the signal: the extra tug on a thread that is about to snag, the second look at a solder joint that is slightly off color.",
       "Long sessions matter for the same reason. Our motherboard assembly program records full 8-hour days rather than curated clips. Transitions, idle time, recoveries from mistakes, and handoffs between stations are all present. Models trained on trimmed highlights never see how a task begins or how it goes wrong.",
-      "The operational work is where most of the difficulty sits. Consent, site access, camera placement that does not interfere with the job, storage that keeps up with multi-camera shifts, and a labeling pass tied to the operator's own task log. None of it is glamorous. All of it decides whether the dataset is usable.",
-      "We treat capture as a staffing problem first and a data problem second. Get the right people on the floor, make it worth their time, and the data follows."
+      "Getting on the floor is its own job, and it starts with the site rather than the camera. What does the line make, what may not be filmed, who signs, which shifts can we join, where does the footage go. We run this with boutique workshops, contract factories, manufacturing plants that cover several hectares, bottling and packaging lines, chip fabs, foundries, textile mills, logistics and fulfilment centres, and single-product facilities, in whichever region the industry sits.",
+      "Breadth of site changes the dataset, not just the schedule. The same job looks different on a line that runs one shift a day and on one that never stops, and a model that has only seen the tidy version of a task will meet the other one in the field.",
+      "The rest of the operational work decides whether the dataset is usable at all: consent, camera placement that does not interfere with the job, storage that keeps up with multi-camera shifts, and a labeling pass tied to the operator's own task log. None of it is glamorous.",
+      "We treat capture as a staffing and access problem first and a data problem second. Get the right people on the right floor, make it worth their time, and the data follows."
     ]
   },
   {
@@ -35,15 +39,17 @@
     "tag": "Operations",
     "date": "Aug 2026",
     "isoDate": "2026-08-25",
-    "read": "4 min read",
+    "updatedIso": "2026-09-17",
     "title": "How we recruit operators by the hour",
-    "excerpt": "Staffing capture scenarios is a recruiting problem before it is a data problem. How we source, vet, and pay the people who produce ground truth.",
+    "excerpt": "Staffing capture scenarios is a recruiting problem before it is a data problem. How we source sites and operators, vet them, and pay the people who produce ground truth.",
     "body": [
       "Every dataset we deliver starts with a roster. Before a single frame is recorded, someone has to find the textile worker with fifteen years at the loom, confirm they are who they say they are, agree on a rate, and schedule them around their actual job.",
       "We source through three channels: direct relationships with employers who want their operators' expertise captured, referrals from operators already in our network, and open recruiting in regions where the industry is concentrated. Referrals produce the best retention, so we pay for them.",
+      "The employer channel is the one we invest in hardest, because it brings a site rather than a person. We hold agreements with boutique workshops, contract factories, large manufacturing plants, bottling and packaging lines, chip makers, foundries and machine shops, textile mills, food and cold-chain processing, logistics and fulfilment centres, and specialized production facilities, across the regions where each trade sits.",
+      "A signed site gives us four things a lone operator cannot: a roster, a shift schedule, a floor we are allowed to film, and a manager who answers the phone at six in the morning. It also lets a program grow from one bench to several plants without starting the search again.",
       "Vetting is practical rather than credential-based for floor work. We ask operators to perform a short segment of the task on camera and have a domain reviewer confirm the technique. For expert programs like oncology, we verify board certification and current practice.",
-      "Operators are paid hourly for capture sessions, with a premium for full-shift recordings and for wearing equipment. Contract and full-time arrangements are available for programs that run for months. Paying well is the cheapest quality-control measure we have found.",
-      "If you run a data company and need operators in an industry we have not touched yet, tell us the domain. Recruiting is the part we are built for."
+      "Operators are paid hourly for capture sessions, with a premium for full-shift recordings and for wearing equipment. Contract and full-time arrangements are available for programs that run for months. Paying well is the cheapest quality-control measure we have found. Sites are paid for the access and the disruption, which is what makes plant managers take the second call.",
+      "If you run a data company and need operators in an industry we have not touched, or a site in a region we are not in yet, tell us the domain. Recruiting is the part we are built for."
     ]
   },
   {
@@ -51,13 +57,15 @@
     "tag": "Research",
     "date": "Aug 2026",
     "isoDate": "2026-08-11",
-    "read": "4 min read",
+    "updatedIso": "2026-09-17",
     "title": "Structuring expert reasoning for agent and RL training",
     "excerpt": "What it takes to turn an oncologist's working knowledge into trajectories a lab can train and evaluate against.",
     "body": [
       "Expert working knowledge is a different kind of operator data. There is no camera. The task is reasoning, and the ground truth is the sequence of judgments an experienced clinician makes between a patient presenting and a treatment being chosen.",
       "For our oncology program, oncologists document diagnosis pathways step by step: presenting features, differentials considered and ruled out, staging, the treatment options weighed, and the rationale for the selection. Alongside this they record efficacy trends they have observed across de-identified cohorts.",
       "The structure matters as much as the content. Each pathway is written as a trajectory with explicit decision points, so it can serve as a reference for agent evaluation or as the basis for a reward model in reinforcement learning. Free-form essays are easier to collect and nearly useless for this purpose.",
+      "We partner with institutions here the same way we partner with factories. We contract individual clinicians, and we also work with the organizations around them: hospital groups and cancer centres, diagnostic labs, and the quality, process and engineering teams inside industrial firms who hold the reasoning behind their own plants. An institution brings a cohort of experts, a review process, and a legal path for the data, which is usually what decides whether a program of this kind can run at all.",
+      "That reasoning exists well outside medicine. A process engineer at a chip fab, a line supervisor at a bottling plant, and a planner at a logistics hub each carry a decision tree that has never been written down, and each one is reachable through the site rather than the person.",
       "All patient-level information is de-identified before it reaches us, and contributing clinicians work under agreements that cover consent and data handling. Specifics are available to partners on request at data@zirconoid.com."
     ]
   }

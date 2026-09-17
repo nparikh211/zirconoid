@@ -22,11 +22,11 @@ function write(path, html) {
 
 /** Every indexable page, with the date its content last changed. */
 function pageList() {
-  const newestPost = POSTS.map(p => p.isoDate).sort().pop();
+  const newestPost = POSTS.map(p => p.updatedIso).sort().pop();
   return [
     { path: '/', lastmod: SITE.updated, priority: '1.0', changefreq: 'monthly' },
     { path: '/blog/', lastmod: newestPost, priority: '0.8', changefreq: 'weekly' },
-    ...POSTS.map(p => ({ path: `/blog/${p.slug}/`, lastmod: p.isoDate, priority: '0.7', changefreq: 'yearly' })),
+    ...POSTS.map(p => ({ path: `/blog/${p.slug}/`, lastmod: p.updatedIso, priority: '0.7', changefreq: 'yearly' })),
     { path: '/privacy/', lastmod: EFFECTIVE_ISO, priority: '0.3', changefreq: 'yearly' },
     { path: '/terms/', lastmod: EFFECTIVE_ISO, priority: '0.3', changefreq: 'yearly' },
   ];

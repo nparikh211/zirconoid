@@ -30,6 +30,25 @@ for (const [slug, title] of POSTS) {
   });
 }
 
+// Every post has to say that we partner with the sites, not only that we recruit people.
+// The posts read as an individual-recruiting business otherwise.
+test('every post names the sites we work with, not only the operators', async ({ page }) => {
+  const SITES = /factor(y|ies)|workshop|plant|fab|mill|foundr|logistics|hub|refiner|institution|centre|center/i;
+  for (const [slug] of POSTS) {
+    await page.goto(`/blog/${slug}/`);
+    const text = await page.locator('.post__body').innerText();
+    expect(text, `${slug} should mention the places the work happens`).toMatch(SITES);
+    expect(text, `${slug} should say we partner with them`).toMatch(/partner|agreement|site/i);
+  }
+});
+
+test('reading time is counted from the post itself', async ({ page }) => {
+  await page.goto('/blog/announcing-zirconoid/');
+  const words = (await page.locator('.post__body').innerText()).trim().split(/\s+/).length;
+  const said = parseInt((await page.locator('.post__meta').innerText()).match(/(\d+) min read/)[1], 10);
+  expect(Math.abs(said - Math.max(1, Math.round(words / 200))), 'the label should match the text').toBeLessThanOrEqual(1);
+});
+
 test('old hash links redirect to the post page', async ({ page }) => {
   await page.goto('/blog/#egocentric-capture');
   await expect(page).toHaveURL(/\/blog\/egocentric-capture\/$/);
