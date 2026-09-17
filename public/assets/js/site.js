@@ -76,6 +76,27 @@
     targets.forEach(el => io.observe(el));
   }
 
+  // The Zirconoid marks show their definition on hover. A touch screen has no hover, and the
+  // footer mark is also a link home, so a tap there would just jump to the top of the page.
+  // On those devices a tap shows the definition instead, and a tap anywhere else puts it away.
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+    const holders = [document.querySelector('.belief__mark-wrap'), document.querySelector('.footer__mark')].filter(Boolean);
+    for (const holder of holders) {
+      holder.addEventListener('click', e => {
+        e.preventDefault();                       // never follow the link on a tap
+        const wasOpen = holder.classList.contains('is-open');
+        for (const other of holders) other.classList.remove('is-open');
+        if (!wasOpen) holder.classList.add('is-open');
+      });
+    }
+    if (holders.length) {
+      document.addEventListener('click', e => {
+        if (holders.some(h => h.contains(e.target))) return;
+        for (const h of holders) h.classList.remove('is-open');
+      });
+    }
+  }
+
   // Trusted-by sphere. The marks sit on a sphere centred on the claim and the sphere turns,
   // so each one swings out to the sides and slides back behind the words in between.
   const orbit = document.querySelector('[data-orbit]');

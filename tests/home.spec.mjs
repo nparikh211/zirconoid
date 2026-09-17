@@ -229,6 +229,24 @@ test.describe('home', () => {
     await expect(nav).not.toHaveClass(/is-scrolled/);
   });
 
+  test('the hero galaxy is framed for the screen', async ({ page }, testInfo) => {
+    await open(page, '/', { galaxy: false });
+    const layer = page.locator('[data-galaxy-hero]');
+    const box = await layer.boundingBox();
+    const vw = page.viewportSize().width;
+    if (testInfo.project.name === 'mobile') {
+      // A tall narrow frame crops the spiral to a sliver, so on a phone the layer is wider than
+      // the screen, shorter, and held under the headline rather than behind it.
+      expect(box.width, 'it should bleed past both edges').toBeGreaterThan(vw);
+      expect(box.x).toBeLessThan(0);
+      expect(await layer.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBeLessThan(1);
+      expect(box.height / box.width, 'the frame should not be extremely tall').toBeLessThan(2);
+    } else {
+      expect(box.x).toBeGreaterThan(0);        // desktop keeps it to the right of the headline
+      expect(await layer.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
+    }
+  });
+
   test('hero and galaxy move at different speeds (parallax)', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const h1 = page.locator('h1');
@@ -338,6 +356,42 @@ test.describe('home', () => {
     await page.mouse.move(0, 0);
     await expect.poll(async () => num(await def.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
   });
+
+  test('on a touch screen the marks answer to a tap, and the footer one does not navigate',
+    async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== 'mobile', 'there is no hover to replace on a desktop');
+      await open(page, '/', { galaxy: false });
+
+      const footer = page.locator('.footer__mark');
+      const footerDef = footer.locator('.def');
+      await footer.scrollIntoViewIfNeeded();
+      const url = page.url();
+      const at = await page.evaluate(() => Math.round(window.scrollY));
+      await expect(footerDef).toHaveCSS('opacity', '0');
+
+      // A tap shows the definition. It must not follow the link to the top of the page.
+      await footer.locator('a').tap();
+      await expect(footer).toHaveClass(/is-open/);
+      await expect.poll(() => footerDef.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
+      expect(page.url(), 'the tap should not navigate').toBe(url);
+      expect(Math.abs(await page.evaluate(() => Math.round(window.scrollY)) - at), 'the page should not jump').toBeLessThan(10);
+
+      // A tap anywhere else puts it away.
+      await page.locator('.footer__bar span').tap();
+      await expect(footer).not.toHaveClass(/is-open/);
+      await expect.poll(() => footerDef.evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(0);
+
+      // The mark above the belief text answers the same way.
+      const top = page.locator('.belief__mark-wrap');
+      await top.scrollIntoViewIfNeeded();
+      await top.tap();
+      await expect(top).toHaveClass(/is-open/);
+      await expect.poll(() => top.locator('.def').evaluate(el => parseFloat(getComputedStyle(el).opacity))).toBe(1);
+      // Only one at a time.
+      await footer.scrollIntoViewIfNeeded();
+      await footer.locator('a').tap();
+      await expect(top).not.toHaveClass(/is-open/);
+    });
 
   test('belief mark shows the same definition while hovered', async ({ page }) => {
     await open(page, '/', { galaxy: false });

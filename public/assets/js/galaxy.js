@@ -206,7 +206,19 @@ class ZirconoidGalaxy extends HTMLElement {
     };
     this._applyAttrs();
 
-    const resize = () => { const w = this.clientWidth || 1, h = this.clientHeight || 1; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+    // A perspective camera crops horizontally as the frame narrows, so on a phone the spiral
+    // would be a sliver of its middle. Shrink it to suit instead, and ease its offset back
+    // towards the centre by the same amount so the composition holds rather than drifting off.
+    const BASE_SCALE = 1.65, REF_ASPECT = 1.5, MIN_FIT = 0.34;
+    const resize = () => {
+      const w = this.clientWidth || 1, h = this.clientHeight || 1;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      const fit = T.MathUtils.clamp(camera.aspect / REF_ASPECT, MIN_FIT, 1);
+      inner.scale.setScalar(BASE_SCALE * fit);
+      outer.position.set(off[0] * fit, off[1] * fit, off[2]);
+    };
     resize(); this._ro = new ResizeObserver(resize); this._ro.observe(this);
 
     const mouse = { x: 0, y: 0 }, smooth = { x: 0, y: 0 }; let autoRot = 0;

@@ -433,6 +433,8 @@ img, svg { max-width: 100%; }
   border-top: 1px solid rgba(255, 255, 255, .12);
   transform: rotate(-45deg);
 }
+.footer__mark.is-open .def,
+.belief__mark-wrap.is-open .def,
 .footer__mark a:hover + .def,
 .footer__mark a:focus-visible + .def,
 .belief__mark-wrap:hover .def,
@@ -440,8 +442,12 @@ img, svg { max-width: 100%; }
   opacity: 1;
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
-.footer__mark a:hover + .def--center, .footer__mark a:focus-visible + .def--center { transform: translate(-50%, 0) scale(1); }
-.belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right { transform: translateY(-50%) translateX(0) scale(1); }
+.footer__mark a:hover + .def--center, .footer__mark a:focus-visible + .def--center,
+.footer__mark.is-open .def--center { transform: translate(-50%, 0) scale(1); }
+.belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right,
+.belief__mark-wrap.is-open .def--right { transform: translateY(-50%) translateX(0) scale(1); }
+/* The footer mark keeps turning while its definition is up on a touch screen. */
+.footer__mark.is-open a { animation-play-state: running; }
 .def p { margin: 0; }
 .def__head { font-family: var(--head); font-size: 16px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 10px !important; }
 .def__head strong { font-weight: 600; }
@@ -564,6 +570,17 @@ img, svg { max-width: 100%; }
 
 /* Small screens */
 @media (max-width: 640px) {
+  /* Wider and shorter than on desktop: a tall narrow frame crops the spiral to nothing, and the
+     hard left fade was cutting away most of what was left. */
+  .galaxy-hero {
+    left: -14%;
+    right: -14%;
+    top: -16vh;
+    height: 84vh;
+    opacity: .78;             /* it sits behind the headline, so keep it under the type */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 46%, transparent 78%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 46%, transparent 78%), linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  }
   :root { --nav-gutter: 16px; }
   .nav { padding-top: 16px; padding-bottom: 16px; }
   .nav__brand { letter-spacing: .2em; }
@@ -579,7 +596,8 @@ img, svg { max-width: 100%; }
   .faq__a { padding-right: 0; }
   .def--right { left: 0; top: auto; bottom: calc(100% + 18px); width: min(440px, calc(100vw - var(--gutter) - 16px)); transform: translateY(8px) scale(.98); transform-origin: 32px 100%; }
   .def--right::after { top: 100%; left: 32px; border-left: 0; border-top: 0; border-right: 1px solid rgba(255, 255, 255, .12); border-bottom: 1px solid rgba(255, 255, 255, .12); transform: rotate(45deg); }
-  .belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right { transform: translateY(0) scale(1); }
+  .belief__mark-wrap:hover .def--right, .belief__mark-wrap:focus-visible .def--right,
+  .belief__mark-wrap.is-open .def--right { transform: translateY(0) scale(1); }
 }
 
 /* Reduced motion */
