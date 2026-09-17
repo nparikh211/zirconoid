@@ -238,11 +238,28 @@ class ZirconoidGalaxy extends HTMLElement {
     this._dispose = () => { window.removeEventListener('mousemove', onMove); gpu.dispose(); sgpu.dispose(); galGeo.dispose(); smkGeo.dispose(); starGeo.dispose(); galMat.dispose(); smkMat.dispose(); starMat.dispose(); renderer.dispose(); };
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Hold still while a finger is dragging the page. The layer scrolls with the content, so a
+    // galaxy that pauses for the length of a flick looks like any other background, and the
+    // phone gets the whole frame for the scroll itself. It picks up again once the page settles.
+    let scrolling = false, settle = 0;
+    if (lite) {
+      const onScroll = () => {
+        scrolling = true;
+        clearTimeout(settle);
+        settle = setTimeout(() => { scrolling = false; }, 140);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      const drop = this._dispose;
+      this._dispose = () => { window.removeEventListener('scroll', onScroll); clearTimeout(settle); drop(); };
+    }
+
     let onscreen = true, frames = 0, last = performance.now(), clock = 0;
     this._io = new IntersectionObserver(es => { for (const e of es) onscreen = e.isIntersecting; }, { rootMargin: '256px' }); this._io.observe(this);
     const tick = (now) => {
       if (!this._alive) return; requestAnimationFrame(tick);
       if (!onscreen || document.hidden) { last = now; return; }
+      // Never before the first frames have drawn, or the canvas would fade in mid-scroll empty.
+      if (scrolling && frames > 24) { last = now; return; }
       const raw = Math.min((now - last) / 1000, 0.05); last = now; clock += raw;
       const dt = reduce ? 0 : raw * rotationSpeed;
       galMat.uniforms.uPosition.value = gpu.compute('pos', clock, dt, gal.dataTex);
@@ -253,7 +270,8 @@ class ZirconoidGalaxy extends HTMLElement {
         mouseGroup.rotation.x = BASE[0] - smooth.y * 0.1 * m; mouseGroup.rotation.y = BASE[1] - smooth.x * 0.12 * m; mouseGroup.rotation.z = autoRot + smooth.x * smooth.y * 0.03 * m;
       }
       renderer.render(scene, camera);
-      frames++; if (frames === 24) { canvas.style.opacity = dim; this.setAttribute('data-ready', ''); this.dispatchEvent(new CustomEvent('galaxy-ready')); }
+      frames++; this._frames = frames;   // a plain property, so a test can watch it advance
+      if (frames === 24) { canvas.style.opacity = dim; this.setAttribute('data-ready', ''); this.dispatchEvent(new CustomEvent('galaxy-ready')); }
     };
     requestAnimationFrame(tick);
   }
