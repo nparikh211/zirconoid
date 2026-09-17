@@ -131,7 +131,7 @@ test('llms.txt maps the site and llms-full.txt holds the text', async ({ request
 
   const full = await (await request.get('/llms-full.txt')).text();
   expect(full.length).toBeGreaterThan(9000);
-  expect(full).toContain('Zirconoid collects human data for frontier training');
+  expect(full).toContain('Zirconoid is organizing human-captured data for physical AI');
   expect(full).toContain('## Questions');
   expect(full).toContain('# Privacy Policy');
   expect(full).toContain('# Terms of Service');
