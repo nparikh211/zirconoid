@@ -52,7 +52,7 @@ export const FRONTIER_LABS = [
 export const FAQ = [
   {
     q: 'What does Zirconoid do?',
-    a: 'Zirconoid is a talent engine for operator data. We recruit the people who do real work and we capture what they do, then deliver those datasets to the data companies that supply frontier AI labs. Operators join by the hour for capture scenarios, or on contract and full-time.',
+    a: 'Zirconoid is a talent engine for operator data. We recruit the people who do real work and we capture what they do, then deliver those datasets to the data companies building physical AI. Operators join by the hour for capture scenarios, or on contract and full-time.',
   },
   {
     q: 'Who does Zirconoid work with?',
@@ -111,7 +111,7 @@ export function render() {
       '@type': 'WebPage',
       '@id': `${SITE.origin}/#webpage`,
       url: SITE.origin + '/',
-      name: 'Zirconoid — Human data for frontier training',
+      name: 'Zirconoid — Human-captured data for physical AI',
       description: SITE.description,
       isPartOf: { '@id': SITE_ID },
       about: { '@id': ORG_ID },
@@ -167,7 +167,7 @@ export function render() {
 <main>
 <section class="hero" aria-label="Introduction">
   <div class="hero__inner">
-    <h1 class="hero__title" data-hero-title>Zirconoid collects human data for frontier training</h1>
+    <h1 class="hero__title" data-hero-title>Zirconoid is organizing human-captured data for physical AI</h1>
   </div>
 </section>
 
@@ -232,7 +232,7 @@ ${FAQ.map((f, i) => `    <details class="faq__item" id="faq-${i + 1}" name="zr-f
 
   return layout({
     path: '/',
-    title: 'Zirconoid — Human data for frontier training',
+    title: 'Zirconoid — Human-captured data for physical AI',
     description: SITE.description,
     body,
     home: true,
