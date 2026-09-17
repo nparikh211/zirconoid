@@ -521,16 +521,22 @@ img, svg { max-width: 100%; }
   background: #fdfcf7;
   box-shadow: 0 28px 70px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .05);
   overflow: hidden;                 /* clip the canvas to the rounded corners */
-  --ink: #17160f;
-  --soft: #2b291f;
-  --muted: #4c4839;
-  --dim: #5f5a49;
-  --faint: #7d7768;
-  --cream: #17160f;
-  --rule: rgba(23, 22, 15, .18);
-  --rule-soft: rgba(23, 22, 15, .1);
+  /* Grain breaks up a letter the way a flat background never does, so the ink is black and the
+     supporting greys are far darker than the dark theme's. */
+  --ink: #000;
+  --soft: #000;
+  --muted: #1c1b16;
+  --dim: #2a2822;
+  --faint: #3b382f;
+  --cream: #000;
+  --rule: rgba(0, 0, 0, .22);
+  --rule-soft: rgba(0, 0, 0, .12);
   color: var(--ink);
 }
+/* Light type sits on paper the way it never does on a dark screen: the grain eats the thin
+   strokes. The body text carries normal weight here. */
+.paper .post__body p,
+.paper .post-list__excerpt { font-weight: 400; }
 /* The padding lives in here, not on the sheet: the shader sizes its canvas from the host's
    content box and then stretches it over the border box, so padding on the host renders the
    grain small and blows it back up. */
@@ -543,8 +549,8 @@ img, svg { max-width: 100%; }
 .paper .post__foot a:hover { color: #000; }
 .paper .post__body a { border-bottom-color: var(--rule); }
 .paper .post__body a:hover { border-bottom-color: var(--muted); }
-.paper ::selection { background: #17160f; color: #fdfcf7; }
-.paper .post-list__item:hover { background: rgba(23, 22, 15, .04); }
+.paper ::selection { background: #000; color: #fdfcf7; }
+.paper .post-list__item:hover { background: rgba(0, 0, 0, .05); }
 /* The nav floats over the sheet, and its blur alone would leave pale type on white paper. */
 .site--paper .nav__blur { background: rgba(20, 20, 20, .72); }
 

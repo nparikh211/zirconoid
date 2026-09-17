@@ -108,7 +108,7 @@ test('the sheet still reads without the shader', async ({ page }) => {
   await expect(sheet).not.toHaveAttribute('data-paper-ready', '');
   await expect(sheet.locator('canvas')).toHaveCount(0);
   await expect(sheet).toHaveCSS('background-color', 'rgb(253, 252, 247)');
-  await expect(page.locator('.post__body p').first()).toHaveCSS('color', 'rgb(43, 41, 31)');
+  await expect(page.locator('.post__body p').first()).toHaveCSS('color', 'rgb(0, 0, 0)');
 });
 
 test('the rest of the site keeps its dark pages', async ({ page }) => {
