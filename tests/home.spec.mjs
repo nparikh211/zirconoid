@@ -461,23 +461,20 @@ test.describe('home', () => {
       expect(errors.filter(e => !/WebGL|GPU|swiftshader/i.test(e))).toEqual([]);
     });
 
-    // On a phone the galaxy holds still while a finger drags the page, and starts again once the
-    // page settles. A flag that stuck on would leave it frozen for good, so check both ways.
-    test('galaxy holds still while the page is being scrolled', async ({ page }, testInfo) => {
-      test.skip(testInfo.project.name !== 'mobile', 'only touch screens pause the galaxy');
+    // On a phone the galaxy keeps drawing while a finger drags the page (lite mode still cuts
+    // particle count / DPR; it just no longer freezes for the length of a flick).
+    test('galaxy keeps animating while the page is being scrolled', async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== 'mobile', 'scroll continuity is the mobile regression');
       await open(page, '/');
       const gal = page.locator('zirconoid-galaxy').first();
       await expect(gal).toHaveAttribute('data-ready', '', { timeout: 120000 });
       const frames = () => gal.evaluate(el => el._frames);
-      // Keep scrolling for long enough that a drawn frame would show up, then read the counter.
       const before = await frames();
       await page.evaluate(async () => {
         const end = performance.now() + 4000;
         while (performance.now() < end) { window.scrollBy(0, 2); await new Promise(r => setTimeout(r, 30)); }
       });
-      expect(await frames(), 'it should not draw while the page is moving').toBe(before);
-      await expect.poll(frames, { message: 'it should start again once the page settles', timeout: 60000 })
-        .toBeGreaterThan(before);
+      expect(await frames(), 'it should keep drawing while the page is moving').toBeGreaterThan(before);
     });
 
     test('galaxy code loads three.js from the vendored copy', async ({ page }) => {
