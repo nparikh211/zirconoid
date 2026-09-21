@@ -1,0 +1,164 @@
+/* Button elements sharing .btn (nav / CTA openers, form submit) */
+button.btn {
+  border: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  line-height: inherit;
+}
+
+/* Sample-request modal — above nav (70) and galaxy */
+.sample-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+.sample-modal[hidden] { display: none !important; }
+.sample-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, .72);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+.sample-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  max-height: min(90vh, 720px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 28px 28px 32px;
+  border-radius: 6px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .65);
+  color: var(--ink);
+}
+.sample-modal__x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color .2s, background .2s;
+}
+.sample-modal__x:hover { color: #fff; background: rgba(255, 255, 255, .06); }
+.sample-modal__title {
+  margin: 0 36px 12px 0;
+  font-family: var(--head);
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 24px);
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.sample-modal__lede {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--muted);
+}
+.sample-form { display: grid; gap: 16px; }
+.sample-form__field { display: grid; gap: 6px; }
+.sample-form__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.sample-form__label abbr { text-decoration: none; color: var(--muted); }
+.sample-form__opt { text-transform: none; letter-spacing: 0; color: var(--faint); }
+.sample-form input,
+.sample-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .04);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 300;
+  transition: border-color .2s, background .2s;
+}
+.sample-form input:focus,
+.sample-form textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, .35);
+  background: rgba(255, 255, 255, .06);
+}
+.sample-form textarea { resize: vertical; min-height: 96px; }
+.sample-form input::placeholder,
+.sample-form textarea::placeholder { color: var(--faint); }
+.sample-form__hp {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.sample-form__error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #e8a0a0;
+}
+.sample-form__error[hidden] { display: none !important; }
+.sample-form .btn[disabled],
+.sample-form .btn[aria-busy="true"] {
+  opacity: .55;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
+}
+.sample-modal__thanks { display: grid; gap: 24px; padding-top: 8px; }
+.sample-modal__thanks[hidden] { display: none !important; }
+.sample-modal__thanks-copy {
+  margin: 0;
+  font-family: var(--head);
+  font-weight: 400;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.35;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+html.sample-modal-open { overflow: hidden; }
+
+@media (max-width: 640px) {
+  .sample-modal { padding: 16px 12px; align-items: flex-end; }
+  .sample-modal__panel {
+    width: 100%;
+    max-height: min(92vh, 100%);
+    padding: 24px 20px 28px;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sample-modal__x, .sample-form input, .sample-form textarea { transition: none; }
+}
