@@ -14,9 +14,12 @@ for (const path of PAGES) {
     await expect(page).toHaveTitle(/Zirconoid/);
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('.nav__brand')).toHaveText('Zirconoid');
-    await expect(page.locator('header .btn')).toHaveAttribute('href', /mailto:data@zirconoid\.com\?subject=Sample%20dataset%20request&body=/);
-    const body = decodeURIComponent((await page.locator('header .btn').getAttribute('href')).split('&body=')[1]);
-    expect(body).toBe("Hi Zirconoid team,\r\n\r\nI'd like to request some sample data with the following specs: [please enter info here]\r\n\r\n[Please share a few times that you are available for a call to discuss your requirements].\r\n\r\n- [Your Name]");
+    const sampleBtn = page.locator('header .btn[data-sample-open]');
+    await expect(sampleBtn).toHaveCount(1);
+    await expect(sampleBtn).toHaveAttribute('type', 'button');
+    await expect(sampleBtn).toHaveText(/Request a sample/);
+    await expect(page.locator('[data-sample-modal]')).toHaveCount(1);
+    await expect(page.locator('[data-sample-modal]')).toHaveAttribute('hidden', '');
     // Versioned asset URLs, so a CDN cannot pair this HTML with stale CSS or JS. Only our own
     // files carry a hash; a third-party tag is served from someone else's origin.
     const ours = u => u && !/^https?:/.test(u);
