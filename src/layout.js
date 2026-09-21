@@ -23,7 +23,7 @@ function nav({ rel, current, home }) {
   <a class="nav__brand" href="${rel}">Zirconoid</a>
   <nav class="nav__links" aria-label="Primary">
     <a class="nav__link" href="${rel}blog/"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a>
-    <a class="btn" href="${SITE.sampleMailto}">${STAR}Request a sample</a>
+    <button type="button" class="btn" data-sample-open>${STAR}Request a sample</button>
   </nav>
 </header>`;
 }
@@ -152,6 +152,43 @@ export function layout({
 ${nav({ rel, current, home })}
 ${body}
 ${home ? homeFooter({ rel }) : simpleFooter({ rel, current })}
+
+<div class="sample-modal" data-sample-modal id="sample-dialog" hidden>
+  <div class="sample-modal__backdrop" data-sample-close tabindex="-1" aria-hidden="true"></div>
+  <div class="sample-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sample-dialog-title" data-sample-panel tabindex="-1">
+    <button type="button" class="sample-modal__x" data-sample-close aria-label="Close">&times;</button>
+    <div data-sample-form-wrap>
+      <h2 class="sample-modal__title" id="sample-dialog-title">Request a sample dataset</h2>
+      <p class="sample-modal__lede">Tell us the domain, modality, and volume you need. We will return a scoped sample and a capture plan.</p>
+      <form class="sample-form" data-sample-form action="https://formsubmit.co/ajax/${SITE.email}" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Sample dataset request — zirconoid.com">
+        <input type="text" name="_gotcha" class="sample-form__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="sample-form__field">
+          <span class="sample-form__label">Name <abbr title="required">*</abbr></span>
+          <input type="text" name="name" required autocomplete="name" data-sample-autofocus>
+        </label>
+        <label class="sample-form__field">
+          <span class="sample-form__label">Work email <abbr title="required">*</abbr></span>
+          <input type="email" name="email" required autocomplete="email" inputmode="email">
+        </label>
+        <label class="sample-form__field">
+          <span class="sample-form__label">Company <span class="sample-form__opt">(optional)</span></span>
+          <input type="text" name="company" autocomplete="organization">
+        </label>
+        <label class="sample-form__field">
+          <span class="sample-form__label">What you need <abbr title="required">*</abbr></span>
+          <textarea name="message" required rows="4" placeholder="Domain, modality, and volume"></textarea>
+        </label>
+        <p class="sample-form__error" data-sample-error hidden role="alert"></p>
+        <button type="submit" class="btn" data-sample-submit>${STAR}Request a sample</button>
+      </form>
+    </div>
+    <div class="sample-modal__thanks" data-sample-thanks hidden>
+      <p class="sample-modal__thanks-copy">Thank you, and we'll get back to you within a few hours.</p>
+      <button type="button" class="btn" data-sample-close>Close</button>
+    </div>
+  </div>
+</div>
 </div>
 <script src="${rel}${v('assets/js/site.js')}" defer></script>${home ? `\n<script type="module" src="${rel}${v('assets/js/galaxy.js')}"></script>` : ''}${paper ? `\n<script type="module" src="${rel}${v('assets/js/paper.js')}"></script>` : ''}
 </body>
