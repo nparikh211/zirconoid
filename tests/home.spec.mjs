@@ -40,8 +40,8 @@ test.describe('home', () => {
     await expect(page.locator('.cta .btn--lg')).toHaveText(/Talk to a Data Expert/);
     await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
     await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Sample Datasets', 'Privacy', 'Terms', 'Contact']);
-    await expect(page.locator('.work__more')).toHaveAttribute('href', 'samples/');
-    await expect(page.locator('.work__more')).toHaveText('See more Sample Datasets');
+    await expect(page.locator('.work__more-btn')).toHaveAttribute('href', 'samples/');
+    await expect(page.locator('.work__more-btn')).toHaveText('See more Sample Datasets');
     await expect(page.locator('.card__meta dt')).toHaveText(['Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory']);
     // No leftover section labels the brief asked to remove.
     await expect(page.locator('body')).not.toContainText(/what we believe|how we work/i);

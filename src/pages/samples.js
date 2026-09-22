@@ -14,7 +14,10 @@ function isoDuration(mmss) {
 }
 
 const pill = (label, value) => `
-            <span class="sample-card__pill"><span class="sample-card__pill-k">${esc(label)}</span><span class="sample-card__pill-v">${esc(value)}</span></span>`;
+            <div class="sample-card__field">
+              <span class="sample-card__field-k">${esc(label)}</span>
+              <span class="sample-card__field-v">${esc(value)}</span>
+            </div>`;
 
 const card = s => `
       <article class="sample-card" data-reveal data-sample-card
@@ -27,10 +30,11 @@ const card = s => `
         <div class="sample-card__thumbs" aria-hidden="true">
           <img src="../assets/img/samples/${esc(s.posterA)}" alt="" width="320" height="180" loading="lazy" decoding="async">
           <img src="../assets/img/samples/${esc(s.posterB)}" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <span class="sample-card__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
         <h2 class="sample-card__title">${esc(s.title)}</h2>
         <p class="sample-card__meta">${esc(s.duration)} · ${esc(s.fps)} · ${esc(s.streams)}</p>
-        <div class="sample-card__pills">
+        <div class="sample-card__fields">
 ${pill('Task', s.task)}
 ${pill('Environment', s.environment)}
 ${pill('Inventory', s.inventory)}
@@ -69,7 +73,7 @@ export function render() {
   <div class="page__inner page__inner--wide">
     <p class="eyebrow">Samples</p>
     <h1 class="page__title">Sample Datasets</h1>
-    <p class="page__lede samples-page__lede">Egocentric clips from real benches and plant floors. Click a card to play. Talk to a data expert when you want volume, a new domain, or a capture plan.</p>
+    <p class="page__lede samples-page__lede">Egocentric clips from real benches and plant floors.</p>
     <div class="samples-grid">
 ${CATALOG.map(card).join('')}
     </div>

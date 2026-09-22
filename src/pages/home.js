@@ -206,9 +206,11 @@ ${FRONTIER_LABS.map(b => `      <img class="trust__logo" src="assets/img/labs/${
       <p class="eyebrow">Our work</p>
       <h2 class="h2" id="work-title">Datasets collected by real people</h2>
     </div>
-    <a class="work__more" href="samples/">See more Sample Datasets</a>
   </div>
   <div class="work__grid">${DATASETS.map(card).join('')}
+  </div>
+  <div class="work__foot" data-reveal>
+    <a class="btn work__more-btn" href="samples/"><span>See more Sample Datasets</span></a>
   </div>
 </section>
 

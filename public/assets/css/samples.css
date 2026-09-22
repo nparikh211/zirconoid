@@ -43,6 +43,7 @@
 }
 
 .sample-card__thumbs {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
@@ -62,6 +63,33 @@
 .sample-card:hover .sample-card__thumbs img,
 .sample-card:focus-visible .sample-card__thumbs img {
   filter: none;
+}
+.sample-card__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .28);
+  background: rgba(10, 10, 10, .62);
+  color: #fff;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .4);
+  transition: background .25s, border-color .25s, transform .35s var(--ease);
+}
+.sample-card__play svg { margin-left: 2px; }
+.sample-card:hover .sample-card__play,
+.sample-card:focus-visible .sample-card__play {
+  background: rgba(10, 10, 10, .78);
+  border-color: rgba(255, 255, 255, .45);
+  transform: translate(-50%, -50%) scale(1.06);
 }
 
 .sample-card__title {
@@ -83,30 +111,33 @@
   color: var(--dim);
 }
 
-.sample-card__pills {
+.sample-card__fields {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 2px;
+  gap: 10px 12px;
+  margin-top: 4px;
 }
-.sample-card__pill {
-  display: inline-flex;
+.sample-card__field {
+  display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  min-width: 0;
   max-width: 100%;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, .1);
-  background: rgba(255, 255, 255, .03);
 }
-.sample-card__pill-k {
+.sample-card__field-k {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--faint);
+  padding-left: 1px;
 }
-.sample-card__pill-v {
+.sample-card__field-v {
+  display: block;
+  padding: 5px 9px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .03);
   font-size: 12px;
   line-height: 1.35;
   font-weight: 300;
@@ -191,6 +222,6 @@ html.video-lightbox-open { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sample-card, .sample-card__thumbs img, .video-lightbox__x { transition: none; }
+  .sample-card, .sample-card__thumbs img, .sample-card__play, .video-lightbox__x { transition: none; }
   .sample-card:hover, .sample-card:focus-visible { transform: none; }
 }

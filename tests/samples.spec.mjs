@@ -14,6 +14,8 @@ test.describe('samples gallery', () => {
     await expect(cards.nth(0)).toContainText('Environment');
     await expect(cards.nth(0)).toContainText('Inventory');
     await expect(page.locator('.sample-card__thumbs img')).toHaveCount(8);
+    await expect(page.locator('.sample-card__play')).toHaveCount(4);
+    await expect(page.locator('.sample-card__field-k').first()).toHaveText('Task');
 
     await cards.nth(0).click();
     const lightbox = page.locator('[data-video-lightbox]');

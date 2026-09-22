@@ -1,7 +1,7 @@
 [
   {
     "id": "wire-stripping",
-    "title": "WIRE STRIPPING — ELECTRONICS BENCH",
+    "title": "WIRE STRIPPING \u2014 ELECTRONICS BENCH",
     "duration": "00:10",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -15,7 +15,7 @@
   },
   {
     "id": "soldering",
-    "title": "SOLDERING — PCB WIRE ATTACH",
+    "title": "SOLDERING \u2014 PCB WIRE ATTACH",
     "duration": "00:18",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -29,7 +29,7 @@
   },
   {
     "id": "pcb-stuffing",
-    "title": "PCB STUFFING — THROUGH-HOLE INSERT",
+    "title": "PCB STUFFING \u2014 THROUGH-HOLE INSERT",
     "duration": "00:18",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -43,7 +43,7 @@
   },
   {
     "id": "plastic-clipping",
-    "title": "CLIPPING — INJECTION MOLD SPRUES",
+    "title": "CLIPPING \u2014 INJECTION MOLD SPRUES",
     "duration": "00:16",
     "fps": "30 fps",
     "streams": "1 stream",

@@ -263,17 +263,14 @@ img, svg { max-width: 100%; }
   border-bottom: 1px solid var(--rule);
 }
 .work__head .h2 { white-space: nowrap; }
-.work__more {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--cream);
-  white-space: nowrap;
-  transition: color .2s, opacity .2s;
-}
-.work__more:hover { color: #fff; }
 .work__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 48px; }
+.work__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 28px;
+  margin-top: 4px;
+}
+.work__more-btn { text-decoration: none; }
 .card {
   padding: 40px 20px 44px;
   margin: 0 -20px;
@@ -654,7 +651,6 @@ img, svg { max-width: 100%; }
   .post-list__item { grid-template-columns: 1fr; }
   .post-list__read { display: none; }
   .work__head .h2 { white-space: normal; }
-  .work__more { white-space: normal; }
   .faq__q { gap: 20px; }
   .faq__a { padding-right: 0; }
   /* A centred bubble wider than the screen would run off both edges, so hold it to the gutters. */
