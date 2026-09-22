@@ -168,10 +168,10 @@
 .video-lightbox__panel {
   position: relative;
   z-index: 1;
-  width: min(880px, 100%);
+  width: min(420px, 100%);
   box-sizing: border-box;
-  padding: 24px 24px 28px;
-  border-radius: 6px;
+  padding: 20px 18px 22px;
+  border-radius: 4px;
   background: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, .12);
   box-shadow: 0 24px 64px rgba(0, 0, 0, .65);
@@ -204,7 +204,10 @@
 .video-lightbox__player {
   display: block;
   width: 100%;
-  max-height: min(70vh, 520px);
+  height: auto;
+  max-height: min(78vh, 760px);
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
   background: #000;
   border-radius: 4px;
 }
@@ -215,9 +218,9 @@ html.video-lightbox-open { overflow: hidden; }
   .sample-card { padding: 12px; }
   .video-lightbox { padding: 12px; align-items: flex-end; }
   .video-lightbox__panel {
-    width: 100%;
-    padding: 20px 16px 24px;
-    border-radius: 8px 8px 0 0;
+    width: min(100%, 420px);
+    padding: 18px 14px 20px;
+    border-radius: 4px;
   }
 }
 
