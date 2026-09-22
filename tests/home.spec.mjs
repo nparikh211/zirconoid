@@ -37,9 +37,12 @@ test.describe('home', () => {
     await page.locator('.card').nth(1).hover();
     await expect.poll(() => shot.evaluate(el => getComputedStyle(el).filter)).toBe('none');
     await expect(page.locator('body')).not.toContainText('placeholder:');
-    await expect(page.locator('.cta .btn--lg')).toHaveText(/Request a sample dataset/);
+    await expect(page.locator('.cta .btn--lg')).toHaveText(/Talk to a Data Expert/);
     await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
-    await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Privacy', 'Terms', 'Contact']);
+    await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Sample Datasets', 'Privacy', 'Terms', 'Contact']);
+    await expect(page.locator('.work__more')).toHaveAttribute('href', 'samples/');
+    await expect(page.locator('.work__more')).toHaveText('See more Sample Datasets');
+    await expect(page.locator('.card__meta dt')).toHaveText(['Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory']);
     // No leftover section labels the brief asked to remove.
     await expect(page.locator('body')).not.toContainText(/what we believe|how we work/i);
     for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
@@ -220,7 +223,7 @@ test.describe('home', () => {
     await expect.poll(async () => (await faqRow(page, 0)).open).toBe(false);
   });
 
-  test('nav blur only appears after the hero scrolls away', async ({ page }) => {
+  test('nav blur only appears after the hero scrolls away', async ({ page }) =>
     await open(page, '/', { galaxy: false });
     const nav = page.locator('[data-nav]');
     const blur = page.locator('.nav__blur');
