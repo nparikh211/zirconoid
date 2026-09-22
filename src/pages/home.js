@@ -16,9 +16,9 @@ export const DATASETS = [
     domain: 'Textile manufacturing',
     title: 'Egocentric video from textile factory floors',
     desc: 'Factory workers wear head-mounted cameras through loom operation, fabric inspection, cutting, and finishing. Every clip is tied to the shift, station, and task the operator was performing.',
-    modality: 'Egocentric video + audio',
-    operators: 'Textile factory workers, multi-site',
-    use: 'Vision-language pretraining, manipulation and defect-recognition policies',
+    task: 'Loom operation & fabric inspection',
+    environment: 'Textile mill',
+    inventory: 'Loom, fabric rolls, headcam',
     image: 'textile-ego',
     imageAlt: 'Egocentric view of a textile worker inspecting fabric on a loom in an Indian mill',
   },
@@ -26,9 +26,9 @@ export const DATASETS = [
     domain: 'Electronics assembly',
     title: '8-hour egocentric days on a motherboard assembly line',
     desc: 'Assembly line workers record full 8-hour shifts of component placement, solder inspection, and test-bench handoffs. Continuous capture preserves the transitions and idle time that short clips drop.',
-    modality: 'Egocentric video, 8 hrs/day per operator, synced task logs',
-    operators: 'Motherboard assembly line workers',
-    use: 'Long-horizon task understanding, procedure grounding for embodied agents',
+    task: 'Motherboard assembly',
+    environment: 'Electronics line',
+    inventory: 'PCB, solder station, headcam',
     image: 'assembly-ego',
     imageAlt: 'Egocentric headcam view of gloved hands soldering a motherboard on an assembly bench',
   },
@@ -36,9 +36,9 @@ export const DATASETS = [
     domain: 'Manufacturing',
     title: 'Egocentric capture across a multi-station manufacturing plant',
     desc: 'Plant operators wear head-mounted cameras through machine tending, changeovers, quality checks, and material handoffs across stations. Continuous capture keeps the shop-floor context that short clips lose.',
-    modality: 'Egocentric video + audio, shift-tied task logs',
-    operators: 'Manufacturing plant operators, multi-station',
-    use: 'Manipulation policies, procedure grounding, and long-horizon task understanding for physical AI',
+    task: 'Machine tending & changeovers',
+    environment: 'Multi-station plant',
+    inventory: 'Workstations, parts, headcam',
     image: 'plant-floor',
     imageAlt: 'Egocentric view of a manufacturing plant worker inspecting metal parts at a workbench',
   },
@@ -87,8 +87,8 @@ export const FAQ = [
     a: 'Operators are paid hourly for capture sessions, with a premium for full-shift recordings and for wearing equipment. Contract and full-time arrangements are available for programs that run for months.',
   },
   {
-    q: 'How do I request a sample dataset?',
-    a: `Use the Request a sample form on this site. Tell us the domain, modality, and volume you need — we return a scoped sample and a capture plan. You can also email ${SITE.email}. Sample datasets are confidential and licensed for internal evaluation only.`,
+    q: 'How do I talk to a data expert?',
+    a: `Use the Talk to a Data Expert form on this site. Tell us the domain and volume you need — we return a scoped sample and a capture plan. You can also email ${SITE.email}. Sample datasets are confidential and licensed for internal evaluation only.`,
   },
   {
     q: 'Where does Zirconoid operate?',
@@ -105,9 +105,9 @@ const card = d => `
         <h3 class="card__title">${esc(d.title)}</h3>
         <p class="card__desc">${esc(d.desc)}</p>
         <dl class="card__meta">
-          <dt>Modality</dt><dd>${esc(d.modality)}</dd>
-          <dt>Operators</dt><dd>${esc(d.operators)}</dd>
-          <dt>Used for</dt><dd>${esc(d.use)}</dd>
+          <dt>Task</dt><dd>${esc(d.task)}</dd>
+          <dt>Environment</dt><dd>${esc(d.environment)}</dd>
+          <dt>Inventory</dt><dd>${esc(d.inventory)}</dd>
         </dl>
       </article>`;
 
@@ -146,9 +146,9 @@ export function render() {
             name: d.title,
             description: d.desc,
             creator: { '@id': ORG_ID },
-            variableMeasured: d.modality,
+            variableMeasured: d.task,
             about: d.domain,
-            keywords: [d.domain, d.modality, d.operators].join(', '),
+            keywords: [d.domain, d.task, d.environment, d.inventory].join(', '),
             isAccessibleForFree: false,
             license: `${SITE.origin}/terms/`,
           },
@@ -206,6 +206,7 @@ ${FRONTIER_LABS.map(b => `      <img class="trust__logo" src="assets/img/labs/${
       <p class="eyebrow">Our work</p>
       <h2 class="h2" id="work-title">Datasets collected by real people</h2>
     </div>
+    <a class="work__more" href="samples/">See more Sample Datasets</a>
   </div>
   <div class="work__grid">${DATASETS.map(card).join('')}
   </div>
@@ -227,11 +228,11 @@ ${FAQ.map((f, i) => `    <details class="faq__item" id="faq-${i + 1}" name="zr-f
   <div class="cta__inner" data-reveal>
     <div class="cta__copy">
       <p class="eyebrow">Work with us</p>
-      <h2 class="h2" id="cta-title">Request a sample dataset.</h2>
-      <p class="cta__lede">Tell us the domain, modality, and volume you need. We will return a scoped sample and a capture plan.</p>
+      <h2 class="h2" id="cta-title">Talk to a data expert.</h2>
+      <p class="cta__lede">Tell us the domain and volume you need. We will return a scoped sample and a capture plan.</p>
     </div>
     <div class="cta__actions">
-      <button type="button" class="btn btn--lg" data-sample-open>${STAR}Request a sample dataset</button>
+      <button type="button" class="btn btn--lg" data-sample-open>${STAR}Talk to a Data Expert</button>
       <a class="mono-link" href="mailto:${SITE.email}">${SITE.email}</a>
     </div>
   </div>
