@@ -17,7 +17,7 @@ for (const path of PAGES) {
     const sampleBtn = page.locator('header .btn[data-sample-open]');
     await expect(sampleBtn).toHaveCount(1);
     await expect(sampleBtn).toHaveAttribute('type', 'button');
-    await expect(sampleBtn).toHaveText(/Request a sample/);
+    await expect(sampleBtn).toHaveText(/Talk to a Data Expert/);
     await expect(page.locator('[data-sample-modal]')).toHaveCount(1);
     await expect(page.locator('[data-sample-modal]')).toHaveAttribute('hidden', '');
     // Versioned asset URLs, so a CDN cannot pair this HTML with stale CSS or JS. Only our own

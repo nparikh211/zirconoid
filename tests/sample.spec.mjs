@@ -12,7 +12,7 @@ test.describe('sample request form', () => {
     await expect(modal).toBeVisible();
     await expect(panel).toHaveAttribute('role', 'dialog');
     await expect(panel).toHaveAttribute('aria-modal', 'true');
-    await expect(page.locator('#sample-dialog-title')).toHaveText('Request a sample dataset');
+    await expect(page.locator('#sample-dialog-title')).toHaveText('Talk to a Data Expert');
     await expect(page.locator('[data-sample-form]')).toBeVisible();
     await expect(page.locator('[data-sample-thanks]')).toBeHidden();
 
