@@ -77,6 +77,14 @@ export function render() {
     <div class="samples-grid">
 ${CATALOG.map(card).join('')}
     </div>
+    <aside class="samples-collect" data-reveal aria-label="More samples">
+      <div class="samples-collect__copy">
+        <p class="samples-collect__status"><span class="samples-collect__pulse" aria-hidden="true"></span><span>Actively collecting</span></p>
+        <h2 class="samples-collect__title">More egocentric captures are in progress</h2>
+        <p class="samples-collect__lede">New benches and plant floors land here as programs finish. Request more samples if you want volume, another domain, or a capture plan.</p>
+      </div>
+      <button type="button" class="btn btn--lg samples-collect__btn" data-sample-open>Request more samples</button>
+    </aside>
   </div>
 </main>
 

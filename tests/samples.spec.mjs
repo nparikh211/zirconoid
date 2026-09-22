@@ -15,6 +15,9 @@ test.describe('samples gallery', () => {
     await expect(cards.nth(0)).toContainText('Inventory');
     await expect(page.locator('.sample-card__thumbs img')).toHaveCount(8);
     await expect(page.locator('.sample-card__play')).toHaveCount(4);
+    await expect(page.locator('.samples-collect__status')).toContainText('Actively collecting');
+    await expect(page.locator('.samples-collect__btn')).toHaveText('Request more samples');
+
     await expect(page.locator('.sample-card__field-k').first()).toHaveText('Task');
 
     await cards.nth(0).click();
