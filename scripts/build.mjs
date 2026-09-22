@@ -1,5 +1,6 @@
 // Build the static site into dist/.
-import { cpSync, mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs';
+import { cpSync, mkdirSync, rmSync, writeFileSync, existsSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { Buffer } from 'node:buffer';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, plain } from '../src/site.js';
@@ -7,6 +8,7 @@ import { render as renderHome, HEADLINE, BELIEF, DATASETS, FAQ } from '../src/pa
 import { POSTS, renderIndex, renderPost } from '../src/pages/blog.js';
 import { PRIVACY, TERMS, EFFECTIVE_ISO, renderPrivacy, renderTerms } from '../src/pages/legal.js';
 import { render as renderNotFound } from '../src/pages/notfound.js';
+import { render as renderSamples, CATALOG } from '../src/pages/samples.js';
 import { robotsTxt } from './robots.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,6 +27,7 @@ function pageList() {
   const newestPost = POSTS.map(p => p.updatedIso).sort().pop();
   return [
     { path: '/', lastmod: SITE.updated, priority: '1.0', changefreq: 'monthly' },
+    { path: '/samples/', lastmod: SITE.updated, priority: '0.8', changefreq: 'monthly' },
     { path: '/blog/', lastmod: newestPost, priority: '0.8', changefreq: 'weekly' },
     ...POSTS.map(p => ({ path: `/blog/${p.slug}/`, lastmod: p.updatedIso, priority: '0.7', changefreq: 'yearly' })),
     { path: '/privacy/', lastmod: EFFECTIVE_ISO, priority: '0.3', changefreq: 'yearly' },
@@ -81,6 +84,7 @@ Contact: ${SITE.email}. Operating worldwide.
 ## Pages
 
 - [Home](${SITE.origin}/): what Zirconoid does, the three dataset programs running now, and answers to common questions.
+- [Sample Datasets](${SITE.origin}/samples/): playable egocentric sample clips with task, environment, and inventory tags.
 - [Blog](${SITE.origin}/blog/): notes on capture, operators, and ground truth.
 ${POSTS.map(p => `- [${p.title}](${SITE.origin}/blog/${p.slug}/): ${p.excerpt}`).join('\n')}
 - [Privacy Policy](${SITE.origin}/privacy/): how Zirconoid Inc. collects, uses, and shares personal information.
@@ -88,7 +92,7 @@ ${POSTS.map(p => `- [${p.title}](${SITE.origin}/blog/${p.slug}/): ${p.excerpt}`)
 
 ## Dataset programs
 
-${DATASETS.map(d => `- **${d.title}** (${d.domain}): ${d.desc} Modality: ${d.modality}. Operators: ${d.operators}. Used for: ${d.use}.`).join('\n')}
+${DATASETS.map(d => `- **${d.title}** (${d.domain}): ${d.desc} Task: ${d.task}. Environment: ${d.environment}. Inventory: ${d.inventory}.`).join('\n')}
 
 ## Optional
 
@@ -113,7 +117,7 @@ function llmsFullTxt() {
     '',
     '## Our work: datasets collected by real people',
     '',
-    DATASETS.map(d => `### ${d.title}\n\nDomain: ${d.domain}\n\n${d.desc}\n\n- Modality: ${d.modality}\n- Operators: ${d.operators}\n- Used for: ${d.use}`).join('\n\n'),
+    DATASETS.map(d => `### ${d.title}\n\nDomain: ${d.domain}\n\n${d.desc}\n\n- Task: ${d.task}\n- Environment: ${d.environment}\n- Inventory: ${d.inventory}`).join('\n\n'),
     '',
     '## Questions',
     '',
@@ -121,7 +125,11 @@ function llmsFullTxt() {
     '',
     '## Work with us',
     '',
-    `Request a sample dataset. Tell us the domain, modality, and volume you need. We will return a scoped sample and a capture plan. Email ${SITE.email}.`,
+    `Talk to a data expert. Tell us the domain and volume you need. We will return a scoped sample and a capture plan. Email ${SITE.email}.`,
+    '',
+    '# Sample Datasets',
+    '',
+    CATALOG.map(s => `## ${s.title}\n\n${s.desc}\n\n- Duration: ${s.duration}\n- Task: ${s.task}\n- Environment: ${s.environment}\n- Inventory: ${s.inventory}\n- Video: ${SITE.origin}/assets/video/samples/${s.video}`).join('\n\n'),
     '',
     '# Blog',
     '',
@@ -134,12 +142,46 @@ function llmsFullTxt() {
   ].join('\n');
 }
 
+
+/** Decode *.b64 text sidecars (and numbered .b64.NN chunks) into binary files in dist/. */
+function decodeB64Sidecars(dir) {
+  const entries = readdirSync(dir, { withFileTypes: true });
+  for (const name of entries) {
+    const p = join(dir, name.name);
+    if (name.isDirectory()) decodeB64Sidecars(p);
+  }
+  // Merge split chunks: foo.mp4.b64.00 + foo.mp4.b64.01 → foo.mp4.b64
+  const files = readdirSync(dir);
+  const chunkRe = /^(.*\.b64)\.(\d{2})$/;
+  const groups = new Map();
+  for (const f of files) {
+    const m = chunkRe.exec(f);
+    if (!m) continue;
+    if (!groups.has(m[1])) groups.set(m[1], []);
+    groups.get(m[1]).push([m[2], f]);
+  }
+  for (const [base, parts] of groups) {
+    parts.sort((a, b) => a[0].localeCompare(b[0]));
+    const merged = parts.map(([, f]) => readFileSync(join(dir, f), 'utf8')).join('');
+    writeFileSync(join(dir, base), merged);
+    for (const [, f] of parts) unlinkSync(join(dir, f));
+  }
+  for (const f of readdirSync(dir)) {
+    if (!f.endsWith('.b64')) continue;
+    const p = join(dir, f);
+    writeFileSync(p.slice(0, -4), Buffer.from(readFileSync(p, 'utf8'), 'base64'));
+    unlinkSync(p);
+  }
+}
+
 export function build() {
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
   cpSync(join(ROOT, 'public'), DIST, { recursive: true });
+  decodeB64Sidecars(DIST);
 
   write('/', renderHome());
+  write('/samples/', renderSamples());
   write('/blog/', renderIndex());
   for (const p of POSTS) write(`/blog/${p.slug}/`, renderPost(p));
   write('/privacy/', renderPrivacy());
