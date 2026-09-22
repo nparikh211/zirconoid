@@ -21,8 +21,8 @@
     const title = card.getAttribute('data-title') || '';
     const poster = card.getAttribute('data-poster') || '';
     titleEl.textContent = title;
-    player.poster = poster ? `${root()}assets/img/samples/${poster}` : '';
-    player.src = `${root()}assets/video/samples/${file}`;
+    player.poster = poster ? `${root()}assets/img/samples/${poster}?v=2` : '';
+    player.src = `${root()}assets/video/samples/${file}?v=2`;
     box.hidden = false;
     document.documentElement.classList.add('video-lightbox-open');
     panel.focus();

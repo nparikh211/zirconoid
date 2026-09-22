@@ -28,8 +28,8 @@ const card = s => `
         role="button"
         aria-label="Play ${esc(s.title)}">
         <div class="sample-card__thumbs" aria-hidden="true">
-          <img src="../assets/img/samples/${esc(s.posterA)}" alt="" width="320" height="180" loading="lazy" decoding="async">
-          <img src="../assets/img/samples/${esc(s.posterB)}" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <img src="../assets/img/samples/${esc(s.posterA)}?v=2" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <img src="../assets/img/samples/${esc(s.posterB)}?v=2" alt="" width="320" height="180" loading="lazy" decoding="async">
           <span class="sample-card__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
         <h2 class="sample-card__title">${esc(s.title)}</h2>
