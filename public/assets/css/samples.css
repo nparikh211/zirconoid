@@ -294,3 +294,18 @@ html.video-lightbox-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .samples-collect__pulse { animation: none; }
 }
+
+
+/* Landscape lightbox (overhead / wide clips) */
+.video-lightbox__panel[data-orientation="landscape"] {
+  max-width: min(96vw, 980px);
+}
+.video-lightbox__panel[data-orientation="landscape"] .video-lightbox__player {
+  width: min(900px, calc(96vw - 48px));
+  max-height: min(78vh, 540px);
+}
+@media (max-width: 640px) {
+  .video-lightbox__panel[data-orientation="landscape"] .video-lightbox__player {
+    width: min(900px, calc(96vw - 40px));
+  }
+}

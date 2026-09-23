@@ -8,7 +8,7 @@ export const SITE = {
   copyright: '© 2026 Zirconoid. Worldwide.',
   description: 'Zirconoid is organizing human-captured data for physical AI. We recruit operators and collect datasets for the data companies that train physical AI models.',
   // Bump when the wording on the home or legal pages changes; it feeds sitemap lastmod.
-  updated: '2026-09-22',
+  updated: '2026-09-23',
   areaServed: 'Worldwide',
   topics: [
     'physical AI',

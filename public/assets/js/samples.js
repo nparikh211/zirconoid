@@ -20,9 +20,12 @@
     const file = card.getAttribute('data-video');
     const title = card.getAttribute('data-title') || '';
     const poster = card.getAttribute('data-poster') || '';
+    const orient = card.getAttribute('data-orientation') || 'portrait';
     titleEl.textContent = title;
-    player.poster = poster ? `${root()}assets/img/samples/${poster}?v=2` : '';
-    player.src = `${root()}assets/video/samples/${file}?v=2`;
+    panel.dataset.orientation = orient;
+    player.dataset.orientation = orient;
+    player.poster = poster ? `${root()}assets/img/samples/${poster}?v=3` : '';
+    player.src = `${root()}assets/video/samples/${file}?v=3`;
     box.hidden = false;
     document.documentElement.classList.add('video-lightbox-open');
     panel.focus();

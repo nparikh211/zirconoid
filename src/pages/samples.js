@@ -24,12 +24,13 @@ const card = s => `
         data-video="${esc(s.video)}"
         data-title="${esc(s.title)}"
         data-poster="${esc(s.posterA)}"
+        data-orientation="${esc(s.orientation || 'portrait')}"
         tabindex="0"
         role="button"
         aria-label="Play ${esc(s.title)}">
         <div class="sample-card__thumbs" aria-hidden="true">
-          <img src="../assets/img/samples/${esc(s.posterA)}?v=2" alt="" width="320" height="180" loading="lazy" decoding="async">
-          <img src="../assets/img/samples/${esc(s.posterB)}?v=2" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <img src="../assets/img/samples/${esc(s.posterA)}?v=3" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <img src="../assets/img/samples/${esc(s.posterB)}?v=3" alt="" width="320" height="180" loading="lazy" decoding="async">
           <span class="sample-card__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
         <h2 class="sample-card__title">${esc(s.title)}</h2>
@@ -50,7 +51,7 @@ export function render() {
       '@id': `${SITE.origin}/samples/#webpage`,
       url: `${SITE.origin}/samples/`,
       name: 'Sample Datasets — Zirconoid',
-      description: 'Playable sample clips from Zirconoid egocentric capture programs: wire stripping, soldering, PCB stuffing, and sprue clipping.',
+      description: 'Playable sample clips from Zirconoid capture programs: electronics bench work, confectionery portioning, garment ironing, and more.',
       isPartOf: { '@id': SITE_ID },
       about: { '@id': ORG_ID },
       inLanguage: 'en',
@@ -101,7 +102,7 @@ ${CATALOG.map(card).join('')}
   return layout({
     path: '/samples/',
     title: 'Sample Datasets — Zirconoid',
-    description: 'Playable egocentric sample clips from Zirconoid capture programs: wire stripping, soldering, PCB stuffing, and sprue clipping for physical AI.',
+    description: 'Playable sample clips from Zirconoid capture programs: electronics bench work, confectionery portioning, garment ironing, and more for physical AI.',
     body,
     current: 'samples',
     jsonLd,

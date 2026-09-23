@@ -11,7 +11,8 @@
     "video": "wire-stripping.mp4",
     "posterA": "wire-stripping-a.jpg",
     "posterB": "wire-stripping-b.jpg",
-    "desc": "Operator gathers powered LED boards and strips insulation with an automatic wire stripper."
+    "desc": "Operator gathers powered LED boards and strips insulation with an automatic wire stripper.",
+    "orientation": "portrait"
   },
   {
     "id": "soldering",
@@ -25,7 +26,8 @@
     "video": "soldering.mp4",
     "posterA": "soldering-a.jpg",
     "posterB": "soldering-b.jpg",
-    "desc": "Egocentric soldering of pre-stripped wires onto a green PCB with clear bimanual tool use."
+    "desc": "Egocentric soldering of pre-stripped wires onto a green PCB with clear bimanual tool use.",
+    "orientation": "portrait"
   },
   {
     "id": "pcb-stuffing",
@@ -39,7 +41,8 @@
     "video": "pcb-stuffing.mp4",
     "posterA": "pcb-stuffing-a.jpg",
     "posterB": "pcb-stuffing-b.jpg",
-    "desc": "Fine-motor through-hole resistor insertion into a small PCB from a scattered component pile."
+    "desc": "Fine-motor through-hole resistor insertion into a small PCB from a scattered component pile.",
+    "orientation": "portrait"
   },
   {
     "id": "plastic-clipping",
@@ -53,6 +56,37 @@
     "video": "plastic-clipping.mp4",
     "posterA": "plastic-clipping-a.jpg",
     "posterB": "plastic-clipping-b.jpg",
-    "desc": "Bimanual sprue trimming: hold molded frame, snip rings into a lap bowl with flush cutters."
+    "desc": "Bimanual sprue trimming: hold molded frame, snip rings into a lap bowl with flush cutters.",
+    "orientation": "portrait"
+  },
+  {
+    "id": "kitchen-portioning",
+    "title": "CUTTING \u2014 CONFECTIONERY PORTIONING",
+    "duration": "00:16",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Cutting / Portioning",
+    "environment": "Commercial kitchen",
+    "inventory": "Chef knife, confectionery, blue nitrile gloves",
+    "video": "kitchen-portioning.mp4",
+    "posterA": "kitchen-portioning-a.jpg",
+    "posterB": "kitchen-portioning-b.jpg",
+    "orientation": "portrait",
+    "desc": "Third-person phone POV across a stainless table: gloved hands slice an amber confectionery block into strips, then bite-size pieces."
+  },
+  {
+    "id": "garment-ironing",
+    "title": "IRONING \u2014 SWEATPANTS FOLD & PRESS",
+    "duration": "00:16",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Ironing / Folding",
+    "environment": "Laundry / tailor shop",
+    "inventory": "Sweatpants, steam iron, blue ironing table",
+    "video": "garment-ironing.mp4",
+    "posterA": "garment-ironing-a.jpg",
+    "posterB": "garment-ironing-b.jpg",
+    "orientation": "landscape",
+    "desc": "Fixed overhead view of a professional ironing station: folding and steam-pressing grey sweatpants with white side stripes."
   }
 ]
