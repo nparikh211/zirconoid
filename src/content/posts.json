@@ -1,5 +1,36 @@
 [
   {
+    "slug": "access-to-real-work",
+    "tag": "Company",
+    "date": "Sep 2026",
+    "isoDate": "2026-09-23",
+    "title": "The scarce input in physical AI is access to real work",
+    "excerpt": "Rights-cleared access to real workplaces and operators is the bottleneck for egocentric physical AI capture. What labs published, what open datasets left open, and how we are standing up floors.",
+    "body": [
+      "Physical AI's bottleneck is rights-cleared access to real workplaces and the operators who work in them. Generic capture hours and cameras are easier to buy than floors.",
+      "Robots still learn badly from environments they never enter. Labs can rent headsets and teleop rigs this quarter. Standing up consenting operators inside running plants, kitchens, and fields takes longer, and that delay is where most programs stall.",
+      "MIT Technology Review reported on April 1, 2026 that robotics companies are already spending more than $100 million a year on real-world training data, citing Ali Ansari of Micro1. Ken Goldberg, quoted in the same piece, framed the scarcity against language-scale corpora: the text and image stack that trained large language models has no peer in robot experience. The spend is real. The supply of usable floors is thinner than the purchase orders imply.",
+      "Hours matter. Variation across machines, materials, shifts, and sites matters more for generalization. Buying another camera does not create that variation. Getting onto a floor that already produces it does.",
+      "Ops and data leads at middle-layer robotics-data companies feel this first. Specs arrive for egocentric coverage of a task family. The open question is who can put wearers on the right benches this quarter, with consent and a license a buyer can train on.",
+      "What the labs published over the past year points the same direction.",
+      "Physical Intelligence, on December 16, 2025, showed that co-finetuning with egocentric human video yields roughly 2× performance on generalization tasks that appear only in the human data. Once robot pretraining is large enough, treating human wearers as another embodiment starts to transfer. Wearable cameras are cheap to run relative to robot fleets. The hard part is collecting human video where the work is actually done. The paper is at pi.website/research/human_to_robot.",
+      "NVIDIA EgoScale, published February 19, 2026, pretrained a vision-language-action model on 20,854 hours of action-labeled egocentric human video. Average success rose 54% versus no pretraining on a 22-DoF hand, with a log-linear scaling relationship between human data volume and validation loss. Scale works when the human corpus exists at volume and carries action labels. The write-up is at research.nvidia.com/labs/gear/egoscale/.",
+      "Figure's partnership with Brookfield, announced September 17, 2025, made the access thesis explicit: human video capture across more than 100,000 residential units and over 500 million square feet of commercial space. The dataset strategy is environment inventory. Real estate access became a pretraining asset.",
+      "Open corpora proved demand and left the commercial gaps open.",
+      "Ego4D collected 3,670 hours across 74 locations in 9 countries. It set the research baseline for egocentric video. Research licenses and daily-life skew leave commercial training and industrial SOPs under-served. Re-consent at enterprise scale is rarely practical after the fact.",
+      "Open X-Embodiment pooled more than 1 million trajectories across 22 embodiments. Transfer improved. Licenses stay mixed across constituents, and most setups remain research labs rather than production floors. A buyer clearing commercial weight training still has to chase upstream terms one corpus at a time.",
+      "DROID pushed scene diversity to about 76,000 trajectories across 564 scenes. That is still a long way from industrial ops floors in India-class environments: multi-shift lines, material variance, and machines that keep running while you film. Scene count is progress. Skilled long-horizon work on real inventory is a different product.",
+      "The pattern across these releases is consistent. Volume exists. Rights-cleared, domain-correct, ops-environment capture does not ship with the research dump. Short chore clips and tabletop teleop leave 8-hour shifts, SOP variance, and recoveries from mistakes under-represented relative to deployment ambition.",
+      "Zirconoid's view follows from that gap.",
+      "We organize human-captured egocentric data at ops and geo scale. Operators do the work. Sites host it. We recruit both. The work that matters happens inside buildings other people own, so we partner with plant management as well as the staff, and we run capture around the production schedule rather than across it.",
+      "In September 2026 we are standing up human-captured samples from real work: electronics bench wire stripping, injection-mold sprue clipping, PCB soldering, and commercial kitchen portioning. We are recruiting operator access across factories, manufacturing, and agri in India. Early samples are at zirconoid.com/samples.",
+      "A four-person workshop and a thousand-person plant teach a model different things about the same task. A dataset drawn from one kind of site alone inherits that site's habits. Breadth of site changes what the model sees, not only how fast footage accumulates.",
+      "The belief from our announcing note still holds. The bottleneck on frontier data is access to real operators and the sites they work in. Engineering systems that solve technical problems get commoditized. Fresh operator-collected data does not, because it is specific to the person, the place, and the task.",
+      "If you buy or package physical AI data this quarter, the decision that moves programs is repeatable access to where humans still outperform models. Cameras arrive in days. Floors take relationships, consent, and a schedule that fits production.",
+      "Samples are up. If the domain fits, write to data@zirconoid.com."
+    ]
+  },
+  {
     "slug": "announcing-zirconoid",
     "tag": "Company",
     "date": "Sep 2026",
