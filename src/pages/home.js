@@ -1,5 +1,6 @@
 import { SITE, STAR, esc, ORGANIZATION, WEBSITE, ORG_ID, SITE_ID } from '../site.js';
-import { layout, definitionBubble } from '../layout.js';
+import { layout, definitionBubble, ASSET_V } from '../layout.js';
+import { CATALOG } from './samples.js';
 
 // The hero headline. scripts/build.mjs puts the same string in llms-full.txt, so a model reading
 // the site in one fetch sees what a reader sees.
@@ -11,38 +12,18 @@ export const BELIEF = [
   'From factory floors and fields to construction sites and manufacturing plants, we recruit global talent and collect large-scale datasets across diverse physical environments.',
 ];
 
-export const DATASETS = [
-  {
-    domain: 'Textile manufacturing',
-    title: 'Egocentric video from textile factory floors',
-    desc: 'Factory workers wear head-mounted cameras through loom operation, fabric inspection, cutting, and finishing. Every clip is tied to the shift, station, and task the operator was performing.',
-    task: 'Loom operation & fabric inspection',
-    environment: 'Textile mill',
-    inventory: 'Loom, fabric rolls, headcam',
-    image: 'textile-ego',
-    imageAlt: 'Egocentric view of a textile worker inspecting fabric on a loom in an Indian mill',
-  },
-  {
-    domain: 'Electronics assembly',
-    title: '8-hour egocentric days on a motherboard assembly line',
-    desc: 'Assembly line workers record full 8-hour shifts of component placement, solder inspection, and test-bench handoffs. Continuous capture preserves the transitions and idle time that short clips drop.',
-    task: 'Motherboard assembly',
-    environment: 'Electronics line',
-    inventory: 'PCB, solder station, headcam',
-    image: 'assembly-ego',
-    imageAlt: 'Egocentric headcam view of gloved hands soldering a motherboard on an assembly bench',
-  },
-  {
-    domain: 'Manufacturing',
-    title: 'Egocentric capture across a multi-station manufacturing plant',
-    desc: 'Plant operators wear head-mounted cameras through machine tending, changeovers, quality checks, and material handoffs across stations. Continuous capture keeps the shop-floor context that short clips lose.',
-    task: 'Machine tending & changeovers',
-    environment: 'Multi-station plant',
-    inventory: 'Workstations, parts, headcam',
-    image: 'plant-floor',
-    imageAlt: 'Egocentric view of a manufacturing plant worker inspecting metal parts at a workbench',
-  },
+// Home featured Sample Datasets (order matters). Full catalog stays on /samples/.
+export const FEATURED_SAMPLE_IDS = [
+  'wire-stripping',
+  'plastic-clipping',
+  'soldering',
 ];
+
+export const DATASETS = FEATURED_SAMPLE_IDS.map(id => {
+  const s = CATALOG.find(c => c.id === id);
+  if (!s) throw new Error(`Missing featured sample "${id}" in CATALOG.json`);
+  return s;
+});
 
 const CHEVRON = '<svg class="faq__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 
@@ -96,19 +77,33 @@ export const FAQ = [
   },
 ];
 
-const card = d => `
-      <article class="card" data-reveal>
-        <span class="card__domain">${esc(d.domain)}</span>
-        <div class="card__media${d.image ? ' card__media--shot' : ''}">${d.image
-          ? `<img src="assets/img/work/${d.image}.jpg" alt="${esc(d.imageAlt || d.title)}" loading="lazy" decoding="async">`
-          : '<span>Coming soon</span>'}</div>
-        <h3 class="card__title">${esc(d.title)}</h3>
-        <p class="card__desc">${esc(d.desc)}</p>
-        <dl class="card__meta">
-          <dt>Task</dt><dd>${esc(d.task)}</dd>
-          <dt>Environment</dt><dd>${esc(d.environment)}</dd>
-          <dt>Inventory</dt><dd>${esc(d.inventory)}</dd>
-        </dl>
+const pill = (label, value) => `
+            <div class="sample-card__field">
+              <span class="sample-card__field-k">${esc(label)}</span>
+              <span class="sample-card__field-v">${esc(value)}</span>
+            </div>`;
+
+const card = s => `
+      <article class="sample-card" data-reveal data-sample-card
+        data-video="${esc(s.video)}"
+        data-title="${esc(s.title)}"
+        data-poster="${esc(s.posterA)}"
+        data-orientation="${esc(s.orientation || 'portrait')}"
+        tabindex="0"
+        role="button"
+        aria-label="Play ${esc(s.title)}">
+        <div class="sample-card__thumbs" aria-hidden="true">
+          <img src="assets/img/samples/${esc(s.posterA)}?v=3" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <img src="assets/img/samples/${esc(s.posterB)}?v=3" alt="" width="320" height="180" loading="lazy" decoding="async">
+          <span class="sample-card__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+        </div>
+        <h3 class="sample-card__title">${esc(s.title)}</h3>
+        <p class="sample-card__meta">${esc(s.duration)} · ${esc(s.fps)} · ${esc(s.streams)}</p>
+        <div class="sample-card__fields">
+${pill('Task', s.task)}
+${pill('Environment', s.environment)}
+${pill('Inventory', s.inventory)}
+        </div>
       </article>`;
 
 export function render() {
@@ -147,8 +142,11 @@ export function render() {
             description: d.desc,
             creator: { '@id': ORG_ID },
             variableMeasured: d.task,
-            about: d.domain,
-            keywords: [d.domain, d.task, d.environment, d.inventory].join(', '),
+            about: d.environment,
+            keywords: [d.task, d.environment, d.inventory].join(', '),
+            encodingFormat: 'video/mp4',
+            contentUrl: `${SITE.origin}/assets/video/samples/${d.video}`,
+            thumbnailUrl: `${SITE.origin}/assets/img/samples/${d.posterA}`,
             isAccessibleForFree: false,
             license: `${SITE.origin}/terms/`,
           },
@@ -207,7 +205,7 @@ ${FRONTIER_LABS.map(b => `      <img class="trust__logo" src="assets/img/labs/${
       <h2 class="h2" id="work-title">Datasets collected by real people</h2>
     </div>
   </div>
-  <div class="work__grid">${DATASETS.map(card).join('')}
+  <div class="work__grid work__grid--samples">${DATASETS.map(card).join('')}
   </div>
   <div class="work__foot" data-reveal>
     <a class="btn work__more-btn" href="samples/"><span>See more Sample Datasets</span></a>
@@ -241,12 +239,25 @@ ${FAQ.map((f, i) => `    <details class="faq__item" id="faq-${i + 1}" name="zr-f
 </section>
 </main>`;
 
+  const lightbox = `
+<div class="video-lightbox" data-video-lightbox hidden>
+  <div class="video-lightbox__backdrop" data-video-close tabindex="-1" aria-hidden="true"></div>
+  <div class="video-lightbox__panel" role="dialog" aria-modal="true" aria-labelledby="video-lightbox-title" data-video-panel tabindex="-1">
+    <button type="button" class="video-lightbox__x" data-video-close aria-label="Close">&times;</button>
+    <h2 class="video-lightbox__title" id="video-lightbox-title" data-video-title></h2>
+    <video class="video-lightbox__player" data-video-player controls playsinline preload="metadata"></video>
+  </div>
+</div>`;
+
+  const v = file => `${file}?v=${ASSET_V[file]}`;
   return layout({
     path: '/',
     title: 'Zirconoid — Human-captured data for physical AI',
     description: SITE.description,
-    body,
+    body: body + lightbox,
     home: true,
     jsonLd,
+    extraHead: `\n<link rel="stylesheet" href="${v('assets/css/samples.css')}">`,
+    extraScripts: `\n<script src="${v('assets/js/samples.js')}" defer></script>`,
   });
 }

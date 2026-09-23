@@ -83,16 +83,16 @@ Contact: ${SITE.email}. Operating worldwide.
 
 ## Pages
 
-- [Home](${SITE.origin}/): what Zirconoid does, the three dataset programs running now, and answers to common questions.
+- [Home](${SITE.origin}/): what Zirconoid does, featured sample datasets from real benches, and answers to common questions.
 - [Sample Datasets](${SITE.origin}/samples/): playable egocentric sample clips with task, environment, and inventory tags.
 - [Blog](${SITE.origin}/blog/): notes on capture, operators, and ground truth.
 ${POSTS.map(p => `- [${p.title}](${SITE.origin}/blog/${p.slug}/): ${p.excerpt}`).join('\n')}
 - [Privacy Policy](${SITE.origin}/privacy/): how Zirconoid Inc. collects, uses, and shares personal information.
 - [Terms of Service](${SITE.origin}/terms/): terms governing use of zirconoid.com and related services.
 
-## Dataset programs
+## Featured sample datasets
 
-${DATASETS.map(d => `- **${d.title}** (${d.domain}): ${d.desc} Task: ${d.task}. Environment: ${d.environment}. Inventory: ${d.inventory}.`).join('\n')}
+${DATASETS.map(d => `- **${d.title}**: ${d.desc} Task: ${d.task}. Environment: ${d.environment}. Inventory: ${d.inventory}.`).join('\n')}
 
 ## Optional
 
@@ -117,7 +117,7 @@ function llmsFullTxt() {
     '',
     '## Our work: datasets collected by real people',
     '',
-    DATASETS.map(d => `### ${d.title}\n\nDomain: ${d.domain}\n\n${d.desc}\n\n- Task: ${d.task}\n- Environment: ${d.environment}\n- Inventory: ${d.inventory}`).join('\n\n'),
+    DATASETS.map(d => `### ${d.title}\n\n${d.desc}\n\n- Task: ${d.task}\n- Environment: ${d.environment}\n- Inventory: ${d.inventory}\n- Video: ${SITE.origin}/assets/video/samples/${d.video}`).join('\n\n'),
     '',
     '## Questions',
     '',

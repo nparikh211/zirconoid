@@ -264,6 +264,12 @@ img, svg { max-width: 100%; }
 }
 .work__head .h2 { white-space: nowrap; }
 .work__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 48px; }
+.work__grid--samples {
+  gap: 28px 24px;
+  padding-top: 36px;
+  align-items: stretch;
+}
+.work__grid--samples .sample-card { height: 100%; }
 .work__foot {
   display: flex;
   justify-content: flex-end;

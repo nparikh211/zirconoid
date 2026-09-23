@@ -8,13 +8,14 @@ test.describe('home', () => {
     await expect(page.locator('h1')).toHaveText(HEADLINE);
     await expect(page.locator('[data-belief] p')).toHaveCount(3);
     await expect(page.locator('[data-belief] p').first()).toContainText('Physical AI is the future');
-    await expect(page.locator('.card')).toHaveCount(3);
-    await expect(page.locator('.card__title')).toHaveText([
-      'Egocentric video from textile factory floors',
-      '8-hour egocentric days on a motherboard assembly line',
-      'Egocentric capture across a multi-station manufacturing plant',
-    ]);
-    await expect(page.locator('.card__domain')).toHaveText(['Textile manufacturing', 'Electronics assembly', 'Manufacturing']);
+    const cards = page.locator('[data-sample-card]');
+    await expect(cards).toHaveCount(3);
+    await expect(cards.nth(0)).toContainText('WIRE STRIPPING — ELECTRONICS BENCH');
+    await expect(cards.nth(1)).toContainText('CLIPPING — INJECTION MOLD SPRUES');
+    await expect(cards.nth(2)).toContainText('SOLDERING — PCB WIRE ATTACH');
+    await expect(cards.nth(0)).toHaveAttribute('data-video', 'wire-stripping.mp4');
+    await expect(cards.nth(1)).toHaveAttribute('data-video', 'plastic-clipping.mp4');
+    await expect(cards.nth(2)).toHaveAttribute('data-video', 'soldering.mp4');
     // The work heading holds one line on desktop, and the FAQ carries no heading at all.
     if (testInfo.project.name === 'desktop') {
       const lines = await page.locator('#work-title').evaluate(el => el.offsetHeight / parseFloat(getComputedStyle(el).lineHeight));
@@ -22,30 +23,32 @@ test.describe('home', () => {
     }
     await expect(page.locator('body')).not.toContainText('What people ask us');
     await expect(page.locator('.faq h2')).toHaveCount(0);
-    const shots = page.locator('.card__media--shot img');
-    await expect(shots).toHaveCount(3);
-    await expect(shots.nth(0)).toHaveAttribute('src', 'assets/img/work/textile-ego.jpg');
-    await expect(shots.nth(1)).toHaveAttribute('src', 'assets/img/work/assembly-ego.jpg');
-    await expect(shots.nth(2)).toHaveAttribute('src', 'assets/img/work/plant-floor.jpg');
-    const shot = page.locator('.card').nth(1).locator('.card__media--shot img');
-    await expect(shot).toHaveAttribute('alt', /soldering/);
-    await shot.scrollIntoViewIfNeeded();   // it is lazy, so bring it into view before asking
-    await expect.poll(() => shot.evaluate(el => el.naturalWidth), { message: 'the still should decode' }).toBeGreaterThan(0);
-    expect(await shot.evaluate(el => getComputedStyle(el).objectFit)).toBe('cover');
-    // Held back on the page, full colour when the card is hovered.
-    expect(await shot.evaluate(el => getComputedStyle(el).filter)).toMatch(/grayscale/);
-    await page.locator('.card').nth(1).hover();
-    await expect.poll(() => shot.evaluate(el => getComputedStyle(el).filter)).toBe('none');
+    await expect(page.locator('.sample-card__thumbs img')).toHaveCount(6);
+    await expect(page.locator('.sample-card__play')).toHaveCount(3);
+    const shot = page.locator('[data-sample-card]').nth(0).locator('.sample-card__thumbs img').first();
+    await shot.scrollIntoViewIfNeeded();
+    await expect.poll(() => shot.evaluate(el => el.naturalWidth), { message: 'the poster should decode' }).toBeGreaterThan(0);
     await expect(page.locator('body')).not.toContainText('placeholder:');
+    await expect(page.locator('body')).not.toContainText('CUTTING — CONFECTIONERY');
+    await expect(page.locator('body')).not.toContainText('IRONING — SWEATPANTS');
     await expect(page.locator('.cta .btn--lg')).toHaveText(/Talk to a Data Expert/);
     await expect(page.locator('.cta .mono-link')).toHaveAttribute('href', 'mailto:data@zirconoid.com');
     await expect(page.locator('.footer__bar nav a')).toHaveText(['Blog', 'Sample Datasets', 'Privacy', 'Terms', 'Contact']);
     await expect(page.locator('.work__more-btn')).toHaveAttribute('href', 'samples/');
     await expect(page.locator('.work__more-btn')).toHaveText('See more Sample Datasets');
-    await expect(page.locator('.card__meta dt')).toHaveText(['Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory']);
+    await expect(page.locator('.sample-card__field-k')).toHaveText(['Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory', 'Task', 'Environment', 'Inventory']);
+    await expect(cards.nth(0)).toContainText('Electronics assembly line');
+    await expect(cards.nth(1)).toContainText('Injection-mold finishing');
+    await expect(cards.nth(2)).toContainText('Motherboard / PCB assembly');
+    // Playable lightbox on the home featured cards.
+    await cards.nth(0).click();
+    await expect(page.locator('[data-video-lightbox]')).toBeVisible();
+    await expect(page.locator('[data-video-player]')).toHaveAttribute('src', /wire-stripping\.mp4/);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-video-lightbox]')).toBeHidden();
     // No leftover section labels the brief asked to remove.
     await expect(page.locator('body')).not.toContainText(/what we believe|how we work/i);
-    for (const t of await page.locator('.card').allInnerTexts()) expect(t).not.toMatch(/^0[123]\b/);
+    for (const txt of await cards.allInnerTexts()) expect(txt).not.toMatch(/^0[123]\b/);
   });
 
   test('trusted-by shows the lab marks around the claim', async ({ page }, testInfo) => {
@@ -223,7 +226,7 @@ test.describe('home', () => {
     await expect.poll(async () => (await faqRow(page, 0)).open).toBe(false);
   });
 
-  test('nav blur only appears after the hero scrolls away', async ({ page }) =>
+  test('nav blur only appears after the hero scrolls away', async ({ page }) => {
     await open(page, '/', { galaxy: false });
     const nav = page.locator('[data-nav]');
     const blur = page.locator('.nav__blur');
@@ -314,18 +317,16 @@ test.describe('home', () => {
 
   test('sections reveal when scrolled into view and cards keep hover', async ({ page }) => {
     await open(page, '/', { galaxy: false });
-    const card = page.locator('.card').first();
+    const card = page.locator('[data-sample-card]').first();
     await expect(card).not.toHaveClass(/is-in/);
     await expect(card).toHaveCSS('opacity', '0');
     await card.scrollIntoViewIfNeeded();
     await expect(card).toHaveClass(/is-in/);
     await expect(card).toHaveClass(/is-settled/, { timeout: 15000 });
     await expect(card).toHaveCSS('opacity', '1');
-    await expect(card).toHaveCSS('transition-duration', '0.45s, 0.55s');
     await card.hover();
     await expect.poll(async () => alpha(await card.evaluate(el => getComputedStyle(el).backgroundColor))).toBeGreaterThan(0.02);
-    await expect.poll(() => card.evaluate(el => getComputedStyle(el).transform)).toBe('matrix(1, 0, 0, 1, 0, -6)');
-    await expect.poll(async () => alpha(await card.locator('.card__media').evaluate(el => getComputedStyle(el).borderColor))).toBeCloseTo(0.22, 1);
+    await expect.poll(() => card.evaluate(el => getComputedStyle(el).transform)).toBe('matrix(1, 0, 0, 1, 0, -4)');
   });
 
   test('buttons lift on hover and the star turns', async ({ page }) => {
@@ -496,8 +497,8 @@ test.describe('home', () => {
     await open(page, '/', { galaxy: false });
     const first = page.locator('[data-belief] [data-w]').first();
     await expect.poll(async () => num(await first.evaluate(el => el.style.opacity))).toBe(1);
-    await expect(page.locator('.card').first()).toHaveClass(/is-in/);
-    await expect(page.locator('.card').first()).toHaveCSS('opacity', '1');
+    await expect(page.locator('[data-sample-card]').first()).toHaveClass(/is-in/);
+    await expect(page.locator('[data-sample-card]').first()).toHaveCSS('opacity', '1');
     await ctx.close();
   });
 });
