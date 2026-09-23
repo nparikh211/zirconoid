@@ -11,8 +11,8 @@ import { emptyPixel } from '../vendor/paper-shaders/empty-pixel.js';
 // The grain of the stock. These are the values the design was signed off on.
 const PAPER = {
   colorBack: '#ffffff',
-  colorFront: '#a4a092',
-  contrast: 0.27,
+  colorFront: '#b2aea2',
+  contrast: 0.23,
   roughness: 0.74,
   fiber: 0.47,
   fiberSize: 0.07,
