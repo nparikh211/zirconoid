@@ -51,22 +51,5 @@
       "Operators are paid hourly for capture sessions, with a premium for full-shift recordings and for wearing equipment. Contract and full-time arrangements are available for programs that run for months. Paying well is the cheapest quality-control measure we have found. Sites are paid for the access and the disruption, which is what makes plant managers take the second call.",
       "If you run a data company and need operators in an industry we have not touched, or a site in a region we are not in yet, tell us the domain. Recruiting is the part we are built for."
     ]
-  },
-  {
-    "slug": "expert-trajectories",
-    "tag": "Research",
-    "date": "Aug 2026",
-    "isoDate": "2026-08-11",
-    "updatedIso": "2026-09-17",
-    "title": "Structuring expert reasoning for agent and RL training",
-    "excerpt": "What it takes to turn an oncologist's working knowledge into trajectories a lab can train and evaluate against.",
-    "body": [
-      "Expert working knowledge is a different kind of operator data. There is no camera. The task is reasoning, and the ground truth is the sequence of judgments an experienced clinician makes between a patient presenting and a treatment being chosen.",
-      "For our oncology program, oncologists document diagnosis pathways step by step: presenting features, differentials considered and ruled out, staging, the treatment options weighed, and the rationale for the selection. Alongside this they record efficacy trends they have observed across de-identified cohorts.",
-      "The structure matters as much as the content. Each pathway is written as a trajectory with explicit decision points, so it can serve as a reference for agent evaluation or as the basis for a reward model in reinforcement learning. Free-form essays are easier to collect and nearly useless for this purpose.",
-      "We partner with institutions here the same way we partner with factories. We contract individual clinicians, and we also work with the organizations around them: hospital groups and cancer centres, diagnostic labs, and the quality, process and engineering teams inside industrial firms who hold the reasoning behind their own plants. An institution brings a cohort of experts, a review process, and a legal path for the data, which is usually what decides whether a program of this kind can run at all.",
-      "That reasoning exists well outside medicine. A process engineer at a chip fab, a line supervisor at a bottling plant, and a planner at a logistics hub each carry a decision tree that has never been written down, and each one is reachable through the site rather than the person.",
-      "All patient-level information is de-identified before it reaches us, and contributing clinicians work under agreements that cover consent and data handling. Specifics are available to partners on request at data@zirconoid.com."
-    ]
   }
 ]

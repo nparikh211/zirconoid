@@ -525,7 +525,7 @@ img, svg { max-width: 100%; }
   --paper-pad: clamp(24px, 4.4vw, 68px);
   max-width: calc(720px + 2 * var(--paper-pad));
   border-radius: 14px;
-  background: #fdfcf7;
+  background: #fffefa;
   box-shadow: 0 28px 70px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .05);
   overflow: hidden;                 /* clip the canvas to the rounded corners */
   /* Grain breaks up a letter the way a flat background never does, so the ink is black and the
@@ -556,7 +556,7 @@ img, svg { max-width: 100%; }
 .paper .post__foot a:hover { color: #000; }
 .paper .post__body a { border-bottom-color: var(--rule); }
 .paper .post__body a:hover { border-bottom-color: var(--muted); }
-.paper ::selection { background: #000; color: #fdfcf7; }
+.paper ::selection { background: #000; color: #fffefa; }
 .paper .post-list__item:hover { background: rgba(0, 0, 0, .05); }
 /* The nav floats over the sheet, and its blur alone would leave pale type on white paper. */
 .site--paper .nav__blur { background: rgba(20, 20, 20, .72); }

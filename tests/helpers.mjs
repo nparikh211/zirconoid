@@ -13,7 +13,7 @@ export function watch(page) {
   return errors;
 }
 
-export const PAGES = ['/', '/samples/', '/blog/', '/blog/announcing-zirconoid/', '/blog/egocentric-capture/', '/blog/operators-by-the-hour/', '/blog/expert-trajectories/', '/privacy/', '/terms/'];
+export const PAGES = ['/', '/samples/', '/blog/', '/blog/announcing-zirconoid/', '/blog/egocentric-capture/', '/blog/operators-by-the-hour/', '/privacy/', '/terms/'];
 
 export async function expectNoOverflow(page) {
   const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));

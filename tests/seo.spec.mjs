@@ -66,7 +66,7 @@ test('home describes the business, its service and its questions', async ({ page
 test('blog index and posts are linked as a blog', async ({ page }) => {
   await page.goto('/blog/');
   const indexNodes = await ld(page);
-  expect(typed(indexNodes, 'Blog').blogPost).toHaveLength(4);
+  expect(typed(indexNodes, 'Blog').blogPost).toHaveLength(3);
   expect(typed(indexNodes, 'BreadcrumbList').itemListElement).toHaveLength(2);
 
   await page.goto('/blog/egocentric-capture/');
@@ -122,7 +122,7 @@ test('rss feed carries every post in full', async ({ request }) => {
   const res = await request.get('/feed.xml');
   expect(res.headers()['content-type']).toContain('xml');
   const xml = await res.text();
-  expect([...xml.matchAll(/<item>/g)]).toHaveLength(4);
+  expect([...xml.matchAll(/<item>/g)]).toHaveLength(3);
   expect(xml).toContain('<title>Announcing Zirconoid</title>');
   expect(xml).toContain('content:encoded');
   expect(xml).toContain('<atom:link href="https://zirconoid.com/feed.xml"');
@@ -134,7 +134,7 @@ test('llms.txt maps the site and llms-full.txt holds the text', async ({ request
   // The blockquote is the site description, so it follows whatever SITE.description says.
   expect(llms).toContain(`> ${SITE.description}`);
   expect(llms).toContain('## Pages');
-  for (const slug of ['announcing-zirconoid', 'egocentric-capture', 'operators-by-the-hour', 'expert-trajectories']) {
+  for (const slug of ['announcing-zirconoid', 'egocentric-capture', 'operators-by-the-hour']) {
     expect(llms).toContain(`/blog/${slug}/`);
   }
 

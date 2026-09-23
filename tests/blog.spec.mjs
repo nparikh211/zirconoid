@@ -5,7 +5,6 @@ const POSTS = [
   ['announcing-zirconoid', 'Announcing Zirconoid'],
   ['egocentric-capture', 'Why egocentric capture is the hardest data to fake'],
   ['operators-by-the-hour', 'How we recruit operators by the hour'],
-  ['expert-trajectories', 'Structuring expert reasoning for agent and RL training'],
 ];
 
 // The paper texture is WebGL, and software WebGL on a runner takes seconds per sheet. Only the
@@ -19,9 +18,9 @@ test.beforeEach(async ({ page }, testInfo) => {
 test('blog index lists every post', async ({ page }) => {
   await page.goto('/blog/');
   await expect(page.locator('h1')).toHaveText('Notes on capture, operators, and ground truth.');
-  await expect(page.locator('.post-list__item')).toHaveCount(4);
+  await expect(page.locator('.post-list__item')).toHaveCount(3);
   await expect(page.locator('.post-list__title')).toHaveText(POSTS.map(p => p[1]));
-  await expect(page.locator('header .nav__link')).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header .nav__link', { hasText: 'Blog' })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('[data-nav]')).toHaveCSS('position', 'sticky');
   expect(await page.locator('.nav__blur').evaluate(el => getComputedStyle(el).backdropFilter)).toBe('blur(4px)');
 });
@@ -107,7 +106,7 @@ test('the sheet still reads without the shader', async ({ page }) => {
   const sheet = page.locator('[data-paper]');
   await expect(sheet).not.toHaveAttribute('data-paper-ready', '');
   await expect(sheet.locator('canvas')).toHaveCount(0);
-  await expect(sheet).toHaveCSS('background-color', 'rgb(253, 252, 247)');
+  await expect(sheet).toHaveCSS('background-color', 'rgb(255, 254, 250)');
   await expect(page.locator('.post__body p').first()).toHaveCSS('color', 'rgb(0, 0, 0)');
 });
 
