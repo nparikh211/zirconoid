@@ -9,7 +9,7 @@ export const HEADLINE = 'Zirconoid is organizing human-captured data for physica
 export const BELIEF = [
   'Physical AI is the future. Zirconoid provides global, human-captured egocentric data to train physical AI models at scale.',
   "Our core belief is that complex data required to teach today's models is bottlenecked by access to diverse, real-world physical environments. Engineering systems that solve technical problems get commoditized. Proprietary human and operator-collected data does not.",
-  'From factory floors and fields to construction sites and manufacturing plants, we recruit global talent and collect large-scale datasets across diverse physical environments.',
+  'From factory floors, warehouses, and construction sites to kitchens, workshops, and homes, we recruit global talent and collect large-scale egocentric datasets for physical AI.',
 ];
 
 // Home featured Sample Datasets (order matters). Full catalog stays on /samples/.
@@ -73,7 +73,7 @@ export const FAQ = [
   },
   {
     q: 'Where does Zirconoid operate?',
-    a: 'Worldwide. We recruit talent globally and run capture wherever the ground truth lives, from factory floors and assembly lines to manufacturing plants and workshops.',
+    a: 'Worldwide. We recruit talent globally and run capture wherever the ground truth lives, from factory floors, warehouses, and construction sites to kitchens, workshops, and homes.',
   },
 ];
 
