@@ -14,7 +14,7 @@
 
   function label() {
     if (!configured) return 'Coming soon / Stripe not configured';
-    if (!agree.checked) return 'Agree to license to continue';
+    if (!agree.checked) return 'Please confirm you agree to the Dataset License and Terms of Sale to continue.';
     return 'Continue to checkout';
   }
 
@@ -25,7 +25,7 @@
     btn.textContent = label();
     if (status) {
       status.textContent = configured
-        ? 'Stripe is configured. Agree to the license and terms, then continue to checkout.'
+        ? 'Stripe is configured. Agree to the Dataset License and Terms of Sale, then continue to checkout.'
         : 'Coming soon — Stripe not configured. A publishable key or Payment Link plus a server-side Checkout Session endpoint are required before charges can run.';
     }
   }
@@ -33,7 +33,14 @@
   agree.addEventListener('change', refresh);
 
   btn.addEventListener('click', async () => {
-    if (btn.disabled || !agree.checked) return;
+    if (btn.disabled || !agree.checked) {
+      if (configured && !agree.checked && status) {
+        status.textContent = 'Please confirm you agree to the Dataset License and Terms of Sale to continue.';
+      }
+      return;
+    }
+    const skuEl = panel.querySelector('[data-buy-sku]:checked');
+    const sku = skuEl ? skuEl.value : 'train';
     if (cfg.checkoutSessionEndpoint) {
       btn.disabled = true;
       btn.textContent = 'Starting checkout…';
@@ -41,7 +48,7 @@
         const res = await fetch(cfg.checkoutSessionEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ agree: true, product: cfg.productLabel || '' }),
+          body: JSON.stringify({ agree: true, product: cfg.productLabel || '', licenseSku: sku }),
         });
         if (!res.ok) throw new Error('Checkout session request failed');
         const data = await res.json();
