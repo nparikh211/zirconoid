@@ -8,7 +8,7 @@ const RB2B = `<script>!function(key){if(window.reb2b)return;window.reb2b={loaded
 // Short content hash per asset, appended as ?v=, so a CDN can never pair new HTML with a stale file.
 const hash = file => createHash('sha256').update(readFileSync(new URL(`../public/${file}`, import.meta.url))).digest('hex').slice(0, 10);
 export const ASSET_V = Object.fromEntries(
-  ['assets/css/fonts.css', 'assets/css/site.css', 'assets/css/sample-modal.css', 'assets/css/samples.css', 'assets/js/site.js', 'assets/js/sample-modal.js', 'assets/js/samples.js', 'assets/js/galaxy.js', 'assets/js/paper.js'].map(f => [f, hash(f)]));
+  ['assets/css/fonts.css', 'assets/css/site.css', 'assets/css/sample-modal.css', 'assets/css/samples.css', 'assets/js/site.js', 'assets/js/sample-modal.js', 'assets/js/samples.js', 'assets/js/galaxy.js', 'assets/js/paper.js', 'assets/js/buy-config.js', 'assets/js/buy.js'].map(f => [f, hash(f)]));
 const v = file => `${file}?v=${ASSET_V[file]}`;
 
 // Relative prefix from a page path back to the site root, so pages work at any base URL.

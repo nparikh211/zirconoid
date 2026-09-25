@@ -9,6 +9,9 @@ import { POSTS, renderIndex, renderPost } from '../src/pages/blog.js';
 import { PRIVACY, TERMS, EFFECTIVE_ISO, renderPrivacy, renderTerms } from '../src/pages/legal.js';
 import { render as renderNotFound } from '../src/pages/notfound.js';
 import { render as renderSamples, CATALOG } from '../src/pages/samples.js';
+import { render as renderBuy } from '../src/pages/buy.js';
+import { render as renderDataLicense } from '../src/pages/data-license.js';
+import { render as renderTermsOfSale } from '../src/pages/terms-of-sale.js';
 import { robotsTxt } from './robots.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -186,6 +189,9 @@ export function build() {
   for (const p of POSTS) write(`/blog/${p.slug}/`, renderPost(p));
   write('/privacy/', renderPrivacy());
   write('/terms/', renderTerms());
+  write('/buy/', renderBuy()); // URL-only; omitted from sitemap / llms
+  write('/data-license/', renderDataLicense()); // URL-only; linked from /buy only
+  write('/terms-of-sale/', renderTermsOfSale()); // URL-only; linked from /buy only
   write('/404.html', renderNotFound());
 
   const pages = pageList();
