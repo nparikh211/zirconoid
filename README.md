@@ -9,6 +9,7 @@ Marketing site for Zirconoid Inc. Static HTML, CSS and JavaScript, built with a 
 | `/` | `src/pages/home.js` |
 | `/blog/` and `/blog/<slug>/` | `src/pages/blog.js`, posts in `src/content/posts.json` |
 | `/privacy/`, `/terms/` | `src/pages/legal.js` |
+| `/buy/` | `src/pages/buy.js` — URL-only (not linked from nav, footer, or homepage); Stripe + license scaffold |
 | `/404.html` | `src/pages/notfound.js` |
 
 `src/layout.js` holds the document shell, nav and both footers. `src/site.js` holds site constants (name, email, copyright) and the star icon used on buttons.
@@ -91,6 +92,7 @@ The site is built to be read by search engines and by AI answer engines, and to 
 - Every post has to say that Zirconoid partners with the sites as well as recruiting the operators: workshops, factories, plants, bottling lines, chip fabs, mills, logistics hubs and the rest. Without it the posts read as an individual-recruiting business. A test enforces it.
 - FAQ: `FAQ` in `src/pages/home.js`. Keep answers factual; they are what AI assistants will quote.
 - Legal text: `src/pages/legal.js`. Change `EFFECTIVE` and `EFFECTIVE_ISO` when you change the text.
+- Commercial buy page (`/buy/`, URL-only): `src/pages/buy.js`, Stripe placeholders in `public/assets/js/buy-config.js`, client stub in `public/assets/js/buy.js`. Counsel drops license/terms into `docs/DATA_LICENSE.md` and the `#license` / `#terms` sections in `buy.js`.
 - Dataset card images: the cards use a striped placeholder box (`.card__media`). Swap in an `<img>` there when stills are ready.
 
 ## Deploying

@@ -673,3 +673,66 @@ img, svg { max-width: 100%; }
   .btn, .card, .card__media, .post-list__item, .nav__blur { transition: none; }
   .js .faq__panel, .faq__chevron, .faq__q { transition: none; }
 }
+
+/* Obscured /buy/ commercial page — purchase panel + agree checkbox. */
+.buy-panel {
+  margin: 8px 0 56px;
+  padding: 28px 28px 32px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .03);
+  display: grid;
+  gap: 18px;
+}
+.buy-panel__title {
+  margin: 0;
+  font-family: var(--head);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.buy-panel__lede,
+.buy-panel__note,
+.buy-panel__status {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  font-weight: 300;
+  color: var(--soft);
+}
+.buy-panel__status { color: var(--muted); }
+.buy-panel__note { font-size: 13px; color: var(--faint); }
+.buy-panel__note code,
+.buy-legal code {
+  font-family: var(--mono);
+  font-size: .92em;
+  color: var(--muted);
+}
+.buy-agree {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 300;
+  color: var(--soft);
+  cursor: pointer;
+}
+.buy-agree input {
+  margin-top: 3px;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  accent-color: #f2f2ee;
+}
+.buy-agree a { color: var(--muted); }
+.buy-agree a:hover { color: #fff; }
+.buy-panel .btn[disabled],
+.buy-panel .btn[aria-disabled="true"] {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.buy-legal { margin-top: 8px; }
