@@ -8,13 +8,13 @@ test.describe('samples gallery', () => {
     await expect(page.locator('h1')).toHaveText('Sample Datasets');
     await expect(page.locator('.nav__link[aria-current="page"]')).toHaveText('Sample Datasets');
     const cards = page.locator('[data-sample-card]');
-    await expect(cards).toHaveCount(6);
+    await expect(cards).toHaveCount(7);
     await expect(cards.nth(0)).toContainText('WIRE STRIPPING');
     await expect(cards.nth(0)).toContainText('Task');
     await expect(cards.nth(0)).toContainText('Environment');
     await expect(cards.nth(0)).toContainText('Inventory');
-    await expect(page.locator('.sample-card__thumbs img')).toHaveCount(12);
-    await expect(page.locator('.sample-card__play')).toHaveCount(6);
+    await expect(page.locator('.sample-card__thumbs img')).toHaveCount(14);
+    await expect(page.locator('.sample-card__play')).toHaveCount(7);
     await expect(page.locator('.samples-collect__status')).toContainText('Actively collecting');
     await expect(page.locator('.samples-collect__btn')).toHaveText('Request more samples');
 
@@ -34,7 +34,7 @@ test.describe('samples gallery', () => {
   });
 
   test('sample videos and posters resolve', async ({ request }) => {
-    for (const id of ['wire-stripping', 'soldering', 'pcb-stuffing', 'plastic-clipping', 'kitchen-portioning', 'garment-ironing']) {
+    for (const id of ['wire-stripping', 'soldering', 'pcb-stuffing', 'plastic-clipping', 'kitchen-portioning', 'garment-ironing', 'textile-handloom-weaving']) {
       expect((await request.get(`/assets/video/samples/${id}.mp4`)).status()).toBe(200);
       expect((await request.get(`/assets/img/samples/${id}-a.jpg`)).status()).toBe(200);
       expect((await request.get(`/assets/img/samples/${id}-b.jpg`)).status()).toBe(200);
