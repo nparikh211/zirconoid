@@ -133,5 +133,20 @@
     "posterB": "restaurant-mcdonalds-kiosk-walk-b.jpg",
     "orientation": "landscape",
     "desc": "Egocentric walk into a McDonald's: cross the dining seating area and approach the ORDER HERE self-service kiosks with payment terminals and digital menu boards."
+  },
+  {
+    "id": "mall-taco-bell-corridor-walk",
+    "title": "WALKING \u2014 MALL TACO BELL CORRIDOR",
+    "duration": "00:20",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Mall walk / food-court corridor",
+    "environment": "Shopping mall food court (Gopalan Mall, Bangalore area)",
+    "inventory": "Taco Bell storefront, Meal Mania promo, mamaearth kiosk, polished floor, LED ceiling, EXIT escalator",
+    "video": "mall-taco-bell-corridor-walk.mp4",
+    "posterA": "mall-taco-bell-corridor-walk-a.jpg",
+    "posterB": "mall-taco-bell-corridor-walk-b.jpg",
+    "orientation": "landscape",
+    "desc": "Egocentric walk through a mall food-court corridor past a mamaearth kiosk and Taco Bell Meal Mania storefront toward the EXIT escalator."
   }
 ]
