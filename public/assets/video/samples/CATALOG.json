@@ -103,5 +103,20 @@
     "posterB": "textile-handloom-weaving-b.jpg",
     "orientation": "landscape",
     "desc": "Overhead view of handloom weaving: shuttle passes across pink silk with gold zari border work on a wooden loom."
+  },
+  {
+    "id": "metro-platform-waiting",
+    "title": "WAITING \u2014 METRO PLATFORM POV",
+    "duration": "00:09",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Commuting / waiting on platform",
+    "environment": "Metro station platform (Namma Metro)",
+    "inventory": "Metro train, tactile paving, fire extinguishers, metal benches, digital signage",
+    "video": "metro-platform-waiting.mp4",
+    "posterA": "metro-platform-waiting-a.jpg",
+    "posterB": "metro-platform-waiting-b.jpg",
+    "orientation": "portrait",
+    "desc": "Egocentric POV on a Namma Metro platform: polished granite floor, yellow tactile strip, train at the platform, and waiting commuters under industrial ceiling lights."
   }
 ]
