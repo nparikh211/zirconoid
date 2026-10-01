@@ -24,8 +24,8 @@
     titleEl.textContent = title;
     panel.dataset.orientation = orient;
     player.dataset.orientation = orient;
-    player.poster = poster ? `${root()}assets/img/samples/${poster}?v=12` : '';
-    player.src = `${root()}assets/video/samples/${file}?v=12`;
+    player.poster = poster ? `${root()}assets/img/samples/${poster}?v=13` : '';
+    player.src = `${root()}assets/video/samples/${file}?v=13`;
     box.hidden = false;
     document.documentElement.classList.add('video-lightbox-open');
     panel.focus();

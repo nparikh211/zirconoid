@@ -1,7 +1,7 @@
 [
   {
     "id": "wire-stripping",
-    "title": "WIRE STRIPPING — ELECTRONICS BENCH",
+    "title": "WIRE STRIPPING \u2014 ELECTRONICS BENCH",
     "duration": "00:10",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -11,12 +11,12 @@
     "video": "wire-stripping.mp4",
     "posterA": "wire-stripping-a.jpg",
     "posterB": "wire-stripping-b.jpg",
-    "desc": "Egocentric wire prep on a motherboard-style electronics bench: gather powered LED boards and strip insulation with an automatic stripper — the fine-motor sequence that feeds PCB harness and wire-attach stations.",
+    "desc": "Egocentric wire prep on a motherboard-style electronics bench: gather powered LED boards and strip insulation with an automatic stripper \u2014 the fine-motor sequence that feeds PCB harness and wire-attach stations.",
     "orientation": "portrait"
   },
   {
     "id": "soldering",
-    "title": "SOLDERING — PCB WIRE ATTACH",
+    "title": "SOLDERING \u2014 PCB WIRE ATTACH",
     "duration": "00:18",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -26,12 +26,12 @@
     "video": "soldering.mp4",
     "posterA": "soldering-a.jpg",
     "posterB": "soldering-b.jpg",
-    "desc": "Egocentric soldering of pre-stripped wires onto a PCB — the wire-attach station on a board assembly line, with clear bimanual iron and board control.",
+    "desc": "Egocentric soldering of pre-stripped wires onto a PCB \u2014 the wire-attach station on a board assembly line, with clear bimanual iron and board control.",
     "orientation": "portrait"
   },
   {
     "id": "pcb-stuffing",
-    "title": "PCB STUFFING — THROUGH-HOLE INSERT",
+    "title": "PCB STUFFING \u2014 THROUGH-HOLE INSERT",
     "duration": "00:18",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -46,7 +46,7 @@
   },
   {
     "id": "plastic-clipping",
-    "title": "CLIPPING — INJECTION MOLD SPRUES",
+    "title": "CLIPPING \u2014 INJECTION MOLD SPRUES",
     "duration": "00:16",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -56,12 +56,12 @@
     "video": "plastic-clipping.mp4",
     "posterA": "plastic-clipping-a.jpg",
     "posterB": "plastic-clipping-b.jpg",
-    "desc": "Post-mold finishing on the plant floor: hold the injection-molded frame and snip sprue rings into a bowl — the bimanual trim step between molding and assembly.",
+    "desc": "Post-mold finishing on the plant floor: hold the injection-molded frame and snip sprue rings into a bowl \u2014 the bimanual trim step between molding and assembly.",
     "orientation": "portrait"
   },
   {
     "id": "kitchen-portioning",
-    "title": "CUTTING — CONFECTIONERY PORTIONING",
+    "title": "CUTTING \u2014 CONFECTIONERY PORTIONING",
     "duration": "00:16",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -76,7 +76,7 @@
   },
   {
     "id": "garment-ironing",
-    "title": "IRONING — SWEATPANTS FOLD & PRESS",
+    "title": "IRONING \u2014 SWEATPANTS FOLD & PRESS",
     "duration": "00:16",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -91,7 +91,7 @@
   },
   {
     "id": "textile-handloom-weaving",
-    "title": "WEAVING — HANDLOOM ZARI BORDER",
+    "title": "WEAVING \u2014 HANDLOOM ZARI BORDER",
     "duration": "00:20",
     "fps": "60 fps",
     "streams": "1 stream",
@@ -106,7 +106,7 @@
   },
   {
     "id": "metro-platform-waiting",
-    "title": "WAITING — METRO PLATFORM POV",
+    "title": "WAITING \u2014 METRO PLATFORM POV",
     "duration": "00:09",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -121,7 +121,7 @@
   },
   {
     "id": "restaurant-mcdonalds-kiosk-walk",
-    "title": "WALKING — MCDONALD'S KIOSK APPROACH",
+    "title": "WALKING \u2014 MCDONALD'S KIOSK APPROACH",
     "duration": "00:20",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -136,7 +136,7 @@
   },
   {
     "id": "mall-taco-bell-corridor-walk",
-    "title": "WALKING — MALL TACO BELL CORRIDOR",
+    "title": "WALKING \u2014 MALL TACO BELL CORRIDOR",
     "duration": "00:20",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -151,7 +151,7 @@
   },
   {
     "id": "street-delhi-qrt-van-drive",
-    "title": "DRIVING — DELHI STREET QRT VAN",
+    "title": "DRIVING \u2014 DELHI STREET QRT VAN",
     "duration": "00:20",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -166,7 +166,7 @@
   },
   {
     "id": "street-delhi-overloaded-cart-drive",
-    "title": "DRIVING — DELHI OVERLOADED CART MARKET",
+    "title": "DRIVING \u2014 DELHI OVERLOADED CART MARKET",
     "duration": "00:20",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -181,7 +181,7 @@
   },
   {
     "id": "street-delhi-djb-e-rickshaw-drive",
-    "title": "DRIVING — DELHI DJB E-RICKSHAW TRAFFIC",
+    "title": "DRIVING \u2014 DELHI DJB E-RICKSHAW TRAFFIC",
     "duration": "00:20",
     "fps": "30 fps",
     "streams": "1 stream",
@@ -193,5 +193,20 @@
     "posterB": "street-delhi-djb-e-rickshaw-drive-b.jpg",
     "orientation": "landscape",
     "desc": "Egocentric drive through a Delhi commercial street behind a Falcon e-rickshaw past ON DJB DUTY water tankers, a yellow school bus, and roadside shops under midday sun."
+  },
+  {
+    "id": "street-bangalore-namma-metro-backhoe-ride",
+    "title": "RIDING \u2014 BANGALORE NAMMA METRO BACKHOE",
+    "duration": "00:20",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Scooter ride / past metro construction + backhoe",
+    "environment": "Urban street (Bangalore / BMRCL Namma Metro construction)",
+    "inventory": "TVS NTORQ scooter, Google Maps phone mount, yellow backhoe, BMRCL/NCC Namma Metro hoarding, metro pillars",
+    "video": "street-bangalore-namma-metro-backhoe-ride.mp4",
+    "posterA": "street-bangalore-namma-metro-backhoe-ride-a.jpg",
+    "posterB": "street-bangalore-namma-metro-backhoe-ride-b.jpg",
+    "orientation": "landscape",
+    "desc": "Egocentric scooter ride through a Bangalore street under a flyover past a yellow backhoe loader and BMRCL/NCC Namma Metro construction hoarding, with Google Maps navigation mounted on the TVS NTORQ dashboard."
   }
 ]
