@@ -223,5 +223,20 @@
     "posterB": "street-bangalore-apl-water-tanker-walk-b.jpg",
     "orientation": "landscape",
     "desc": "Egocentric walk through a Bangalore neighborhood street past a Packers & Movers truck and a red APL water-supply tanker at a dusk intersection with Campa shop signs and overhead wires."
+  },
+  {
+    "id": "steel-rebar-mill-hot-rolling-tongs-01",
+    "title": "HOT ROLLING \u2014 STEEL REBAR MILL",
+    "duration": "00:22",
+    "fps": "30 fps",
+    "streams": "1 stream",
+    "task": "Guiding hot steel rods with tongs",
+    "environment": "Steel rebar rolling mill",
+    "inventory": "Long tongs, red-hot steel rods, open furnace, floor tracks",
+    "video": "steel-rebar-mill-hot-rolling-tongs-01.mp4",
+    "posterA": "steel-rebar-mill-hot-rolling-tongs-01-a.jpg",
+    "posterB": "steel-rebar-mill-hot-rolling-tongs-01-b.jpg",
+    "orientation": "portrait",
+    "desc": "Handheld view of a steel rebar mill: workers use long tongs to guide glowing red-hot rods along the floor tracks, and a worker at an open furnace handles a fresh rod."
   }
 ]
