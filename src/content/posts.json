@@ -1,5 +1,24 @@
 [
   {
+    "slug": "industry-hours-are-not-one-product",
+    "tag": "Capture",
+    "date": "Oct 2026",
+    "isoDate": "2026-10-12",
+    "title": "What sits inside the industry tag",
+    "excerpt": "Open hubs now ship egocentric hours under an industry tag. A rebar hot-rolling floor and an electronics bench still train a robot for very different jobs.",
+    "body": [
+      "On October 7 we cut a 46-second phone clip from a steel rebar mill into two labeled samples. One is 22.5 seconds of workers guiding glowing rods with long tongs and pulling stock from an open furnace. The other is 14.1 seconds of cooled rebar on a cooling bed, then a worker shouldering a bundle onto a flatbed truck. Both sit in our sidecar JSON with environment set to factory_floor. The rights field is still unknown, so for now they travel as watermarked samples only.",
+      "That same week, open egocentric hubs kept growing the industry column. Lightwheel's EgoSuite-Open100K (Hugging Face blog, August 26, 2026) plans 100,000 hours of first-person human activity, with 10,000 hours live now. Industry is one of its seven environmental categories, next to home, hospitality, retail, sports, logistics, and office. EgoWild (arXiv 2609.23755) reports 538.9 hours of in-the-wild egocentric data across homes, factories, and pharmacies. Both releases are useful research signals, but neither tells a buyer which floor the industry hours came from.",
+      "We think the market is about to misread that tag. A purchase order that says industrial egocentric hours can still land garment stitching, sprue clipping, PCB stuffing, or hot-rolling tongs under the same line item. For a model that has to run on one of those floors, each of those is its own product.",
+      "The research keeps pointing the same way. Ego4WAM (arXiv 2609.40341, September 2026) held the model fixed and varied alignment, duration, and task diversity, and found that duration and task diversity moved different capabilities. At matched volumes (2,000 and 4,000 hours), denser coverage of the top 500 tasks stayed stronger on several aggregate metrics than broader long-tail task sets. The authors put it plainly: neither total hours nor task count alone describes useful egocentric scale, and alignment with the robot's task still matters.",
+      "Physical Intelligence showed a related result on December 16, 2025. Co-finetuning with egocentric human video gave roughly 2x performance on generalization tasks that appear only in the human data (pi.website/research/human_to_robot). The gains came when the human footage covered the right distribution, and volume helped once that match was in place.",
+      "Felicis put a funding number under the same wave. Robotics and physical AI startups raised a record $27.6 billion in 2025, about twice the prior year, and Tobi Coker argued the physical world still lacks a shared data stack (Felicis, 2026). With that much capital chasing scale, it is easy to overbuy hours that have no site-type or task-family mix attached.",
+      "Our own inventory sheet stays thin on purpose. As of late September the honest pilot row was about 0.18 hours across 12 factory and workshop SOP clips (electronics bench, sprue clipping, metal stamping, and textile handloom). The October 7 mill cuts add two more labeled scenes under factory_floor, still with rights unknown. We will not roll those into a train pack until the operator and site records are filled in. A sample and a train pack are different goods for us, and the sidecar says which is which.",
+      "If you are buying India industrial egocentric hours this quarter, please run one check before the purchase order goes out. Ask for the site-type mix and the task-family mix alongside the environment category. How many hours are hot mill, garment, electronics bench, textile handloom, or logistics dock? Which SOP families sit inside the industry tag? If the seller can only say industry, it is fair to treat that pack as unsorted footage and price the domain match separately.",
+      "We are happy to answer that same question on anything we ship. Early samples from real floors are at zirconoid.com/samples, and data@zirconoid.com reaches us if you are scoping a capture program. Thanks for reading, and please send us your take if you see it differently."
+    ]
+  },
+  {
     "slug": "indias-largest-human-data-provider",
     "tag": "Company",
     "date": "Sep 2026",
