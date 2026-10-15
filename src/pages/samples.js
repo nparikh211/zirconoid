@@ -75,6 +75,7 @@ export function render() {
     <p class="eyebrow">Samples</p>
     <h1 class="page__title">Sample Datasets</h1>
     <p class="page__lede samples-page__lede">Egocentric clips from real benches and plant floors.</p>
+    <p class="samples-page__capabilities"><a class="samples-capabilities-link" href="https://docs.google.com/spreadsheets/d/1XuO_Ly5oH8kc5g_wih8yzXPXXQuBgo-wMriOms9aLTw/view" target="_blank" rel="noopener">Data Capture Capabilities by Industry &amp; Task <span aria-hidden="true">&#8599;</span></a></p>
     <div class="samples-grid">
 ${CATALOG.map(card).join('')}
     </div>

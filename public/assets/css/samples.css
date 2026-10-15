@@ -10,6 +10,24 @@
   text-wrap: pretty;
 }
 
+.samples-page__lede:has(+ .samples-page__capabilities) { margin-bottom: 20px; }
+.samples-page__capabilities { margin: 0 0 40px; }
+.samples-capabilities-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  border: 1px solid var(--cream);
+  border-radius: 4px;
+  padding: 10px 16px;
+  transition: background .25s, color .25s;
+}
+.samples-capabilities-link:hover, .samples-capabilities-link:focus-visible { background: var(--cream); color: var(--bg); }
+
 .samples-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
