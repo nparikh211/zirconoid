@@ -5,7 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, plain } from '../src/site.js';
 import { render as renderHome, HEADLINE, BELIEF, DATASETS, FAQ } from '../src/pages/home.js';
-import { POSTS, renderIndex, renderPost } from '../src/pages/blog.js';
+import { POSTS, renderIndex, renderPost, renderBlocks, renderFaq, stripMarker } from '../src/pages/blog.js';
 import { PRIVACY, TERMS, EFFECTIVE_ISO, renderPrivacy, renderTerms } from '../src/pages/legal.js';
 import { render as renderNotFound } from '../src/pages/notfound.js';
 import { render as renderSamples, CATALOG } from '../src/pages/samples.js';
@@ -56,7 +56,7 @@ function feed() {
     <pubDate>${new Date(p.isoDate + 'T12:00:00Z').toUTCString()}</pubDate>
     <category>${xml(p.tag)}</category>
     <description>${xml(p.excerpt)}</description>
-    <content:encoded><![CDATA[${p.body.map(t => `<p>${t}</p>`).join('\n')}]]></content:encoded>
+    <content:encoded><![CDATA[${renderBlocks(p.body, '')}${p.faq ? '\n' + renderFaq(p.faq, '') : ''}]]></content:encoded>
   </item>`).join('\n');
   const newest = POSTS.map(p => p.isoDate).sort().pop();
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -136,7 +136,7 @@ function llmsFullTxt() {
     '',
     '# Blog',
     '',
-    POSTS.map(p => `## ${p.title}\n\n${p.tag} · ${p.date} · ${p.read} · ${SITE.origin}/blog/${p.slug}/\n\n${p.body.map(plain).join('\n\n')}`).join('\n\n'),
+    POSTS.map(p => `## ${p.title}\n\n${p.tag} · ${p.date} · ${p.read} · ${SITE.origin}/blog/${p.slug}/\n\n${p.body.map(t => (/^## /.test(t) ? '### ' : /^(- |\d+\. )/.test(t) ? '- ' : '') + plain(stripMarker(t))).join('\n\n')}${p.faq ? '\n\n### Frequently asked questions\n\n' + p.faq.map(f => `**${f.q}** ${f.a}`).join('\n\n') : ''}`).join('\n\n'),
     '',
     legal(PRIVACY),
     '',

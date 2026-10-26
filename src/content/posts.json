@@ -1,5 +1,101 @@
 [
   {
+    "slug": "does-egocentric-video-train-robots",
+    "tag": "Research",
+    "date": "Oct 2026",
+    "isoDate": "2026-10-26",
+    "title": "Does egocentric human video actually train robots?",
+    "excerpt": "Yes, with conditions. What 2026 studies show about human-to-robot transfer, how much egocentric video helps, and what buyers should spec.",
+    "metaDescription": "Yes, with conditions. What 2026 studies show about human-to-robot transfer, how much egocentric video helps, and what buyers should spec.",
+    "keywords": [
+      "egocentric video for robot learning",
+      "human-to-robot transfer",
+      "egocentric human video pretraining",
+      "robot training data",
+      "physical AI training data",
+      "human demonstration data",
+      "egocentric data scaling law",
+      "embodiment gap",
+      "VLA training data",
+      "Does human video help robots learn?",
+      "Can egocentric video replace robot teleoperation data?",
+      "How many hours of egocentric data does a robot model need?",
+      "What makes egocentric data useful for robot training?",
+      "Why do robots still need robot data after human video pretraining?"
+    ],
+    "body": [
+      "Yes. Egocentric human video measurably improves robot policies, provided it carries a clean motion signal and is followed by a small amount of data from the target robot. In an October 2026 study, growing filtered human video from 1,000 to 5,000 hours lifted real-robot success from 63.3% to 85.0% with robot data held fixed.",
+      "## What is human-to-robot transfer?",
+      "Human-to-robot transfer means teaching a robot from recordings of people doing a task. The camera sits on the person's head, chest or neck, so the footage shows hands, tools and objects from roughly the view a robot would have. The hard part has always been the embodiment gap, since a human hand and a robot gripper move differently and a person's head sways in ways a robot camera does not.",
+      "This matters because robot data is scarce. A June 2026 study from Peking University, NUS, MIT, UCSB and NVIDIA put the whole aggregated public supply of teleoperated robot data at about 20,000 hours, which is comparable to what a single lab holds privately. Egocentric video is far cheaper to collect, so any real evidence that it transfers changes how training budgets get spent.",
+      "## What does the 2026 research show?",
+      "Five controlled studies published between February and October 2026 point the same way. Each one holds the robot side of training steady and changes the human video, which makes the effect easy to read (any gain has to come from the footage).",
+      "- Scaling curve: NVIDIA, UC Berkeley and the University of Maryland trained on 20,854 hours of action-labeled egocentric video in February. Average task completion went from 0.30 at 1,000 hours to 0.71 at 20,000 hours, and validation loss followed a log-linear law with no sign of saturation.",
+      "- Matched comparison: the June HumanScale study pretrained the same model two ways, once on 5,000 hours of egocentric video and once on 5,000 hours of teleoperated robot data. On unseen tasks (ones held out from training), the egocentric version reached roughly 20% lower loss than the robot-data version. Robot pretraining stayed flat on those tasks as it scaled.",
+      "- Fixed robot budget: an October study from JD, Harbin Institute of Technology and Tsinghua kept target-robot data at 250 hours and grew only the filtered human video. Real-robot success went from 63.3% at 1,000 hours to 80.0% at 3,000 hours and 85.0% at 5,000 hours. A robot-only control landed at 55.0%.",
+      "- Whole-body motion: Alibaba's \u03bb0 paper, also from October, built a 500-hour corpus of 32,993 episodes across homes, retail, industrial sites, offices and outdoor settings. Feeding more of that corpus into training lifted real-world task progress steadily, from 59.9% to 80.4%.",
+      "- New conditions from human demos: KODA, dated October 15, turned ordinary egocentric video into training data for a Unitree G1 humanoid. On conditions that only the human demos covered (the robot data never saw them), success rose by 45.0 and 46.25 points across two controllers.",
+      "These are research results on a handful of robots and tasks, and the JD authors state their own limits plainly (seven tasks, one robot and 20 trials per condition). Still, five teams with different models landed on the same direction of result, and that is a stronger signal than any single paper.",
+      "## How much egocentric video do you need?",
+      "No single number applies, though the curves do give a shape. In the February study, gains were still arriving at 20,000 hours. In the October JD study, most of the lift came between 1,000 and 3,000 hours, with a smaller step up to 5,000.",
+      "Variety matters as much as volume. The HumanScale authors credit their scaling to clips picked for a wide range of objects, skills and environments, so each extra hour added new situations. The February corpus spanned 9,869 scenes, 6,015 tasks and 43,237 objects across household, industrial, retail and education settings.",
+      "Hour counts also understate what sits inside them. In HumanScale's 100-hour recipe, egocentric video held about 45,000 trajectories against about 8,000 for the same hours of robot teleoperation (teleoperation carries long idle stretches and slower arm motion).",
+      "## Why do labels and filtering decide whether transfer works?",
+      "A model learns actions from a motion signal attached to the video, such as estimated hand pose, wrist trajectory or full-body pose. When that signal is noisy, adding hours can actually make results worse. In the JD study, a baseline trained on hand-pose labels climbed from 58.3% to 75.0% by 3,000 hours, then fell back to 55.0% at 5,000 hours.",
+      "The authors suggest that drop may come from hand estimates that break down under occlusion, camera motion and viewpoint shifts. Their own method skips the hand estimate, learns latent actions straight from the frames, and kept improving. The February NVIDIA study found a similar pattern in how actions are represented, where wrist-only labels performed poorly and joint-space hand actions worked best.",
+      "Filtering removes a large share of raw capture. The JD team trained its action model on 23.3K hours. For policy pretraining it set aside one 10.0K-hour source that lacked hand-pose labels, and about 5.1K of the remaining 13.3K hours survived filtering. Its filters cut strong blur, extreme camera motion, missing hands, long static stretches, heavy occlusion and clips with little manipulation.",
+      "## Do you still need robot data?",
+      "Yes, though less of it. Every study above finishes with data from the target robot. The JD study used 250 hours, while the February NVIDIA study got by with far less, pairing about 4 hours of robot data with about 50 hours of viewpoint-matched human video across 344 tasks.",
+      "For humanoids, body coverage counts too. In Alibaba's \u03bb0 tests, taking out the whole-body human training stage cut real-world success from 62.5% to 22.5%, a drop of 40 points.",
+      "Each human demo is cheaper to collect and teaches a little less than a robot demo. In the same tests, 200 human demonstrations reached a mean score of 53.3%, which is close to the 60.0% that 50 robot demonstrations reached. The savings show up in labor, since each human demo took 33.30 person-seconds against 140.85 for teleoperation (about 76% less).",
+      "## How should buyers spec egocentric data for transfer?",
+      "The 2026 research turns into six questions worth settling before a purchase order goes out. Each one can be checked on a sample, so please run them early.",
+      "1. Motion signal: which labels ship with each clip (hand pose, wrist trajectory or body pose), how they were estimated, and whether frames with failed estimates are flagged.",
+      "2. Usable hours: how many hours survive filtering for blur, camera motion, missing hands and idle time, reported next to raw hours.",
+      "3. Variety: counts of distinct scenes, tasks and objects, since added hours help most when they add new situations.",
+      "4. Viewpoint match: camera model, mount and height relative to the target robot. The \u03bb0 team neck-mounted a GoPro HERO13 so the human camera sat at robot height.",
+      "5. Body coverage: for humanoids, whether whole-body motion was recorded with the video. EgoExplorer, a 100-hour dataset published October 12, pairs egocentric video with body motion, glove-tracked fingers and touch on one 30 Hz clock.",
+      "6. Traceability: collector and session IDs, calibration records and device-health logs, which the \u03bb0 team kept for each recording.",
+      "A small scaling test answers most of this (and it is a lot cheaper than finding out after the full order lands). Train on 1,000 hours, then on a larger slice with the robot data held constant, and see whether success keeps climbing.",
+      "## Key terms",
+      "- Egocentric video: footage recorded from the point of view of the person doing the task, usually with a head, chest or neck camera.",
+      "- Embodiment gap: the differences in body shape, joints and camera position between a human and a robot.",
+      "- Pseudo-action labels: actions estimated from video, such as hand pose, used where no robot motor commands exist.",
+      "- Latent action model: a model that learns compact action codes directly from video frames, without hand-pose estimates.",
+      "- Mid-training: a stage between broad pretraining and robot fine-tuning that uses data matched to the target robot's viewpoint or body.",
+      "- Scaling law: a steady relationship between data volume and model performance, often linear against the log of hours.",
+      "More of this research is on the way, and this year's papers already give buyers plenty to work with when writing a spec. If you are putting one together and would like to compare notes, please write to us at data@zirconoid.com. Thanks for reading.",
+      "Sources: Zheng et al. (NVIDIA, UC Berkeley, UMD), \"EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data,\" arXiv 2602.16710 (Feb 18, 2026). https://arxiv.org/abs/2602.16710",
+      "Sources: Ma, Bi et al. (PKU, NUS, MIT, UCSB, NVIDIA), \"HumanScale: Egocentric Human Video Can Outperform Real-Robot Data for Embodied Pretraining,\" arXiv 2606.20521 (Jun 2026). https://arxiv.org/abs/2606.20521",
+      "Sources: JD Joy Future Academy, HIT Shenzhen, Tsinghua, \"LAPT-Scale: Scaling Embodied Policies with Latent Action Pre-Training on Human Videos,\" arXiv 2610.13732 (Oct 9, 2026). https://arxiv.org/abs/2610.13732",
+      "Sources: Alibaba, \"\u03bb0: Scaling Open-World Egocentric Human Data for Humanoid Loco-Manipulation,\" arXiv 2610.18950 (Oct 13, 2026). https://arxiv.org/abs/2610.18950",
+      "Sources: TeleAI, SJTU, Gamma Robotics, \"KODA: Kinematics-Observation Data Alignment for Humanoid Learning from Human Egocentric Demonstration,\" arXiv 2610.21152 (Oct 15, 2026). https://arxiv.org/abs/2610.21152",
+      "Sources: Zhou et al., \"EgoExplorer: A Vision-Motion-Touch Observatory for Human Loco-Manipulation In Situ,\" Hugging Face Papers 2610.18872 (published Oct 12, 2026). https://huggingface.co/papers/2610.18872"
+    ],
+    "faq": [
+      {
+        "q": "Does human video help robots learn?",
+        "a": "Yes, in controlled 2026 studies. With robot data held fixed, adding egocentric human video raised real-robot performance in each study cited here, including a rise from 63.3% to 85.0% success in one October paper."
+      },
+      {
+        "q": "Can egocentric video replace robot teleoperation data?",
+        "a": "Partly. It can carry most of the pretraining load, and a June 2026 study found it generalized better than equal hours of robot data on unseen tasks. Every published recipe still finishes with a smaller amount of data from the target robot."
+      },
+      {
+        "q": "How many hours of egocentric data does a robot model need?",
+        "a": "Published curves show gains from 1,000 hours all the way to 20,000 hours. The useful number depends on task range, label quality and how many hours survive filtering, so track usable hours alongside raw hours."
+      },
+      {
+        "q": "What makes egocentric data useful for robot training?",
+        "a": "Four things show up across the 2026 papers. They are a reliable motion signal, wide coverage of scenes and tasks, camera placement close to the robot's viewpoint, and filtering that removes blur, missing hands and idle footage."
+      },
+      {
+        "q": "Why can hand-pose labels hurt performance at scale?",
+        "a": "Hand-pose estimates fail under occlusion, camera motion and viewpoint shifts, and more varied video brings more of those cases. In one October 2026 study, success with hand-pose labels fell from 75.0% at 3,000 hours to 55.0% at 5,000 hours."
+      }
+    ]
+  },
+  {
     "slug": "indias-largest-human-data-provider",
     "tag": "Company",
     "date": "Sep 2026",
